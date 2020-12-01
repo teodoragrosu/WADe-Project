@@ -1,0 +1,962 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0-oas3
+  title: Coda API
+  description: |
+    # REST API for the CODA project
+  contact:
+    email: teogrosu29@gmail.com
+  license:
+    name: MIT
+    url: 'https://opensource.org/licenses/MIT'
+servers:
+  - url: 'https://codAPI.com/v1'
+
+paths:
+  /countries:
+    get:
+      tags:
+        - Covid data by country
+      summary: Returns all countries available
+      description: | 
+        ## Get a list of all countries and their codes
+      responses:
+        '200':
+          description: | 
+            ### Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Country'
+              example:
+                - id: 1
+                  name: Romania
+                  countryCode: RO
+                - id: 2
+                  name: France
+                  countryCode: FR
+                - id: 3
+                  name: Italy
+                  countryCode: IT
+                - id: 4
+                  name: China
+                  countryCode: CN
+                - id: 5
+                  name: United States of America
+                  countryCode: USA
+        '400':
+          description: Bad request, check your syntax
+          content:
+            application/json: {}
+        '404':
+          description: Not found
+          content:
+            application/json: {}
+        '500':
+          description: Internal server error
+          content:
+            application/json: {}
+            
+  /countries/{countryCode}/latest:
+    get:
+      tags:
+        - Covid data by country
+      summary: Returns the lastest info for the specified country
+      description: |
+        ### Returns all information related to the cases in the specified country from the current day. By default, all information will be included in the response:
+            * number of new confirmed cases
+            * new deceased
+            * new recovered
+            * new tested
+            * total confirmed cases
+            * total deceased
+            * total recovered
+            * total tested
+        ### If any of these parameters are specified in the query, only that specific count will be included (can be multiple).
+      responses:
+        '200':
+          description: Successful operation
+            
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cases'
+              examples:
+                ex_1:
+                  summary: RO example
+                  description: |
+                    ```
+                    GET https://codAPI.com/v1/countries/ro/latest
+                    ```
+                  value:
+                    id: 1
+                    name: Romania
+                    countryCode: RO
+                    date: '2020-12-02'
+                    new_confirmed: 4000
+                    new_deceased: 125
+                    new_recovered: 300
+                    new_tested: 7800
+                    total_confirmed: 576123
+                    total_deceased: 80000
+                    total_recovered: 498120
+                    total_tested: 784124
+        '400':
+          description: Invalid country code supplied
+          content:
+            application/json: {}
+        '404':
+          description: Country code not found
+          content:
+            application/json: {}
+        '500':
+          description: Internal server error
+          content:
+            application/json: {}
+    parameters:
+    - name: countryCode
+      in: path
+      description: country code to return the information for
+      required: true
+      schema:
+        type: string
+      example: RO
+    - $ref: '#/components/parameters/filter_new_confirmed'
+    - $ref: '#/components/parameters/filter_new_deceased'
+    - $ref: '#/components/parameters/filter_new_recovered'
+    - $ref: '#/components/parameters/filter_new_tested'
+    - $ref: '#/components/parameters/filter_total_confirmed'
+    - $ref: '#/components/parameters/filter_total_deceased'
+    - $ref: '#/components/parameters/filter_total_recovered'
+    - $ref: '#/components/parameters/filter_total_tested'
+    
+  /countries/{countryCode}/{date}:
+    get:
+      tags:
+        - Covid data by country
+      summary: Returns the cases in a specific day for the specified country 
+      description: |
+        ### Returns all information related to the cases in the specified country for that day. By default, all information will be included in the response:
+            * number of new confirmed cases
+            * new deceased
+            * new recovered
+            * new tested
+            * total confirmed cases
+            * total deceased
+            * total recovered
+            * total tested
+        ### If any of these parameters are specified in the query, only that specific count will be included (can be multiple).
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cases'
+              examples:
+                ex_1:
+                  summary: all cases
+                  description: |
+                    #### Get all cases reported in Romania on the 2nd of december
+                    ```
+                    GET https://codAPI.com/v1/countries/ro/2020-12-02
+                    ```
+                  value:
+                    id: 1
+                    name: Romania
+                    countryCode: RO
+                    date: '2020-12-02'
+                    new_confirmed: 4000
+                    new_deceased: 125
+                    new_recovered: 300
+                    new_tested: 7800
+                    total_confirmed: 576123
+                    total_deceased: 80000
+                    total_recovered: 498120
+                    total_tested: 784124
+                ex_2:
+                  summary: filter cases
+                  description: |
+                    #### Get the count of the new confirmed cases and the new deceased ones reported
+                    #### on the 2nd of december in Romania
+                    ```
+                    GET https://codAPI.com/v1/countries/ro/2020-12-02?filter_new_confirmed=true&filter_new_deceased=true
+                     ```
+                  value:
+                    id: 1
+                    name: Romania
+                    countryCode: RO
+                    date: '2020-12-02'
+                    new_confirmed: 4000
+                    new_deceased: 125
+        '400':
+          description: Invalid country code supplied
+          content:
+            application/json: {}
+        '404':
+          description: Country code not found
+          content:
+            application/json: {}
+        '500':
+          description: Internal server error
+          content:
+            application/json: {}
+            
+    parameters:
+    - name: countryCode
+      in: path
+      description: country code to return the information for
+      required: true
+      schema:
+        type: string
+      example: RO
+    - name: date
+      in: path
+      description: day from
+      required: true
+      schema:
+        type: string
+        format: date
+      example: '2020-12-01'
+    - $ref: '#/components/parameters/filter_new_confirmed'
+    - $ref: '#/components/parameters/filter_new_deceased'
+    - $ref: '#/components/parameters/filter_new_recovered'
+    - $ref: '#/components/parameters/filter_new_tested'
+    - $ref: '#/components/parameters/filter_total_confirmed'
+    - $ref: '#/components/parameters/filter_total_deceased'
+    - $ref: '#/components/parameters/filter_total_recovered'
+    - $ref: '#/components/parameters/filter_total_tested'
+
+  /countries/{countryCode}/cases/range:
+    get:
+      tags:
+        - Covid data by country
+      summary: Returns cases in the specified country for a specific date range
+      description: |
+        ### Returns all information related to the cases in the specified country in a specific date range. By default, all information will be included in the response:
+            * number of new confirmed cases
+            * new deceased
+            * new recovered
+            * new tested
+            * total confirmed cases
+            * total deceased
+            * total recovered
+            * total tested
+        ### If any of these parameters are specified in the query, only that specific count will be included (can be multiple).
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cases'
+              examples:
+                ex_1:
+                  summary: date range all cases
+                  description: |
+                    #### Get all cases reported in Romania from the 1st of december until the 2nd of december
+                    ```
+                    GET https://codAPI.com/v1/countries/ro/range?from=2020-12-01&to=2020-12-02
+                    ```
+                  value:
+                  - id: 1
+                    name: Romania
+                    countryCode: RO
+                    date: '2020-12-01'
+                    new_confirmed: 4000
+                    new_deceased: 125
+                    new_recovered: 300
+                    new_tested: 7800
+                    total_confirmed: 576123
+                    total_deceased: 80000
+                    total_recovered: 498120
+                    total_tested: 784124
+              
+                  - id: 1
+                    name: Romania
+                    countryCode: RO
+                    date: '2020-12-02'
+                    new_confirmed: 5600
+                    new_deceased: 124
+                    new_recovered: 200
+                    new_tested: 7845
+                    total_confirmed: 576567
+                    total_deceased: 80145
+                    total_recovered: 50912
+                    total_tested: 7124
+        '400':
+          description: Invalid country code supplied and/or date range
+          content:
+            application/json: {}
+        '404':
+          description: Country code not found
+          content:
+            application/json: {}
+        '500':
+          description: Internal server error
+          content:
+            application/json: {}
+    parameters:
+    - name: countryCode
+      in: path
+      description: country code to return the information for
+      required: true
+      schema:
+        type: string
+      example: RO
+    - name: from
+      in: query
+      description: day from
+      required: true
+      schema:
+        type: string
+        format: date
+      example: '2020-12-01'
+    - name: to
+      in: query
+      description: day to
+      required: true
+      schema:
+        type: string
+        format: date
+      example: '2020-12-02'
+    - $ref: '#/components/parameters/filter_new_confirmed'
+    - $ref: '#/components/parameters/filter_new_deceased'
+    - $ref: '#/components/parameters/filter_new_recovered'
+    - $ref: '#/components/parameters/filter_new_tested'
+    - $ref: '#/components/parameters/filter_total_confirmed'
+    - $ref: '#/components/parameters/filter_total_deceased'
+    - $ref: '#/components/parameters/filter_total_recovered'
+    - $ref: '#/components/parameters/filter_total_tested'
+    
+  /countries/{countryCode}/download:
+    get:
+        tags:
+          - Covid data by country
+        summary: Download data for a specified country
+        description: | 
+          ### Download a report (csv or json) with the covid cases in a specific country. A date range can be specified. By default, the report will include all historic data available. 
+        responses:
+          '200':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: string
+                  format: binary
+              text/csv:
+                schema:
+                  type: string
+                  format: binary
+          '400':
+            description: Invalid country code
+          '404':
+            description: Data for country not found
+          '500':
+            description: Server error
+    
+    head:
+        tags:
+          - Covid data by country
+        summary: Check the data to be downloaded
+        description: |
+          ### Returns headers: column names to be returned, country name, dates, status code, content type, md5
+        responses:
+          '200':
+            description: Success
+            headers:
+              columns:
+                schema:
+                  type: string
+                description: column names in the file
+              country:
+                schema:
+                  type: string
+                description: name of the country that has been selected for the report
+              date_to:
+                schema:
+                  type: string
+                  format: date
+                  default: null
+                description: starting day, if specified
+              date_from:
+                schema:
+                  type: string
+                  format: date
+                  default: null
+                description: ending day, if specified
+              status_code:
+                schema: 
+                  type: string
+                  default: HTTP/1.1 200 OK
+              Content-Type:
+                schema:
+                  type: string
+                  enum: [application/json, application/csv]
+                  default: application/json
+              Content-Length:
+                schema:
+                  type: integer
+              Content-MD5:
+                schema:
+                  type: string
+
+          '400':
+            description: Invalid country code
+          '404':
+            description: Data for country not found
+          '500':
+            description: Server error
+            
+    parameters:
+      - name: countryCode
+        in: path
+        description: country code to return the information for
+        required: true
+        schema:
+          type: string
+        example: RO
+      - name: format
+        in: query
+        description: The file format to download. Can be CSV or JSON
+        required: true
+        schema:
+          type: string
+          enum: [json, csv]
+          default: json
+      - name: from
+        in: query
+        description: day from
+        required: false
+        schema:
+          type: string
+          format: date
+        example: '2020-12-01'
+      - name: to
+        in: query
+        description: day to
+        required: false
+        schema:
+          type: string
+          format: date
+        example: '2020-12-02'
+  
+        
+    
+  /news/latest:
+    get:
+      tags:
+        - Covid news
+      summary: Latest news related to the COVID disease
+      description: | 
+        ### Get the latest news related to COVID-19 worldwide. If no limit is specified, the newest 20 news will be returned
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/News'
+              examples:
+                news1:
+                  summary: newest 3
+                  description: |
+                    ### Get the latest 3 news worldwide
+                    ```
+                    GET https://codAPI.com/v1/news/latest?limit=3
+                    ```
+                  value:
+                  - id: 1
+                    date: '2020-12-02'
+                    title: Măsurile anti-Covid vor creşte cu aproape 1 miliard de dolari costurile organizării Jocurilor Olimpice de la Tokyo
+                    summary: Comitetul de organizare a Jocurilor Olimpice şi Paralimpice de la Tokyo a estimat costul măsurilor anti-COVID-19 la aproximativ 100 miliarde yeni japonezi (960 milioane dolari), în plus faţă de 200 miliarde yeni (1,9 miliarde dolari) costuri suplimentare estimate în legătură cu amânarea jocurilor, spun surse apropiate situaţiei, citate de publicaţia The Japan Times.
+                    source: news.ro
+                    url: 'https://www.news.ro/economic/masurile-anti-covid-vor-creste-cu-aproape-1-miliard-de-dolari-costurile-organizarii-jocurilor-olimpice-de-la-tokyo-1922400530082020111319634510'
+                    keywords: COVID, Jocuri Olimpice, Tokyo
+                    country: ro
+                    
+                  - id: 2
+                    date: '2020-12-02'
+                    title: Covid infections in England fall by 30% over lockdown - React study
+                    summary: Coronavirus infections in England have fallen by about a third over lockdown, according to a major study. Some of the worst-hit areas saw the biggest improvements - but, despite this progress, cases remained relatively high across England.
+                    source: BBC News
+                    url: 'https://www.bbc.com/news/health-55124286'
+                    keywords: COVID, England, lockdown, study
+                    country: uk
+                    
+                  - id: 3
+                    date: '2020-12-02'
+                    title: Coronavirus en España hoy, última hora | Plan de vacunación del Gobierno y medidas y restricciones de Navidad, en directo
+                    summary: La pandemia mundial del coronavirus supera 1,4 millones de muertos en todo el mundo, según el recuento de referencia de la Universidad Johns Hopkins. El número de contagiados asciende a más de 53,7 millones.
+                    source: marca.com
+                    url: 'https://www.marca.com/tiramillas/actualidad/2020/11/30/5fc46cfdca4741c20a8b4588.html'
+                    keywords: COVID-19, casos, medidas, restricciones
+                    country: es
+        '404':
+          description: Not found
+          content:
+            application/json: {}
+        '500':
+          description: Internal server error
+          content:
+            application/json: {}
+    parameters:
+      - $ref: '#/components/parameters/offset'
+      - $ref: '#/components/parameters/limit'
+      
+  /news/filter:
+    get:
+      tags:
+        - Covid news
+      summary: Latest news related to the COVID disease
+      description: | 
+        ### Get the latest news related to COVID-19 worldwide. If no limit is specified, the newest 20 news will be returned
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/News'
+              examples:
+                news1:
+                  summary: newest 3
+                  description: |
+                    ### Get the latest 3 news worldwide
+                    ```
+                    GET https://codAPI.com/v1/news/latest?limit=3
+                    ```
+                  value:
+                  - id: 1
+                    date: '2020-12-02'
+                    title: Măsurile anti-Covid vor creşte cu aproape 1 miliard de dolari costurile organizării Jocurilor Olimpice de la Tokyo
+                    summary: Comitetul de organizare a Jocurilor Olimpice şi Paralimpice de la Tokyo a estimat costul măsurilor anti-COVID-19 la aproximativ 100 miliarde yeni japonezi (960 milioane dolari), în plus faţă de 200 miliarde yeni (1,9 miliarde dolari) costuri suplimentare estimate în legătură cu amânarea jocurilor, spun surse apropiate situaţiei, citate de publicaţia The Japan Times.
+                    source: news.ro
+                    url: 'https://www.news.ro/economic/masurile-anti-covid-vor-creste-cu-aproape-1-miliard-de-dolari-costurile-organizarii-jocurilor-olimpice-de-la-tokyo-1922400530082020111319634510'
+                    keywords: COVID, Jocuri Olimpice, Tokyo
+                    country: ro
+                    
+                  - id: 2
+                    date: '2020-12-02'
+                    title: Covid infections in England fall by 30% over lockdown - React study
+                    summary: Coronavirus infections in England have fallen by about a third over lockdown, according to a major study. Some of the worst-hit areas saw the biggest improvements - but, despite this progress, cases remained relatively high across England.
+                    source: BBC News
+                    url: 'https://www.bbc.com/news/health-55124286'
+                    keywords: COVID, England, lockdown, study
+                    country: uk
+                    
+                  - id: 3
+                    date: '2020-12-02'
+                    title: Coronavirus en España hoy, última hora | Plan de vacunación del Gobierno y medidas y restricciones de Navidad, en directo
+                    summary: La pandemia mundial del coronavirus supera 1,4 millones de muertos en todo el mundo, según el recuento de referencia de la Universidad Johns Hopkins. El número de contagiados asciende a más de 53,7 millones.
+                    source: marca.com
+                    url: 'https://www.marca.com/tiramillas/actualidad/2020/11/30/5fc46cfdca4741c20a8b4588.html'
+                    keywords: COVID-19, casos, medidas, restricciones
+                    country: es
+        '404':
+          description: Not found
+          content:
+            application/json: {}
+        '500':
+          description: Internal server error
+          content:
+            application/json: {}
+    parameters:
+      - $ref: '#/components/parameters/offset'
+      - $ref: '#/components/parameters/limit'    
+      
+    
+  /news/{news_id}:
+    delete:
+      tags:
+        - Covid news
+      summary: Remove news 
+      description: |
+        ### Admins can remove news (by their IDs). An access token is required.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: News removed successfully
+        '400':
+          description: Bad request, check your syntax
+        '401':
+          description: Unauthorized; access token is missing or is invalid
+        '404':
+          description: News ID not found
+        '500':
+          description: Internal server error
+
+    parameters:
+    - name: news_id
+      in: path
+      description: ID of the news to be deleted
+      required: true
+      schema:
+        type: integer
+        format: int64
+      example: 123
+  
+
+  /articles/latest:
+    get:
+      tags:
+        - Covid articles and research
+      summary: Latest articles and research related to the COVID disease
+      description: |
+        ### Get the latest research articles related to COVID-19. If no limit is specified, the newest 20 articles will be returned
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Articles'
+              examples:
+                articles1:
+                  description: |
+                    #### Get 2 articles, skipping the first 100
+                    ```
+                    GET https://codAPI.com/v1/articles/latest?offset=100&limit=2
+                    ```
+                  value:
+                  - id: 431
+                    date: '2020-11-27'
+                    title: 'Multiple epitope-based vaccine prediction against SARS-CoV-2 spike glycoprotein'
+                    astract: 'The global emergence of novel coronavirus disease and its rapid global expansion over a short span of time require effective countermeasures to combat it. Development of a specific vaccine can induce an optimal antibody response, thus providing immunity against it. Our study proposes a detailed and comprehensive immunoinformatic approach that can be applied to the currently available coronavirus protein data in the online server for vaccine candidate development. We have identified the receptor binding domain (RBD) of structural spike protein (S1) as a potential target for immunity against COVID- 19 infection. Epitope prediction illustrated cytotoxic T-cell epitopes, helper T-cell epitopes, and B-cell epitopes associated with the target protein. These were joined through specific linkers along with adjuvant beta-defensin located at the N-terminal to create a multi epitope subunit vaccine (MESV). The specificity in the binding of the devised vaccine candidate to the TLR-3 immune cell receptor was evaluated via molecular docking interaction studies. Good docking score combined with robust interactions in the binding cavity certified the stringency of the engineered vaccine. Molecular dynamics simulation data showed minimal variation of the root-mean square deviations (RMSDs) and root-mean-square fluctuations (RMSFs) which confirmed the interaction stability. These results obtained from various in-silico experiments indicate the potency of this vaccine candidate as a probable therapeutic agent against COVID-19. Vaccination strategies targeting conserved epitope-based immune response would be beneficial in providing cross protection across beta-coronaviruses, and such vaccines would be resistant to the ever-evolving viruses.'
+                    citation: 'Preeti Rana Sirohi, Jyoti Gupta, Pallavi Somvanshi, Vijay Kumar Prajapati & Abhinav Grover (2020) Multiple epitope-based vaccine prediction against SARS-CoV-2 spike glycoprotein, Journal of Biomolecular Structure and Dynamics, DOI: 10.1080/07391102.2020.1846626'
+                    type: Research Article
+                    keywords: [Spike glycoprotein, receptor binding domain, subunit vaccine, COVID-19, immunoinformatics]
+                    publication_source: Journal of Biomolecular Structure and Dynamics
+                    uri: https://www.tandfonline.com/doi/full/10.1080/07391102.2020.1846626
+                  
+                  - id: 411
+                    date: '2020-11-26'
+                    title: 'The impact of the COVID-19 pandemic on depression and stress levels in pregnant women: a national survey during the COVID-19 pandemic in Mexico'
+                    astract: 'COVID-19 outbreak has been associated with a wide variety of psychiatric manifestations such as panic, anxiety, and depression. We aim to assess the impact of the COVID − 19 pandemic on the levels of stress and depression of pregnant women in Mexico.'
+                    citation: 'Virginia Medina-Jimenez, Maria de la Luz Bermudez-Rojas, Hector Murillo-Bargas, Ana Claudia Rivera-Camarillo, Jairo Muñoz-Acosta, Tania Gabriela Ramirez-Abarca, Diana Magdalena Esparza-Valencia, Alejandra Cristina Angeles-Torres, Leticia Lara-Avila, Veronica Aide Hernandez-Muñoz, Fernando Javier Madrigal-Tejeda, Gaston Eduardo Estudillo-Jimenez, Luis Mauricio Jacobo-Enciso, Johnatan Torres-Torres, Salvador Espino-y-Sosa, Mariana Baltazar-Martinez, Job Villanueva-Calleja, Aaron Ezequiel Nava-Sanchez, Claudia Elvira Mendoza-Carrera, César Aguilar-Torres, Cuauhtemoc Celis-Gonzalez & Raigam Jafet Martinez-Portilla (2020) The impact of the COVID-19 pandemic on depression and stress levels in pregnant women: a national survey during the COVID-19 pandemic in Mexico, The Journal of Maternal-Fetal & Neonatal Medicine, DOI: 10.1080/14767058.2020.1851675'
+                    type: Report
+                    keywords: [Pregnancy, Coronavirus, depression, anxiety, mental health]
+                    publication_source: The Journal of Maternal-Fetal & Neonatal Medicine
+                    uri: https://www.tandfonline.com/doi/full/10.1080/14767058.2020.1851675
+                    
+        '404':
+          description: Not found
+          content:
+            application/json: {}
+        '500':
+          description: Internal server error
+          content:
+            application/json: {}
+            
+    parameters:
+      - $ref: '#/components/parameters/offset'
+      - $ref: '#/components/parameters/limit'
+            
+  /articles/findByType:
+    get:
+      tags:
+        - Covid articles and research
+      summary: Find articles by type
+      description: | 
+        ### Search for articles by the publication type. Types to search for:
+        ```
+          * dataset
+          * research article
+          * report
+          * figure
+          * journal contribution
+        ```
+        ### The default limit is 20 articles.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Articles'
+              examples:
+                datasets:
+                  description: |
+                    #### Get the newest 2 published datasets related to Covid
+                    ```
+                    GET https://codAPI.com/v1/articles/latest?type=dataset&limit=2
+                    ```
+                  value:
+                  - id: 4105
+                    date: '2020-11-27'
+                    title: 'Neurological Complications and Noninvasive Multimodal Neuromonitoring in Critically Ill Mechanically Ventilated COVID-19 Patients'
+                    astract: 'The incidence and the clinical presentation of neurological manifestations of coronavirus disease-2019 (COVID-19) remain unclear. No data regarding the use of neuromonitoring tools in this group of patients are available.'
+                    citation: 'Battaglini, Denise; Santori, Gregorio; Chandraptham, Karthikka; Iannuzzi, Francesca; Bastianello, Matilde; Tarantino, Fabio; et al. (2020): Data_Sheet_1_Neurological Complications and Noninvasive Multimodal Neuromonitoring in Critically Ill Mechanically Ventilated COVID-19 Patients.docx. Frontiers. Dataset. https://doi.org/10.3389/fneur.2020.602114.s001 '
+                    type: dataset
+                    keywords: [COVID-19, neurological complications, SARS-CoV-2, neuromonitoring, neurocritical care]
+                    publication_source: Frontiers
+                    uri: https://www.frontiersin.org/articles/10.3389/fneur.2020.602114/full#h1
+                  
+                  - id: 3012
+                    date: '2020-11-27'
+                    title: 'Whole Genome Identification of Potential G-Quadruplexes and Analysis of the G-Quadruplex Binding Domain for SARS-CoV-2'
+                    astract: 'The coronavirus disease 2019 (COVID-19) pandemic caused by SARS-CoV-2 (severe acute respiratory syndrome coronavirus 2) has become a global public health emergency. G-quadruplex, one of the non-canonical secondary structures, has shown potential antiviral values. However, little is known about the G-quadruplexes of the emerging SARS-CoV-2. Herein, we characterized the potential G-quadruplexes in both positive and negative-sense viral strands. The identified potential G-quadruplexes exhibited similar features to the G-quadruplexes detected in the human transcriptome. Within some bat- and pangolin-related betacoronaviruses, the G-tracts rather than the loops were under heightened selective constraints. We also found that the amino acid sequence similar to SUD (SARS-unique domain) was retained in SARS-CoV-2 but depleted in some other coronaviruses that can infect humans. Further analysis revealed that the amino acid residues related to the binding affinity of G-quadruplexes were conserved among 16,466 SARS-CoV-2 samples. Moreover, the dimer of the SUD-homology structure in SARS-CoV-2 displayed similar electrostatic potential patterns to the SUD dimer from SARS. Considering the potential value of G-quadruplexes to serve as targets in antiviral strategy, our fundamental research could provide new insights for the SARS-CoV-2 drug discovery.'
+                    citation: 'Zhang, Rongxin; Xiao, Ke; Gu, Yu; Liu, Hongde; Sun, Xiao (2020): Data_Sheet_1_Whole Genome Identification of Potential G-Quadruplexes and Analysis of the G-Quadruplex Binding Domain for SARS-CoV-2.docx. Frontiers. Dataset. https://doi.org/10.3389/fgene.2020.587829.s001 '
+                    type: dataset
+                    keywords: [G-quadruplex, SARS-CoV-2, COVID-19, G4, coronavirus, G-quadruplex binding domain, SUD-homology structure]
+                    publication_source: Frontiers
+                    uri: https://www.frontiersin.org/articles/10.3389/fgene.2020.587829/full#h1
+                    
+        '404':
+          description: Not found
+          content:
+            application/json: {}
+        '500':
+          description: Internal server error
+          content:
+            application/json: {}
+    
+    parameters:
+      - $ref: '#/components/parameters/offset'
+      - $ref: '#/components/parameters/limit'
+      - name: type
+        in: query
+        description: type of research
+        required: true
+        schema:
+          type: string
+        example: dataset
+            
+            
+  /articles/{article_id}:
+    delete:
+      tags:
+        - Covid articles and research
+      summary: Remove articles
+      description: |
+        ### Admins can remove articles (by their IDs). An access token is required.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Article removed successfully
+        '400':
+          description: Bad request, check your syntax
+        '401':
+          description: Unauthorized; access token is missing or is invalid
+        '404':
+          description: News ID not found
+        '500':
+          description: Internal server error
+
+    parameters:
+    - name: article_id
+      in: path
+      description: ID of the article to be deleted
+      required: true
+      schema:
+        type: integer
+        format: int64
+      example: 123
+            
+components:
+
+  # security scheme type(HTTP bearer)
+  securitySchemes:
+    bearerAuth:           
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # json web token
+  
+  schemas:
+    Country:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        countryCode:
+          type: string
+          
+    Cases:
+      type: object
+      required:
+        - date
+        - country
+      properties:
+        date:
+          type: string
+          format: date
+        new_confirmed:
+          type: integer
+          format: int64
+        new_deceased:
+          type: integer
+          format: int64
+        new_recovered:
+          type: integer
+          format: int64
+        new_tested:
+          type: integer
+          format: int64
+        total_confirmed:
+          type: integer
+          format: int64
+        total_deceased:
+          type: integer
+          format: int64
+        total_recovered:
+          type: integer
+          format: int64
+        total_tested:
+          type: integer
+          format: int64
+        country:
+          $ref: '#/components/schemas/Country'
+          
+    News:
+      type: object
+      required:
+        - date
+      properties:
+        date:
+          type: string
+          format: date
+        title:
+          type: string
+        summary:
+          type: string
+        url:
+          type: string
+          format: uri
+        source:
+          type: string
+        keywords:
+          type: string
+        country:
+          $ref: '#/components/schemas/Country'
+          
+    Articles:
+      type: object
+      required:
+        - date
+      properties:
+        date:
+          type: string
+          format: date
+        title:
+          type: string
+        astract:
+          type: string
+        citation:
+          type: string
+        keywords:
+          type: string
+        publication_source:
+          type: string
+        uri:
+          type: string
+          format: uri
+
+  parameters:
+    filter_new_confirmed:
+      name: filter_new_confirmed
+      in: query
+      description: include only new confirmed cases in the response
+      required: false
+      schema:
+        type: boolean
+        default: false
+        
+    filter_new_deceased:  
+      name: filter_new_deceased
+      in: query
+      description: include only new deceased cases in the response
+      required: false
+      schema:
+        type: boolean
+        default: false
+        
+    filter_new_recovered:    
+      name: filter_new_recovered
+      in: query
+      description: include only new recovered cases in the response
+      required: false
+      schema:
+        type: boolean
+        default: false
+        
+    filter_new_tested:  
+      name: filter_new_tested
+      in: query
+      description: include only new tested cases in the response
+      required: false
+      schema:
+        type: boolean
+        default: false
+        
+    filter_total_confirmed:  
+      name: filter_total_confirmed
+      in: query
+      description: include only total confirmed cases in the response
+      required: false
+      schema:
+        type: boolean
+        default: false
+        
+    filter_total_deceased:      
+      name: filter_total_deceased
+      in: query
+      description: include only total deceased cases in the response
+      required: false
+      schema:
+        type: boolean
+        default: false
+    
+    filter_total_recovered:
+      name: filter_total_recovered
+      in: query
+      description: include only total recovered cases in the response
+      required: false
+      schema:
+        type: boolean
+        default: false
+        
+    filter_total_tested:  
+      name: filter_total_tested
+      in: query
+      description: include only total tested cases in the response
+      required: false
+      schema:
+        type: boolean
+        default: false
+  
+    offset:
+      in: query
+      name: offset
+      required: false
+      schema:
+        type: integer
+        default: 0
+      description: The number of items to skip before starting to collect the result set
+    
+    limit:
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+        default: 20
+      description: The numbers of items to return
