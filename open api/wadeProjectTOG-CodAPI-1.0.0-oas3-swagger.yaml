@@ -1,4 +1,5 @@
 openapi: 3.0.0
+
 info:
   version: 1.0.0-oas3
   title: Coda API
@@ -9,6 +10,7 @@ info:
   license:
     name: MIT
     url: 'https://opensource.org/licenses/MIT'
+    
 servers:
   - url: 'https://codAPI.com/v1'
 
@@ -87,7 +89,7 @@ paths:
                   $ref: '#/components/schemas/Cases'
               examples:
                 ex_1:
-                  summary: RO example
+                  summary: RO example all cases
                   description: |
                     ```
                     GET https://codAPI.com/v1/countries/ro/latest
@@ -101,6 +103,35 @@ paths:
                     new_deceased: 125
                     new_recovered: 300
                     new_tested: 7800
+                    total_confirmed: 576123
+                    total_deceased: 80000
+                    total_recovered: 498120
+                    total_tested: 784124
+                    
+                ex_2:
+                  summary: RO example new tested count only
+                  description: |
+                    ```
+                    GET https://codAPI.com/v1/countries/ro/latest?filter_new_tested=true
+                    ```
+                  value:
+                    id: 1
+                    name: Romania
+                    countryCode: RO
+                    date: '2020-12-02'
+                    new_tested: 7800
+                
+                ex_3:
+                  summary: RO example total counts only
+                  description: |
+                    ```
+                    GET https://codAPI.com/v1/countries/ro/latest?filter_total_*=true
+                    ```
+                  value:
+                    id: 1
+                    name: Romania
+                    countryCode: RO
+                    date: '2020-12-02'
                     total_confirmed: 576123
                     total_deceased: 80000
                     total_recovered: 498120
@@ -446,8 +477,6 @@ paths:
           type: string
           format: date
         example: '2020-12-02'
-  
-        
     
   /news/latest:
     get:
@@ -512,13 +541,14 @@ paths:
       - $ref: '#/components/parameters/offset'
       - $ref: '#/components/parameters/limit'
       
-  /news/filter:
+  /news/filter/{countryCode}:
     get:
       tags:
         - Covid news
-      summary: Latest news related to the COVID disease
+      summary: Filter news by country
       description: | 
-        ### Get the latest news related to COVID-19 worldwide. If no limit is specified, the newest 20 news will be returned
+        ### Filter the news related to the COVID disease, based on the country code. Optionally, a date
+        ### range and keywords can be specified (case-insensitive). By default, the results limit is 20. 
       responses:
         '200':
           description: Success
@@ -530,39 +560,69 @@ paths:
                   $ref: '#/components/schemas/News'
               examples:
                 news1:
-                  summary: newest 3
+                  summary: newest 2 example
                   description: |
-                    ### Get the latest 3 news worldwide
+                    #### Get the latest 2 news in UK, that contain the keyword 'Vaccine'
                     ```
-                    GET https://codAPI.com/v1/news/latest?limit=3
+                    GET https://codAPI.com/v1/news/filter/uk?limit=2&keywords=Vaccine
                     ```
                   value:
-                  - id: 1
-                    date: '2020-12-02'
-                    title: Măsurile anti-Covid vor creşte cu aproape 1 miliard de dolari costurile organizării Jocurilor Olimpice de la Tokyo
-                    summary: Comitetul de organizare a Jocurilor Olimpice şi Paralimpice de la Tokyo a estimat costul măsurilor anti-COVID-19 la aproximativ 100 miliarde yeni japonezi (960 milioane dolari), în plus faţă de 200 miliarde yeni (1,9 miliarde dolari) costuri suplimentare estimate în legătură cu amânarea jocurilor, spun surse apropiate situaţiei, citate de publicaţia The Japan Times.
-                    source: news.ro
-                    url: 'https://www.news.ro/economic/masurile-anti-covid-vor-creste-cu-aproape-1-miliard-de-dolari-costurile-organizarii-jocurilor-olimpice-de-la-tokyo-1922400530082020111319634510'
-                    keywords: COVID, Jocuri Olimpice, Tokyo
-                    country: ro
-                    
-                  - id: 2
+                  - id: 25
                     date: '2020-12-02'
                     title: Covid infections in England fall by 30% over lockdown - React study
                     summary: Coronavirus infections in England have fallen by about a third over lockdown, according to a major study. Some of the worst-hit areas saw the biggest improvements - but, despite this progress, cases remained relatively high across England.
                     source: BBC News
                     url: 'https://www.bbc.com/news/health-55124286'
-                    keywords: COVID, England, lockdown, study
+                    keywords: COVID, England, lockdown, study, vaccine
                     country: uk
                     
-                  - id: 3
-                    date: '2020-12-02'
-                    title: Coronavirus en España hoy, última hora | Plan de vacunación del Gobierno y medidas y restricciones de Navidad, en directo
-                    summary: La pandemia mundial del coronavirus supera 1,4 millones de muertos en todo el mundo, según el recuento de referencia de la Universidad Johns Hopkins. El número de contagiados asciende a más de 53,7 millones.
-                    source: marca.com
-                    url: 'https://www.marca.com/tiramillas/actualidad/2020/11/30/5fc46cfdca4741c20a8b4588.html'
-                    keywords: COVID-19, casos, medidas, restricciones
-                    country: es
+                  - id: 34
+                    date: '2020-11-27'
+                    title: Coronavirus vaccine
+                    summary: A coronavirus (COVID-19) vaccine is not available yet.
+                      Several vaccines are being developed. They will only be available on the NHS 
+                      once they have been thoroughly tested to make sure they are safe and effective.
+                    source: www.nhs.uk
+                    url: 'https://www.nhs.uk/conditions/coronavirus-covid-19/coronavirus-vaccination/coronavirus-vaccine/'
+                    keywords: Coronavirus vaccine
+                    country: uk
+                
+                news2:
+                  summary: date range example
+                  description: |
+                    #### Search for the first 3 news in the US, that contain the keyword 'covid-19'
+                    #### posted between 2020-09-01 and 2020-10-01
+                    ```
+                    GET https://codAPI.com/v1/news/filter/us?limit=3&keywords=covid-19&from=2020-09-01&to=2020-10-01
+                    ```
+                  value:
+                  - id: 51
+                    date: '2020-09-28'
+                    title: COVID-19 Trends Among School-Aged Children — United States, March 1–September 19, 2020
+                    summary: On September 28, 2020, this report was posted online as an MMWR Early Release.
+                    source: https://www.cdc.gov/
+                    url: https://www.cdc.gov/mmwr/volumes/69/wr/mm6939e2.htm
+                    keywords: COVID-19, United States, children, trends
+                    country: us
+                    
+                  - id: 67
+                    date: '2020-09-25'
+                    title: 'Coronavirus News Roundup: September 19–September 25'
+                    summary: Here are pandemic highlights for the week
+                    source: https://www.scientificamerican.com/
+                    url: 'https://www.scientificamerican.com/article/coronavirus-news-roundup-september-19-september-25/'
+                    keywords: Coronavirus, vaccine, covid-19
+                    country: us
+                    
+                  - id: 101
+                    date: '2020-09-24'
+                    title: FDA commissioner says vaccine decision will be "based upon the science and the data, not politics"
+                    summary: In an interview Thursday on WPHT’s The Rich Zeoli Show, US Food and Drug Administration Commissioner Dr. Stephen Hahn responded to questions about the agency considering new guidelines for the authorization of a Covid-19 vaccine.
+                    source: htpps://edition.cnn.com
+                    url: 'https://edition.cnn.com/world/live-news/coronavirus-pandemic-09-24-20-intl/index.html?tab=Vaccines'
+                    keywords: US, covid-19, vaccine
+                    country: us
+
         '404':
           description: Not found
           content:
@@ -573,9 +633,39 @@ paths:
             application/json: {}
     parameters:
       - $ref: '#/components/parameters/offset'
-      - $ref: '#/components/parameters/limit'    
+      - $ref: '#/components/parameters/limit'
+      - name: countryCode
+        in: path
+        description: country code to return the news for
+        required: true
+        schema:
+          type: string
+        example: RO
+      - name: from
+        in: query
+        description: day from
+        required: false
+        schema:
+          type: string
+          format: date
+        example: '2020-12-01'
+      - name: to
+        in: query
+        description: day to
+        required: false
+        schema:
+          type: string
+          format: date
+        example: '2020-12-02'
+      - name: keywords
+        in: query
+        description: keywords to filter by
+        required: false
+        schema:
+          type: string
+          format: multipleOf
+        example: covid-19, health, vaccine
       
-    
   /news/{news_id}:
     delete:
       tags:
@@ -736,7 +826,6 @@ paths:
         schema:
           type: string
         example: dataset
-            
             
   /articles/{article_id}:
     delete:
