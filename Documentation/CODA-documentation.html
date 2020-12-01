@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>CODA (COVID-19 Data for ALL)</title>
+    <link rel="stylesheet" href="documentation.css">
+</head>
+<body prefix="schema: http://schema.org">
+    <article typeof="schema:ScholarlyArticle" resource="#">
+        <header>
+            <h1 property="schema:name"> CODA (COVID-19 Data for ALL)
+            </h1>
+        </header>
+        <div role="contentinfo">
+            <dl>
+                <dt>Authors</dt>
+                <dd>
+                    TOG-team: Grosu Teodora, Hriscu Oana, Schițcu Gabriel
+                </dd>
+            </dl>
+        </div>
+        <section typeof="sa:content" id="content">
+            <h2>Content</h2>
+            <aside typeof="schema:WPSideBar">
+                <ol>
+                    <li>
+                        <a href="#introduction">Introduction</a>
+                    </li>
+                    <li>
+                        <a href="#technology-stack">Technology stack</a>
+                    </li>
+                    <li>
+                        <a href="#microservices">Microservices</a>
+                    </li>
+                    <li>
+                        <a href="#implementation-logic">Implementation Logic</a>
+                    </li>
+                    <li>
+                        <a href="#user-journey">User journey</a>
+                    </li>
+                </ol>
+            </aside>
+        </section>
+        <section typeof="sa:Results" id="introduction">
+            <h2>1. Introduction</h2>
+            <h3>About CODA</h3>
+            <blockquote>
+                <p>
+                    CODA stands for COvid-19 Data for All. It is a smart micro-service-based web system that is able to provide information regarding the Covid-19 pandemic in multiple written and visual formats for both specialists and the general public. Every data collected by CODA such as articles, documents and graphics, contains attested pieces of information which can be easily viewed, downloaded and shared to other platforms. Moreover, everything on CODA can be accessed via a SPARQL endpoint created in order to ease user access to required knowledge. CODA’s goal is to keep everyone informed about the pandemic in a fast and easy manner and avoid spreading misinformation to the general public.
+                </p>
+            </blockquote>
+        </section>
+        <section id="technology-stack">
+            <h2>2. Technology Stack</h2>
+            <h3>FRONT-END</h3>
+            <blockquote>
+                <p><b>Bootstrap</b> - a free and open-source CSS framework directed at responsive, mobile-first front-end web development</p>
+                <p><b>React</b> - an open-source, front-end, JavaScript library for building user interfaces or UI components</p>
+                <p><b>Charts</b> - an interactive Web service that creates graphical charts from user-supplied information</p>
+            </blockquote>
+
+            <h3>BACK-END</h3>
+            <blockquote>
+                <p><b>Python</b> - an interpreted, high-level and general-purpose programming language.</p>
+                <p><b>Django</b> - a Python-based free and open-source web framework that follows the model-template-views architectural pattern</p>
+                <p><b>Scrapy</b> - a free and open-source web-crawling framework written in Python. Originally designed for web scraping, it can also be used to extract data using APIs or as a general-purpose web crawler</p>
+                <p><b>RDFLib</b> - a Python library for working with RDF</p>
+                <p><b>SPARQL</b> - a query language for retrieving RDF triples</p>
+            </blockquote>
+        </section>
+        <section id="microservices">
+            <h2>3. Microservices</h2>
+            <h3>Data Crawler</h3>
+            <blockquote>
+                <p>
+                    A data crawler or a web crawler is an Internet bot that systematically browses the World Wide Web, typically for creating search engine indices. CODA makes use of its own personalised data crawler that collects Covid-19-related data from trusted news sources all over the internet. 
+                    The Scrapy framework for Python is used in order to create this specific web crawler.
+                    The sources of information that are scraped by the data crawler come from official news articles sites, statistics sites and many more. A few examples are The Guardian, The New York Times and BBC News. 
+                </p>
+            </blockquote>
+            <h3>Data Visualiser</h3>
+            <blockquote>
+                <p>
+                    CODA wants to offer its users a platform that can speed up the process of analysis and understanding. The Coronavirus pandemic deals with many rapidly-changing variables and putting them into perspective can offer a better image of the evolution of the event. Thus, CODA makes great use of different graphics and statistics that show the numbers involved in the Pandemic.
+                    With the help of Google Charts and the COVID19 API developed by Postman, CODA manages is able to display the following data:
+                <ul>
+                    <li>Number of cases by continent/country/city etc.</li>
+                    <li>Number of new cases </li>
+                    <li>Number of deaths</li>
+                    <li>Active cases</li>
+                    <li>Closed cases</li>
+                </ul>
+                    Any visual data available on CODA can also be downloaded in CSV or JSON format.
+                </p>
+            </blockquote>
+            <h3>Data Study</h3>
+            <blockquote>
+                <p>
+                    This microservice deals with analysing scientific documents from different sites and creating summaries about the articles found on there. The essential data extracted from those articles is used to create suggestion boxes that are displayed in most pages of CODA. When selected, the suggestion will lead to the original page of the article. This is done in order to keep the user interested in reading more information.
+                </p>
+            </blockquote>
+            <h3>Data Sharing</h3>
+            <blockquote>
+                <p>
+                    Logged users as well as guest users are able to share any data present on CODA to the available platforms (Facebook, Twitter, Messenger, WhatsApp, Slack etc.) or simply by copying and sending the link.
+                </p>
+            </blockquote>
+        </section>
+        <section id="implementation-logic">
+            <h2>4. Implementation Logic</h2>
+            <blockquote>
+                <p>
+                    CODA’s implementation makes great use of APIs for both the user interaction and the back-end development. The entire website is stored in Cloud via Amazon Web Services.
+                </p>
+            </blockquote>
+            <figure typeof="sa:Image1">
+                <img class="imagine" src="Diagrams/Application total flow.png">
+                <figcaption>
+                    Application flow diagram
+                </figcaption>
+            </figure>
+            <h3>Front-End</h3>
+            <blockquote>
+                <p>
+                    Design-wise, the front end uses the React Framework as well as a few other JavaScript libraries mentioned in the Technology Stack section of the documentation such as Google Charts.
+                </p>
+                <p>
+                    When accessing the main page of CODA, the user is presented with a menu bar, log-in/sign-in buttons, a list of the most popular data collected by CODA over the past 24 hours and a “Recommended” bar with different articles curated by the Data Study microservice. The menu bar offers access to other services available on the site such as the Data visualiser and the public API.
+                </p>
+                <p>
+                    The Data Visualiser page offers a set of pre-defined graphs showcasing the most sought after data related to the pandemic (Current number of cases, Total number of cases etc.), data which is updated în real time.
+                </p>
+                <p>
+                    Log-in and Sign-in buttons are for authentication purposes and prompt the user with an authentication pop-up.
+                </p>
+            </blockquote>
+            <figure typeof="sa:Image1">
+                <img class="imagine" src="Diagrams/Frontend UML.png">
+                <figcaption>
+                    Front-end - UML diagram
+                </figcaption>
+            </figure>
+            <h3>Back-End</h3>
+            <blockquote>
+                <p>
+                    The back-end consists of microservices, an API that is accessible by both the backend and the users directly.
+                </p>
+                <p>
+                    <b>Data Crawler</b> is used to gather articles from a list of trusted websites. The articles are then displayed by the front-end in the Articles section of the main web-page.
+                </p>
+                <p>
+                    <b>Data Visualiser</b> gathers updated COVID-19 numbers via an API call to Covid19Api. The collected data is then processed and sent to the front-end where Google Charts is used to visually display the numbers.
+                </p>
+                <p>
+                    <b>Data Study</b> is used to collect articles from trusted medical sources and extract the most important data from them. After this process, the source URL, title and the resulting summary is sent to the front-end where it is added in the “Recommended” section of the page.
+                </p>
+                <p>
+                    <b>Data Sharing</b> is the service which facilitates communication between CODA and selected Social media platforms in order to distribute data more easily. Data Sharing is also capable of creating shortened URLs in case the user does not want to share data directly to other platforms or the desired platform is not available.
+                </p>
+                <p>
+                    <b>CodAPI</b>, the API developed for CODA can be used both by the regular user as well as the back-end. This API offers the options to get various data on COVID19 numbers or articles present on the website as well as download it in CSV and JSON format.
+                    If the user wishes to see data on countries they can get the list of countries with available data, latest cases counts for a country, total cases in a day and in a date range. This data can be further filtered into confirmed cases, cured cases or number of tests.
+                    For news related to the pandemic, the user can request the latest news, filter news by country, by date range or by keywords. Admins can delete news via the API, în which case token authorization is required.
+                    If article data is desired, the user can use a request to get the latest article, filter them by type (dataset, journal, report etc.) and so on. Just as for news articles, admins can delete articles if they possess an authorization token.
+                </p>
+            </blockquote>
+            <figure typeof="sa:Image1">
+                <img class="imagine" src="Diagrams/Backend UML.png">
+                <figcaption>
+                    Back-end - UML diagram
+                </figcaption>
+            </figure>
+        </section>
+        <section id="user-journey">
+            <h2>5. User Journey</h2>
+            <blockquote>
+                <p>
+                    CODA allows both authenticated and unauthenticated usage. There are three types of users that can use the site, each with varying degrees of accessibility.
+                </p>
+            </blockquote>
+            <h3>Guest User</h3>
+            <blockquote>
+                <p>
+                    Guest users can browse the website and view every data available on it as well as use the SPARQL endpoint.
+                </p>
+            </blockquote>
+            <h3>Logged User</h3>
+            <blockquote>
+                <p>
+                    Logged users have the same accesses as Guest users plus a few added benefits. Registered users can favourite an article, leave a comment, report an article and save queries.
+                </p>
+            </blockquote>
+            <h3>Admin</h3>
+            <blockquote>
+                <p>
+                    Admins monitor the site and its activity. Administrators can receive reports and review them, remove, add or edit data on CODA.
+                </p>
+            </blockquote>
+            <figure typeof="sa:Image1">
+                <img class="imagine" src="Diagrams/UseCase.png">
+                <figcaption>
+                    User Journey - Use case diagram
+                </figcaption>
+            </figure>
+        </section>
+    </article>
+</body>
+</html>
