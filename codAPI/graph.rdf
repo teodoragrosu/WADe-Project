@@ -1,0 +1,64 @@
+@prefix ns1: <http://localhost:8082/codapi/resources/properties/> .
+@prefix ns2: <https://schema.org/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://localhost:8082/codapi/resources/articles/0> a ns2:ScholarlyArticle ;
+    ns1:IdentifiedBy 0 ;
+    ns1:hasType "dataset" ;
+    ns2:abstract "abstract1" ;
+    ns2:author "auth1" ;
+    ns2:citation "citation" ;
+    ns2:datePublished "2020-06-01"^^xsd:date ;
+    ns2:headline "article1" ;
+    ns2:keywords "keyworddd" ;
+    ns2:url "google.com"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/articles/1> a ns2:ScholarlyArticle ;
+    ns1:IdentifiedBy 1 ;
+    ns1:hasType "journal contribution" ;
+    ns2:abstract "abstract2" ;
+    ns2:author "auth1",
+        "auth2" ;
+    ns2:citation "citation" ;
+    ns2:datePublished "2020-12-01"^^xsd:date ;
+    ns2:headline "article2" ;
+    ns2:keywords "keyword1" ;
+    ns2:url "sdcdfvfs.com"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/countries/RO> a [ a <http://www.w3.org/2002/07/owl#Class> ;
+            ns1:IsOfType "confirmed" ;
+            ns1:IsReportedOn "2020-01-02"^^xsd:date ;
+            rdf:value 1200 ;
+            rdfs:subClassOf <http://www.w3.org/2002/07/owl#Thing> ],
+        [ a <http://www.w3.org/2002/07/owl#Class> ;
+            ns1:IsOfType "deceased" ;
+            ns1:IsReportedOn "2020-01-01"^^xsd:date ;
+            rdf:value 1000 ;
+            rdfs:subClassOf <http://www.w3.org/2002/07/owl#Thing> ],
+        ns2:Country ;
+    ns1:IdentifiedBy "RO" ;
+    ns1:hasCases ns2:true .
+
+<http://localhost:8082/codapi/resources/countries/UK> a ns2:Country ;
+    ns1:IdentifiedBy "UK" ;
+    ns1:hasCases ns2:false .
+
+<http://localhost:8082/codapi/resources/news/RO/0> a ns2:NewsArticle ;
+    ns1:IdentifiedBy 0 ;
+    ns1:PublishedIn "RO" ;
+    ns2:datePublished "2020-12-01"^^xsd:date ;
+    ns2:headline "['keyword1', 'keyword2']" ;
+    ns2:url "google.com"^^xsd:url .
+
+ns1:IdentifiedBy a rdf:Property .
+
+ns1:IsOfType a rdf:Property .
+
+ns1:IsReportedOn a rdf:Property .
+
+ns1:PublishedIn a rdf:Property .
+
+ns1:hasCases a rdf:Property .
+

@@ -1,7 +1,8 @@
 from rdflib import URIRef, BNode, Literal, Graph
 from rdflib.namespace import RDF, SDO, OWL, RDFS, XSD
 
-PATH = "http://coda.com/resources"
+# CLOUD_PATH = "http://coda.com/resources"
+PATH = "http://localhost:8082/codapi/resources"
 PROPERTIES = [
     "IsOfType",         # CASES -> one of confirmed, deceased, recovered, tested;
     "IsReportedOn",     # CASES -> reported on DATE
@@ -114,4 +115,4 @@ class CovidGraph:
         self.article_id += 1
 
     def get_serialization(self):
-        return self.graph.serialize(format="turtle").decode("utf-8")
+        return self.graph.serialize(destination='codAPI/graph.rdf', format="turtle")
