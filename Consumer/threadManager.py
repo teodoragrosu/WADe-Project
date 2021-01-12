@@ -32,7 +32,6 @@ def threadWrapperFunction(parent, threadIndex, innerFunction):
             time.sleep(1)
         else:
             print(threadIndex, "Work")
-
             tries = 0
             while tries <= 10:      
                 try:
@@ -40,7 +39,7 @@ def threadWrapperFunction(parent, threadIndex, innerFunction):
                 except:
                     print(threadIndex, "Error")
                     tries += 1
-                    time.sleep(2)
+                    time.sleep(5)
                     continue
                 break
             time.sleep(1)
