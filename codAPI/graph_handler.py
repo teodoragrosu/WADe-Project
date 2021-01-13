@@ -23,12 +23,9 @@ def _create_graph():
     cg.get_serialization()
 
 
-_create_graph()
-
-
 class GraphHandler:
     def __init__(self):
-        self.graph = Graph().parse("codAPI/graph.rdf", format="turtle")
+        self.graph = Graph().parse("codApi/graph.rdf", format="turtle")
 
     def _get_results(self, query):
         results = []

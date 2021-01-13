@@ -115,4 +115,4 @@ class CovidGraph:
         self.article_id += 1
 
     def get_serialization(self):
-        return self.graph.serialize(destination='codAPI/graph.rdf', format="turtle")
+        return self.graph.serialize(destination="codApi/graph.rdf", format="turtle")

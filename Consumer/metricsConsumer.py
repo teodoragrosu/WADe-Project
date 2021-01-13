@@ -1,7 +1,6 @@
 import requests
-from threadManager import ThreadManager
+from Consumer.threadManager import ThreadManager
 from datetime import datetime
-from datetime import timedelta
 import time
 import dateutil.parser
 
@@ -13,8 +12,10 @@ class MetricsConsumer:
     def __init__(self):
         self.threadManager = ThreadManager(5,lambda resource: self.processData(resource))
         self.countries = requests.get(countriesUri).json()
+        print(self.countries)
         self.countriesState = {}
         self.sleepTime = 900 #seconds
+
     
     def start(self):
         while True:
@@ -46,11 +47,11 @@ class MetricsConsumer:
         for item in items:
             if fromDate == None or fromDate < dateutil.parser.parse(item["Date"]):
                 dataToSend.append({
-                    "Country": data["country"]["ISO2"], 
-                    "Confirmed": item["Confirmed"] - previousValues["Confirmed"],
-                    "Deaths": item["Deaths"] - previousValues["Deaths"],
-                    "Recovered": item["Recovered"] - previousValues["Recovered"],
-                    "Date": item["Date"]
+                    "country": data["country"]["ISO2"],
+                    "confirmed": item["Confirmed"] - previousValues["Confirmed"],
+                    "deceased": item["Deaths"] - previousValues["Deaths"],
+                    "recovered": item["Recovered"] - previousValues["Recovered"],
+                    "date": item["Date"]
                     })
                 previousValues = item
                 
