@@ -8,15 +8,15 @@ countriesUri = "https://api.covid19api.com/countries"
 countryUri = "https://api.covid19api.com/total/country/"
 apiMetricsUri = "http://127.0.0.1:5000/api/metrics"
 
+
 class MetricsConsumer:
     def __init__(self):
         self.threadManager = ThreadManager(5,lambda resource: self.processData(resource))
-        self.countries = requests.get(countriesUri).json()
+        self.countries = requests.get(countriesUri).json()[:3]
         print(self.countries)
         self.countriesState = {}
         self.sleepTime = 900 #seconds
 
-    
     def start(self):
         while True:
             for country in self.countries:
@@ -36,7 +36,7 @@ class MetricsConsumer:
             params["from"] = fromDate.strftime('%Y-%m-%dT00:00:00Z')
             params["to"] = datetime.now().strftime('%Y-%m-%dT00:00:00Z')
 
-        items = requests.get(countryUri + data["country"]["Slug"], params = params).json()
+        items = requests.get(countryUri + data["country"]["Slug"], params=params).json()
         dataToSend = []
         previousValues = {
             "Confirmed": 0,
@@ -51,13 +51,19 @@ class MetricsConsumer:
                     "confirmed": item["Confirmed"] - previousValues["Confirmed"],
                     "deceased": item["Deaths"] - previousValues["Deaths"],
                     "recovered": item["Recovered"] - previousValues["Recovered"],
+                    "active": item["Active"],
+                    "total_confirmed": item["Confirmed"],
+                    "total_deceased": item["Deaths"],
+                    "total_recovered": item["Recovered"],
                     "date": item["Date"]
                     })
+                print(dataToSend)
                 previousValues = item
                 
         if len(dataToSend) > 0:
-            requests.post(apiMetricsUri, json = {"items": dataToSend})
+            requests.post(apiMetricsUri, json={"items": dataToSend})
             self.countriesState[data["country"]["Slug"]] = dateutil.parser.parse(items[-1]["Date"])
+
 
 consumer = MetricsConsumer()
 consumer.start()

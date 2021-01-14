@@ -1,7 +1,7 @@
 import re
 import json
 from http.server import HTTPServer, SimpleHTTPRequestHandler
-from codAPI.graph_handler import GraphHandler
+from coda_graph.graph_handler import GraphHandler
 
 
 class RequestHandler(SimpleHTTPRequestHandler):

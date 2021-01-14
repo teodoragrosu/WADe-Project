@@ -43,7 +43,7 @@ class CovidGraph:
         self.graph.add((uri, URIRef(f"{PATH}/properties/hasCases"), SDO.false))
 
     def make_cases(self, case_type, date):
-        assert case_type in ["confirmed", "deceased", "recovered", "tested"]
+        assert case_type in ["confirmed", "deceased", "recovered", "active", "total_confirmed", "total_deceased", "total_recovered"]
 
         cases = BNode()   # resource node where the exact URI is not known, a GUID is generated
         self.graph.add((cases, RDF.type, OWL.Class))
@@ -115,4 +115,4 @@ class CovidGraph:
         self.article_id += 1
 
     def get_serialization(self):
-        return self.graph.serialize(destination="codApi/graph.rdf", format="turtle")
+        return self.graph.serialize(destination="graph.rdf", format="turtle")
