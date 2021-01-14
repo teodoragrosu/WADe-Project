@@ -49,3 +49,19 @@ a:hover {
   background-color: #e9ecef;
   border-color: #dee2e6;
 }
+
+.bg-primary {
+  background-color: #2d5437!important;
+}
+
+.bg-dark {
+  background-color: #172b1c!important;
+}
+
+.pb-5, .py-5 {
+    padding-bottom: 1rem!important;
+}
+
+.pt-5, .py-5 {
+    padding-top: 1rem!important;
+}
