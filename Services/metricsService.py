@@ -13,8 +13,8 @@ class MetricsService:
 
     def addMetrics(self, metrics):
         country = metrics[0]["country"]
-        availableCountries = json.loads(self.graphHandler.get_all_available_countries())
-        if not any(c["country_code"] == country for c in availableCountries):
+        available_countries = json.loads(self.graphHandler.get_all_available_countries())
+        if country not in available_countries.keys():
             self.graph.add_country(country)
 
         for metric in metrics:
@@ -35,7 +35,15 @@ class MetricsService:
 
         return result
 
-    def get_metrics(self, country_code, start_date="", end_date=""):
+
+    def get_all_metrics(self):
+        all_data = {}
+        all_countries = json.loads(self.graphHandler.get_all_available_countries())
+        for country_code in all_countries.keys():
+            all_data[country_code] = json.loads(self.graphHandler.get_cases_by_country_code(country_code))
+        return all_data
+
+    def get_country_metrics(self, country_code, start_date="", end_date=""):
         return self.graphHandler.get_cases_by_country_code(country_code, start_date, end_date)
 
     def serialize(self):
