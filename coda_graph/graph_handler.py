@@ -10,6 +10,20 @@ class GraphHandler:
     def __init__(self):
         self.graph = Graph().parse("../coda_graph/graph.rdf", format="turtle")
 
+    def _get_results(self, query):
+        results = []
+        for row in self.graph.query(query, initNs={'SDO': SDO, 'owl': OWL}):
+            article = {}
+            for key, values in row.asdict().items():
+                v = values.toPython()
+                if isinstance(v, (datetime.date, datetime.datetime)):
+                    article[key] = v.strftime("%Y-%m-%d")
+                else:
+                    article[key] = v
+            results.append(article)
+
+        return results
+
     def _get_country_results(self, query):
         country = {}
         for row in self.graph.query(query, initNs={'SDO': SDO, 'owl': OWL, 'rdfs': RDFS}):
@@ -31,7 +45,7 @@ class GraphHandler:
                     ?uri rdf:type SDO:Country .
                     ?uri <{PATH}/properties/IdentifiedBy> ?country_code .
         }} """
-        return json.dumps(self._get_country_results(query))
+        return json.dumps(self._get_results(query))
 
     def get_cases_by_country_code(self, country_code, start_date="", end_date=""):
         """

@@ -38,6 +38,10 @@ def createMetric():
     metricsService.addMetrics(request.json["items"])
     return jsonify({'status': 1})
 
+@app.route('/api/metrics/initialValues', methods=['GET'])
+def getMetricsInitialValues():
+    result = metricsService.get_metrics_initial_values()
+    return jsonify(result)
 
 @app.route('/api/country/<string:country_code>', methods=['GET'])
 @app.route('/api/country/<string:country_code>/latest', methods=['GET'])
