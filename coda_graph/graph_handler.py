@@ -8,16 +8,19 @@ PATH = "http://localhost:8082/codapi/resources"
 
 class GraphHandler:
     def __init__(self):
-        self.graph = Graph().parse("graph.rdf", format="turtle")
+        self.graph = Graph().parse("../coda_graph/graph.rdf", format="turtle")
 
     def _get_country_results(self, query):
         country = {}
         for row in self.graph.query(query, initNs={'SDO': SDO, 'owl': OWL, 'rdfs': RDFS}):
-            _date = row.asdict()["date"].toPython().strftime("%Y-%m-%d")
-            if _date not in country.keys():
-                country[_date] = {row.asdict()["type"].toPython(): row.asdict()["value"].toPython()}
+            if row.asdict().get("date"):
+                _date = row.asdict()["date"].toPython().strftime("%Y-%m-%d")
+                if _date not in country.keys():
+                    country[_date] = {row.asdict()["type"].toPython(): row.asdict()["value"].toPython()}
+                else:
+                    country[_date].update({row.asdict()["type"].toPython(): row.asdict()["value"].toPython()})
             else:
-                country[_date].update({row.asdict()["type"].toPython(): row.asdict()["value"].toPython()})
+                country[row.asdict()["country_code"].toPython()] = row.asdict()["uri"].toPython()
 
         return country
 
@@ -37,7 +40,7 @@ class GraphHandler:
         If both start_date and end_date are provided, the statistics for the date range are returned
         """
         if start_date and end_date:
-            filter_condition = f"&& ?date >= '{start_date}'^^xsd:date && ?date <='{end_date}^^xsd:date'"
+            filter_condition = f"&& ?date >= '{start_date}'^^xsd:date && ?date <='{end_date}'^^xsd:date"
         elif start_date:
             filter_condition = f"&& ?date = '{start_date}'^^xsd:date"
         else:
