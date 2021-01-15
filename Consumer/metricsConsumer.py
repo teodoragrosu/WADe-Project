@@ -7,6 +7,7 @@ import dateutil.parser
 countriesUri = "https://api.covid19api.com/countries"
 countryUri = "https://api.covid19api.com/total/country/"
 apiMetricsUri = "http://127.0.0.1:5000/api/metrics"
+apiMetricsInitialValuesUri = "http://127.0.0.1:5000/api/metrics/initialValues"
 
 
 class MetricsConsumer:
@@ -15,6 +16,7 @@ class MetricsConsumer:
         self.countries = requests.get(countriesUri).json()[:3]
         print(self.countries)
         self.countriesState = {}
+        self.populateCountriesState()
         self.sleepTime = 900 #seconds
 
     def start(self):
@@ -26,6 +28,16 @@ class MetricsConsumer:
 
                 self.threadManager.addResource({"country": country, "lastQuery": lastQuery})
             time.sleep(self.sleepTime)
+
+    def populateCountriesState(self):
+        latestState =  requests.get(apiMetricsInitialValuesUri).json()
+        for country in latestState.keys():
+            try:
+                slug = next(c["Slug"] for c in self.countries if c["ISO2"] == country)
+                self.countriesState[slug] = dateutil.parser.parse(latestState[country])
+            except:
+                pass
+
             
 
     def processData(self, data):
@@ -57,8 +69,8 @@ class MetricsConsumer:
                     "total_recovered": item["Recovered"],
                     "date": item["Date"]
                     })
-                print(dataToSend)
-                previousValues = item
+
+            previousValues = item
                 
         if len(dataToSend) > 0:
             requests.post(apiMetricsUri, json={"items": dataToSend})
@@ -67,5 +79,3 @@ class MetricsConsumer:
 
 consumer = MetricsConsumer()
 consumer.start()
-
-    

@@ -1,6 +1,7 @@
 from coda_graph.graph import CovidGraph
 from coda_graph.graph_handler import GraphHandler
 import json
+import dateutil.parser
 
 PATH = "http://localhost:8082/codapi/resources"
 
@@ -17,7 +18,6 @@ class MetricsService:
             self.graph.add_country(country)
 
         for metric in metrics:
-            print(metric)
             self.graph.add_cases(country, "confirmed", metric["date"], metric["confirmed"])
             self.graph.add_cases(country, "deceased", metric["date"], metric["deceased"])
             self.graph.add_cases(country, "recovered", metric["date"], metric["recovered"])
@@ -25,6 +25,15 @@ class MetricsService:
             self.graph.add_cases(country, "total_confirmed", metric["date"], metric["total_confirmed"])
             self.graph.add_cases(country, "total_deceased", metric["date"], metric["total_deceased"])
             self.graph.add_cases(country, "total_recovered", metric["date"], metric["total_recovered"])
+
+    def get_metrics_initial_values(self):
+        result = {}
+        countries = json.loads(self.graphHandler.get_all_available_countries())
+        for country in countries:
+            metrics = list(json.loads(self.get_metrics(country["country_code"])).keys())
+            result[country["country_code"]] = max(metrics, key=lambda d: dateutil.parser.parse(d))
+
+        return result
 
     def get_metrics(self, country_code, start_date="", end_date=""):
         return self.graphHandler.get_cases_by_country_code(country_code, start_date, end_date)
