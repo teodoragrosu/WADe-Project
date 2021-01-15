@@ -24,16 +24,14 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Latest cases
-              <span class="sr-only">(current)</span>
-            </a>
-          </li>
           <li class="nav-item">
             <a class="nav-link" href="#">News</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('article_page') }}">Articles</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('statistics_page') }}">Statistics</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('about_page') }}">About</a>
