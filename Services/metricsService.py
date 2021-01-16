@@ -3,18 +3,16 @@ from coda_graph.graph_handler import GraphHandler
 import json
 import dateutil.parser
 
-PATH = "http://localhost:8082/codapi/resources"
-
 
 class MetricsService:
     def __init__(self):
-        self.graphHandler = GraphHandler()
-        self.graph = CovidGraph()
+        self.graphHandler = GraphHandler("cases")
+        self.graph = CovidGraph("cases")
 
     def addMetrics(self, metrics):
         country = metrics[0]["country"]
         available_countries = json.loads(self.graphHandler.get_all_available_countries())
-        if not any(c["country_code"] == country for c in available_countries):
+        if country not in available_countries.keys():
             self.graph.add_country(country)
 
         for metric in metrics:
@@ -35,7 +33,6 @@ class MetricsService:
 
         return result
 
-
     def get_all_metrics(self):
         all_data = {}
         all_countries = json.loads(self.graphHandler.get_all_available_countries())
@@ -47,4 +44,4 @@ class MetricsService:
         return self.graphHandler.get_cases_by_country_code(country_code, start_date, end_date)
 
     def serialize(self):
-        self.graph.get_serialization()
+        self.graph.get_serialization("cases")

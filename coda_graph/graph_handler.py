@@ -8,22 +8,8 @@ PATH = "http://localhost:8082/codapi/resources"
 
 
 class GraphHandler:
-    def __init__(self):
-        self.graph = GraphStore.getInstance()
-
-    def _get_results(self, query):
-        results = []
-        for row in self.graph.query(query, initNs={'SDO': SDO, 'owl': OWL}):
-            article = {}
-            for key, values in row.asdict().items():
-                v = values.toPython()
-                if isinstance(v, (datetime.date, datetime.datetime)):
-                    article[key] = v.strftime("%Y-%m-%d")
-                else:
-                    article[key] = v
-            results.append(article)
-
-        return results
+    def __init__(self, name):
+        self.graph = GraphStore.getInstance(name)
 
     def _get_country_results(self, query):
         country = {}
@@ -46,7 +32,7 @@ class GraphHandler:
                     ?uri rdf:type SDO:Country .
                     ?uri <{PATH}/properties/IdentifiedBy> ?country_code .
         }} """
-        return json.dumps(self._get_results(query))
+        return json.dumps(self._get_country_results(query))
 
     def get_cases_by_country_code(self, country_code, start_date="", end_date=""):
         """
@@ -84,23 +70,89 @@ class GraphHandler:
                 v = values.toPython()
                 if isinstance(v, (datetime.date, datetime.datetime)):
                     article[key] = v.strftime("%Y-%m-%d")
+                elif key in ["authors", "categories"]:
+                    article[key] = v.split(";")
                 else:
                     article[key] = v
             results.append(article)
 
         return results
 
-    def get_article_by_id(self, id_):
+    def get_articles(self, id_=-1, type_="", limit=20, offset=0):
+        """
+        By default, if no id or type are specified, the latest 20 articles will be returned
+
+        id_: int
+        type_: string (eg. `dataset`, `article`)
+
+        """
+        filter_condition = ""
+        if id_ >= 0:
+            filter_condition = f"FILTER (?id = {id_})"
+        elif type_:
+            filter_condition = f"FILTER (?art_type = '{type_}')"
+
         query = f"""
-            SELECT ?id ?title ?abstract ?uri ?art_type ?keywords
+            SELECT DISTINCT ?id ?title 
+                            (group_concat(distinct ?a;separator=';') as ?authors) 
+                            ?abstract ?date ?url ?citation ?art_type 
+                            (group_concat(distinct ?c;separator=';') as ?categories)
             WHERE {{
-                    ?uri rdf:type SDO:ScholarlyArticle .
-                    ?uri <{PATH}/properties/IdentifiedBy> ?id .
-                    ?uri SDO:headline ?title .
-                    ?uri SDO:abstract ?abstract .
-                    ?uri SDO:url ?url .
-                    ?uri <{PATH}/properties/hasType> ?art_type .
-                    ?uri SDO:keywords ?keywords .
-            FILTER (?id = {id_})
-        }}"""
+                ?uri rdf:type SDO:ScholarlyArticle .
+                ?uri <{PATH}/properties/IdentifiedBy> ?id .
+                ?uri SDO:headline ?title .
+                ?uri SDO:author ?a .
+                ?uri SDO:abstract ?abstract .
+                ?uri SDO:datePublished ?date .
+                ?uri SDO:citation ?citation .
+                ?uri SDO:url ?url .
+                ?uri <{PATH}/properties/hasType> ?art_type .
+                ?uri SDO:about ?c .
+            {filter_condition}
+            }}
+            GROUP BY ?id
+            ORDER BY DESC(?date) LIMIT {limit} OFFSET {offset}
+        """
+
         return json.dumps(self._get_article_results(query))
+
+    def _get_news_results(self, query):
+        results = []
+        for row in self.graph.query(query, initNs={'SDO': SDO, 'owl': OWL, 'rdfs': RDFS}):
+            news = {}
+            for key, values in row.asdict().items():
+                v = values.toPython()
+                if isinstance(v, datetime.date):
+                    news[key] = v.strftime("%Y-%m-%d")
+                elif key == "keywords":
+                    news[key] = v.split(";")
+                else:
+                    news[key] = v
+            results.append(news)
+
+        return results
+
+    def get_news(self, id_=-1, publication="", limit=20, offset=0):
+        filter_condition = ""
+        if id_ >= 0:
+            filter_condition = f"FILTER (?id = {id_})"
+        elif publication:
+            filter_condition = f"FILTER (?publication = '{publication}')"
+
+        query = f"""
+            SELECT DISTINCT ?id ?publication ?title ?date ?url_source
+                            (group_concat(distinct ?k;separator=';') as ?keywords)
+            WHERE {{
+                ?uri rdf:type SDO:NewsArticle .
+                ?uri <{PATH}/properties/IdentifiedBy> ?id .
+                ?uri <{PATH}/properties/PublishedIn> ?publication .
+                ?uri SDO:headline ?title .
+                ?uri SDO:datePublished ?date .
+                ?uri SDO:url ?url_source .
+                ?uri SDO:keywords ?k .
+            {filter_condition}
+            }}
+            GROUP BY ?id
+            ORDER BY DESC(?date) LIMIT {limit} OFFSET {offset}
+        """
+        return json.dumps(self._get_news_results(query))

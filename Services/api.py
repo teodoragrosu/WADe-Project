@@ -6,10 +6,12 @@ from flask import Flask, jsonify, request, make_response, abort, send_file
 from Services.metricsService import MetricsService
 from Services.newsService import NewsService
 
+from coda_graph.graph_handler import GraphHandler
+
+
 app = Flask(__name__, static_url_path="")
 metricsService = MetricsService()
 newsService = NewsService()
-
 
 # ====================================== ERROR CODES ==============================================
 @app.errorhandler(400)
@@ -28,33 +30,31 @@ def not_found(error):
 
 
 # ==================================== METRICS ENDPOINTS ==================================================
+@app.route('/api/metrics', methods=['GET', 'POST'])
+def metrics():
+    if request.method == 'POST':
+        metricsService.addMetrics(request.json["items"])
+        return jsonify({'status': 1})
+    elif request.method == 'GET':
+        data = metricsService.get_all_metrics()
+        return jsonify(data)
+    else:
+        return abort(405, "Method not allowed!")
 
-@app.route('/api/metrics', methods=['GET'])
-def get_all_metrics():
-    data = metricsService.get_all_metrics()
-    return jsonify(data)
-
-
-@app.route('/api/metrics', methods=['POST'])
-def createMetric():
-    metricsService.addMetrics(request.json["items"])
-    return jsonify({'status': 1})
-
-@app.route('/api/metrics/initialValues', methods=['GET'])
-def getMetricsInitialValues():
-    result = metricsService.get_metrics_initial_values()
-    return jsonify(result)
 
 @app.route('/api/country/<string:country_code>', methods=['GET'])
 @app.route('/api/country/<string:country_code>/latest', methods=['GET'])
 def get_country_metrics(country_code):
-    if "latest" in request.url_rule.rule:
-        data = metricsService.get_country_metrics(country_code, request.args[datetime.now().strftime("%Y-%m-%d")])
-    elif request.args.get("date"):
-        data = metricsService.get_country_metrics(country_code, request.args["date"])
+    if request.method == "GET":
+        if "latest" in request.url_rule.rule:
+            data = metricsService.get_country_metrics(country_code, request.args[datetime.now().strftime("%Y-%m-%d")])
+        elif request.args.get("date"):
+            data = metricsService.get_country_metrics(country_code, request.args["date"])
+        else:
+            data = metricsService.get_country_metrics(country_code, request.args.get("from", ""), request.args.get("to", ""))
+        return data
     else:
-        data = metricsService.get_country_metrics(country_code, request.args.get("from", ""), request.args.get("to", ""))
-    return data
+        return abort(405, "Method not allowed!")
 
 
 @app.route('/api/country/<string:country_code>/download', methods=['GET'])
@@ -112,28 +112,64 @@ def updateMetric(id):
     return jsonify({'status': 1})
 
 
-@app.route('/api/metrics/<int:id>', methods=['DELETE'])
-def deleteMetric(id):
-    print("DELETE", id)
-    return jsonify({'status': 1})
-
-
 # =========================================== NEWS ENDPOINTS ==============================================
 
-@app.route('/api/news', methods=['POST'])
-def createNews():
-    newsService.addNews(request.json)
-    return jsonify({'status': 1})
+@app.route('/api/news/latest', methods=['GET'])
+@app.route('/api/news/filter/<string:publication>', methods=['GET'])
+def get_news(publication=""):
+    if request.method == 'GET':
+        if "latest" in request.url_rule.rule:
+            data = newsService.get_news(limit=request.args.get("limit", 20),
+                                        offset=request.args.get("offset", 0))
+        elif "filter" in request.url_rule.rule:
+            data = newsService.get_news(publication=publication,
+                                        limit=request.args.get("limit", 20),
+                                        offset=request.args.get("offset", 0))
+        return data
+    else:
+        return abort(405, "Method not allowed!")
 
-# TODO
+
+# =========================================== ARTICLE ENDPOINTS ==============================================
+
+@app.route('/api/articles/latest', methods=['GET'])
+@app.route('/api/articles/filter/<int:id_>', methods=['GET'])
+@app.route('/api/articles/filter/<string:type_>', methods=['GET'])
+def get_articles(id_=-1, type_=""):
+    if request.method == 'GET':
+        # TODO: remove this after ArticleService is added
+        handler = GraphHandler("articles")
+        if "latest" in request.url_rule.rule:
+            data = handler.get_articles(limit=request.args.get("limit", 20),
+                                        offset=request.args.get("offset", 0))
+        elif "filter" in request.url_rule.rule:
+            data = handler.get_articles(id_=id_,
+                                        type_=type_,
+                                        limit=request.args.get("limit", 20),
+                                        offset=request.args.get("offset", 0))
+        return data
+    else:
+        return abort(405, "Method not allowed!")
 
 # =========================================== GRAPH ENDPOINTS ==============================================
 
 
-@app.route('/api/graph/serialize', methods=['GET'])
-def serialize():
-    metricsService.serialize()
-    return jsonify({'status': 1})
+@app.route('/api/graph/serialize/<string:type_>', methods=['GET'])
+def serialize(type_):
+    # type -> what graph to serialize (cases, news, articles)
+    if request.method == "GET":
+        if type_ == "cases":
+            metricsService.serialize()
+        elif type_ == "news":
+            newsService.serialize()
+        elif type_ == "articles":
+            # articleService.serialize()
+            pass
+        else:
+            return abort(400, "Bad Request")
+        return jsonify({'status': 1})
+    else:
+        return abort(405, "Method not allowed!")
 
 
 if __name__ == '__main__':
