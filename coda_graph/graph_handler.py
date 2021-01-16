@@ -34,7 +34,7 @@ class GraphHandler:
         }} """
         return json.dumps(self._get_country_results(query))
 
-    def get_cases_by_country_code(self, country_code, start_date="", end_date=""):
+    def get_cases_by_country_code(self, country_code, start_date="", end_date="", download=False):
         """
         If start_date and end_date are not provided, the function returns the all time data for the specified country
         If only the start_date is provided, the statistics for that day are returned
@@ -59,6 +59,7 @@ class GraphHandler:
                     ?country rdf:type ?cases .
             FILTER (?country_code = '{country_code}' {filter_condition})
             }}
+            ORDER BY {'ASC' if download else 'DESC'}(?date)
         """
         return json.dumps(self._get_country_results(query))
 

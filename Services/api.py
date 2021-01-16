@@ -1,6 +1,5 @@
 import csv
 import json
-import os
 from datetime import datetime
 from flask import Flask, jsonify, request, make_response, abort, send_file
 from Services.metricsService import MetricsService
@@ -63,9 +62,11 @@ def download_country_metrics(country_code):
     if not download_format or download_format.lower() not in ["json", "csv"]:
         abort(400, description="Download format incorrect or not specified! Available formats: CSV, JSON")
 
-    data = metricsService.get_country_metrics(country_code, request.args.get("from", ""), request.args.get("to", ""))
+    data = metricsService.get_country_metrics(country_code,
+                                              request.args.get("from", ""),
+                                              request.args.get("to", ""),
+                                              download=True)
     file_path = f"{country_code}_data.{request.args['format']}"
-    print(file_path)
     with open(file_path, "w") as metrics_file:
         if download_format.lower() == "json":
             json.dump(json.loads(data), metrics_file)
@@ -83,7 +84,6 @@ def download_country_metrics(country_code):
                                                 "Total Deceased"])
             writer.writeheader()
             for date, values in _data.items():
-                print(values)
                 writer.writerow({
                     "Date": date,
                     "Confirmed": values["confirmed"],
@@ -96,13 +96,6 @@ def download_country_metrics(country_code):
                 })
             mimetype = "text/csv"
 
-    @app.after_request
-    def remove_file(response):
-        try:
-            os.remove(file_path)
-        except Exception as error:
-            app.logger.error("Error removing or closing downloaded file", error)
-        return response
     return send_file(file_path, mimetype=mimetype, attachment_filename=file_path, as_attachment=True)
 
 

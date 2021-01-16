@@ -40,8 +40,8 @@ class MetricsService:
             all_data[country_code] = json.loads(self.graphHandler.get_cases_by_country_code(country_code))
         return all_data
 
-    def get_country_metrics(self, country_code, start_date="", end_date=""):
-        return self.graphHandler.get_cases_by_country_code(country_code, start_date, end_date)
+    def get_country_metrics(self, country_code, start_date="", end_date="", download=False):
+        return self.graphHandler.get_cases_by_country_code(country_code, start_date, end_date, download)
 
     def serialize(self):
         self.graph.get_serialization("cases")
