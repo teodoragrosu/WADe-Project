@@ -59,3 +59,32 @@ a:hover {
 .pt-5, .py-5 {
     padding-top: 1rem!important;
 }
+
+.fixed-bottom {
+    position: sticky;
+}
+
+.card-header {
+    display: inline-flex;
+    justify-content: space-between;
+}
+
+.country-select {
+    padding: 0.4rem;
+    border-color: #ced4da;
+    border-radius: 5px;
+}
+
+.datetimes {
+    display: inline-flex;
+    width: fit-content;
+}
+
+.input-group {
+    width: 7rem;
+}
+
+.input-group>.custom-select:not(:last-child), .input-group>.form-control:not(:last-child) {
+    border-radius: 5px;
+}
+

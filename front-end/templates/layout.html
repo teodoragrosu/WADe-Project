@@ -13,6 +13,12 @@
 
   <!-- Custom styles for this template -->
   <link href="/static/css/main.css" rel="stylesheet">
+
+  <link rel="shortcut icon" href="#">
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/static/vendor/jquery/jquery.min.js"></script>
+  <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </head>
 <body id="page-top">
   <!-- Navigation -->
@@ -28,7 +34,7 @@
             <a class="nav-link" href="#">News</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('article_page') }}">Articles</a>
+            <a class="nav-link" href="{{ url_for('article_list_page') }}">Articles</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('statistics_page') }}">Statistics</a>
@@ -49,12 +55,12 @@
     <!-- /.container -->
   </footer>
 
-  <!-- Bootstrap core JavaScript -->
-  <script src="/static/vendor/jquery/jquery.min.js"></script>
-  <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
   <!-- Plugin JavaScript -->
   <script src="/static/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Date Picker -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
 </body>
 </html>
