@@ -14,7 +14,7 @@ class MetricsService:
     def addMetrics(self, metrics):
         country = metrics[0]["country"]
         available_countries = json.loads(self.graphHandler.get_all_available_countries())
-        if country not in available_countries.keys():
+        if not any(c["country_code"] == country for c in available_countries):
             self.graph.add_country(country)
 
         for metric in metrics:

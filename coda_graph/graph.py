@@ -2,6 +2,8 @@ from rdflib import URIRef, BNode, Literal, Graph
 from rdflib.namespace import RDF, SDO, OWL, RDFS, XSD
 
 # CLOUD_PATH = "http://coda.com/resources"
+from coda_graph.graph_store import GraphStore
+
 PATH = "http://localhost:8082/codapi/resources"
 PROPERTIES = [
     "IsOfType",         # CASES -> one of confirmed, deceased, recovered, tested;
@@ -14,7 +16,7 @@ PROPERTIES = [
 
 class CovidGraph:
     def __init__(self):
-        self.graph = Graph()
+        self.graph = GraphStore.getInstance()
         self.add_properties()
         self.news_id = 0
         self.article_id = 0

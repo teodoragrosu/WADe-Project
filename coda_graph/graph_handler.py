@@ -1,14 +1,15 @@
 import datetime
 import json
 from rdflib.namespace import SDO, OWL, RDFS
-from rdflib import Graph
+
+from coda_graph.graph_store import GraphStore
 
 PATH = "http://localhost:8082/codapi/resources"
 
 
 class GraphHandler:
     def __init__(self):
-        self.graph = Graph().parse("../coda_graph/graph.rdf", format="turtle")
+        self.graph = GraphStore.getInstance()
 
     def _get_results(self, query):
         results = []

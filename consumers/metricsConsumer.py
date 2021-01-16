@@ -1,5 +1,5 @@
 import requests
-from Consumer.threadManager import ThreadManager
+from consumers.threadManager import ThreadManager
 from datetime import datetime
 import time
 import dateutil.parser
@@ -13,7 +13,7 @@ apiMetricsInitialValuesUri = "http://127.0.0.1:5000/api/metrics/initialValues"
 class MetricsConsumer:
     def __init__(self):
         self.threadManager = ThreadManager(5,lambda resource: self.processData(resource))
-        self.countries = requests.get(countriesUri).json()[:3]
+        self.countries = requests.get(countriesUri).json()[:4]
         print(self.countries)
         self.countriesState = {}
         self.populateCountriesState()

@@ -4,9 +4,11 @@ import os
 from datetime import datetime
 from flask import Flask, jsonify, request, make_response, abort, send_file
 from Services.metricsService import MetricsService
+from Services.newsService import NewsService
 
 app = Flask(__name__, static_url_path="")
 metricsService = MetricsService()
+newsService = NewsService()
 
 
 # ====================================== ERROR CODES ==============================================
@@ -117,6 +119,11 @@ def deleteMetric(id):
 
 
 # =========================================== NEWS ENDPOINTS ==============================================
+
+@app.route('/api/news', methods=['POST'])
+def createNews():
+    newsService.addNews(request.json)
+    return jsonify({'status': 1})
 
 # TODO
 
