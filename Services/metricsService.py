@@ -28,8 +28,8 @@ class MetricsService:
         result = {}
         countries = json.loads(self.graphHandler.get_all_available_countries())
         for country in countries:
-            metrics = list(json.loads(self.get_country_metrics(country["country_code"])).keys())
-            result[country["country_code"]] = max(metrics, key=lambda d: dateutil.parser.parse(d))
+            metrics = list(json.loads(self.get_country_metrics(country)).keys())
+            result[country] = max(metrics, key=lambda d: dateutil.parser.parse(d))
 
         return result
 

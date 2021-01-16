@@ -29,6 +29,11 @@ def not_found(error):
 
 
 # ==================================== METRICS ENDPOINTS ==================================================
+@app.route('/api/metrics/initialValues', methods=['GET'])
+def getMetricsInitialValues():
+    result = metricsService.get_metrics_initial_values()
+    return jsonify(result)
+
 @app.route('/api/metrics', methods=['GET', 'POST'])
 def metrics():
     if request.method == 'POST':
@@ -99,13 +104,13 @@ def download_country_metrics(country_code):
     return send_file(file_path, mimetype=mimetype, attachment_filename=file_path, as_attachment=True)
 
 
-@app.route('/api/metrics/<int:id>', methods=['PUT'])
-def updateMetric(id):
-    print("PUT", id, request.json)
+# =========================================== NEWS ENDPOINTS ==============================================
+
+@app.route('/api/news', methods=['POST'])
+def add_news():
+    newsService.addNews(request.json)
     return jsonify({'status': 1})
 
-
-# =========================================== NEWS ENDPOINTS ==============================================
 
 @app.route('/api/news/latest', methods=['GET'])
 @app.route('/api/news/filter/<string:publication>', methods=['GET'])

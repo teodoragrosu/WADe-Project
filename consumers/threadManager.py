@@ -16,6 +16,7 @@ class ThreadManager:
     def getResource(self):
         with self.lock:
             if len(self.resources) > 0:
+                print("Data left: " + str(len(self.resources) - 1))
                 return self.resources.pop(0)
             return None
 
@@ -28,18 +29,16 @@ def threadWrapperFunction(parent, threadIndex, innerFunction):
     while True:
         resource = parent.getResource()
         if resource == None:
-            print(threadIndex, "Wait")
             time.sleep(1)
         else:
-            print(threadIndex, "Work")
             tries = 0
-            while tries <= 10:      
-                try:
-                    innerFunction(resource)
-                except:
-                    print(threadIndex, "Error")
-                    tries += 1
-                    time.sleep(5)
-                    continue
-                break
+            innerFunction(resource)
+            #while tries <= 10:
+            #   try:
+            #        innerFunction(resource)
+            #    except:
+            #       tries += 1
+            #       time.sleep(5)
+            #       continue
+            #   break
             time.sleep(1)

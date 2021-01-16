@@ -8,7 +8,7 @@ class NewsService:
         self.graph = CovidGraph("news")
 
     def addNews(self, news):
-        self.graph.add_news("CO", news["title"], news["date"], news["url"], news["keywords"])
+        self.graph.add_news(news["title"], news["date"], news["url"], news["publication"], news["keywords"])
 
     def get_news(self, id_=-1, publication="", limit=20, offset=0):
         return self.graphHandler.get_news(id_, publication, limit, offset)

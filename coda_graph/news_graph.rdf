@@ -3,6 +3,461 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+<http://localhost:8082/codapi/resources/news/0> a ns1:NewsArticle ;
+    ns2:IdentifiedBy 0 ;
+    ns2:PublishedIn "El Mostrador" ;
+    ns1:datePublished "2021-01-16"^^xsd:date ;
+    ns1:headline "China dice que los últimos brotes de COVID están causados por contagios importados" ;
+    ns1:keywords "china",
+        "contagios",
+        "covid",
+        "del",
+        "dice",
+        "el",
+        "en",
+        "están",
+        "han",
+        "importados",
+        "la",
+        "las",
+        "los",
+        "por",
+        "que",
+        "se",
+        "últimos" ;
+    ns1:url "https://www.elmostrador.cl/dia/2021/01/16/china-dice-que-los-ultimos-brotes-de-covid-estan-causados-por-contagios-importados/"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/news/1> a ns1:NewsArticle ;
+    ns2:IdentifiedBy 1 ;
+    ns2:PublishedIn "None" ;
+    ns1:datePublished "2021-01-16"^^xsd:date ;
+    ns1:headline "When will poor will get free Covid-19 vaccine, asks Akhilesh Yadav" ;
+    ns1:keywords "akhilesh",
+        "asks",
+        "bjp",
+        "chief",
+        "covid19",
+        "free",
+        "know",
+        "party",
+        "political",
+        "poor",
+        "proper",
+        "vaccination",
+        "vaccine",
+        "yadav" ;
+    ns1:url "https://www.business-standard.com/article/current-affairs/when-will-poor-will-get-free-covid-19-vaccine-asks-akhilesh-yadav-121011600830_1.html"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/news/10> a ns1:NewsArticle ;
+    ns2:IdentifiedBy 10 ;
+    ns2:PublishedIn "U.S." ;
+    ns1:datePublished "2021-01-16"^^xsd:date ;
+    ns1:headline "'Go for it,' says first person vaccinated in India's massive COVID-19 campaign" ;
+    ns1:keywords "bharat",
+        "campaign",
+        "covid19",
+        "health",
+        "india",
+        "indias",
+        "massive",
+        "million",
+        "modi",
+        "person",
+        "taking",
+        "vaccinated",
+        "vaccine",
+        "workers",
+        "worlds" ;
+    ns1:url "https://www.reuters.com/article/health-coronavirus-india-vaccine/go-for-it-says-first-person-vaccinated-in-indias-massive-covid-19-campaign-idUSKBN29L04Q"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/news/11> a ns1:NewsArticle ;
+    ns2:IdentifiedBy 11 ;
+    ns2:PublishedIn "Cafe Hayek" ;
+    ns1:datePublished "2021-01-16"^^xsd:date ;
+    ns1:headline "Some Covid Links" ;
+    ns1:keywords "college",
+        "covid",
+        "fergusons",
+        "imperial",
+        "links",
+        "model",
+        "paper",
+        "reports",
+        "rightly",
+        "robber",
+        "social",
+        "torment" ;
+    ns1:url "https://cafehayek.com/2021/01/some-covid-links-30.html"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/news/12> a ns1:NewsArticle ;
+    ns2:IdentifiedBy 12 ;
+    ns2:PublishedIn "Observador" ;
+    ns1:datePublished "2021-01-16"^^xsd:date ;
+    ns1:headline "Covid-19. EDP antecipa pagamento a mais de mil fornecedores em Portugal e Espanha" ;
+    ns1:keywords "antecipa",
+        "covid19",
+        "da",
+        "edp",
+        "em",
+        "empresas",
+        "espanha",
+        "fornecedores",
+        "mais",
+        "mil",
+        "os",
+        "pagamento",
+        "pandemia",
+        "para",
+        "portugal",
+        "que",
+        "um" ;
+    ns1:url "https://observador.pt/2021/01/16/covid-19-edp-antecipa-pagamento-a-mais-de-mil-fornecedores-em-portugal-e-espanha/"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/news/13> a ns1:NewsArticle ;
+    ns2:IdentifiedBy 13 ;
+    ns2:PublishedIn "NDTV.com" ;
+    ns1:datePublished "2021-01-16"^^xsd:date ;
+    ns1:headline "Will Get Vaccinated In Next Phase, Says Punjab Chief Minister" ;
+    ns1:keywords "chief",
+        "health",
+        "healthcare",
+        "minister",
+        "phase",
+        "punjab",
+        "singh",
+        "vaccinated",
+        "vaccination",
+        "vaccine",
+        "workers" ;
+    ns1:url "https://www.ndtv.com/india-news/will-get-vaccinated-in-next-phase-says-punjab-chief-minister-amarinder-singh-2353564"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/news/14> a ns1:NewsArticle ;
+    ns2:IdentifiedBy 14 ;
+    ns2:PublishedIn "None" ;
+    ns1:datePublished "2021-01-16"^^xsd:date ;
+    ns1:headline "Açores registaram mais 45 casos de Covid-19 nas últimas 24 horas" ;
+    ns1:keywords "24",
+        "45",
+        "açores",
+        "casos",
+        "covid19",
+        "da",
+        "dos",
+        "em",
+        "horas",
+        "ilha",
+        "mais",
+        "miguel",
+        "nas",
+        "para",
+        "que",
+        "registaram",
+        "são",
+        "últimas" ;
+    ns1:url "https://www.cmjornal.pt/sociedade/detalhe/acores-registaram-mais-45-casos-de-covid-19-nas-ultimas-24-horas"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/news/15> a ns1:NewsArticle ;
+    ns2:IdentifiedBy 15 ;
+    ns2:PublishedIn "HotNewsRo" ;
+    ns1:datePublished "2021-01-16"^^xsd:date ;
+    ns1:headline "O aeronavă militară a adus din Qatar 250.000 de seringi şi 100.000 de ace, pentru campania de vaccinare împotriva COVID" ;
+    ns1:keywords "campania",
+        "covid",
+        "din",
+        "milioane",
+        "militară",
+        "pentru",
+        "qatar",
+        "seringi",
+        "sâmbătă",
+        "urgenţă",
+        "vaccinare",
+        "vaccinarea",
+        "împotriva",
+        "în",
+        "şi" ;
+    ns1:url "https://www.hotnews.ro/stiri-coronavirus-24544624-aeronava-militara-adus-din-qatar-250-000-seringi-100-000-ace-pentru-campania-vaccinare-impotriva-covid.htm"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/news/16> a ns1:NewsArticle ;
+    ns2:IdentifiedBy 16 ;
+    ns2:PublishedIn "None" ;
+    ns1:datePublished "2021-01-16"^^xsd:date ;
+    ns1:headline "National capital's Covid-19 vaccination drive starts with a bang" ;
+    ns1:keywords "bang",
+        "capitals",
+        "care",
+        "covid19",
+        "delhi",
+        "drive",
+        "health",
+        "hospital",
+        "minister",
+        "national",
+        "process",
+        "shot",
+        "starts",
+        "vaccination",
+        "vaccine",
+        "workers" ;
+    ns1:url "https://www.business-standard.com/article/current-affairs/national-capital-s-covid-19-vaccination-drive-starts-with-a-bang-121011600920_1.html"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/news/17> a ns1:NewsArticle ;
+    ns2:IdentifiedBy 17 ;
+    ns2:PublishedIn "None" ;
+    ns1:datePublished "2021-01-16"^^xsd:date ;
+    ns1:headline "'Health of the nation is literally at stake': Biden vows swift action on vaccine sites, supplies; 100 million shots - USA TODAY" ;
+    ns1:keywords "github",
+        "literally",
+        "million",
+        "nation",
+        "quickly",
+        "reach",
+        "releases",
+        "shots",
+        "sites",
+        "slashdot",
+        "sourceforge",
+        "sourceforges",
+        "stake",
+        "supplies",
+        "swift",
+        "sync",
+        "using",
+        "vaccine",
+        "vows",
+        "withand" ;
+    ns1:url "https://slashdot.org/firehose.pl?op=view&amp;id=141103304"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/news/18> a ns1:NewsArticle ;
+    ns2:IdentifiedBy 18 ;
+    ns2:PublishedIn "None" ;
+    ns1:datePublished "2021-01-16"^^xsd:date ;
+    ns1:headline "Santa Cruz seniors face issues signing up for vaccine appointments - KSBW Monterey" ;
+    ns1:keywords "appointments",
+        "cruz",
+        "face",
+        "github",
+        "issues",
+        "quickly",
+        "reach",
+        "releases",
+        "santa",
+        "seniors",
+        "signing",
+        "slashdot",
+        "sourceforge",
+        "sourceforges",
+        "sync",
+        "using",
+        "vaccine",
+        "withand" ;
+    ns1:url "https://slashdot.org/firehose.pl?op=view&amp;id=141103280"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/news/19> a ns1:NewsArticle ;
+    ns2:IdentifiedBy 19 ;
+    ns2:PublishedIn "Global Voices em Português" ;
+    ns1:datePublished "2021-01-16"^^xsd:date ;
+    ns1:headline "Resumo de 2020: COVID-19 no Sul da Ásia" ;
+    ns1:keywords "2020",
+        "covid19",
+        "da",
+        "dos",
+        "em",
+        "foi",
+        "global",
+        "os",
+        "para",
+        "português",
+        "que",
+        "resumo",
+        "sul",
+        "trabalhadores",
+        "um",
+        "uma",
+        "voices",
+        "ásia" ;
+    ns1:url "https://pt.globalvoices.org/2021/01/16/resumo-de-2020-covid-19-no-sul-da-asia/"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/news/2> a ns1:NewsArticle ;
+    ns2:IdentifiedBy 2 ;
+    ns2:PublishedIn "None" ;
+    ns1:datePublished "2021-01-16"^^xsd:date ;
+    ns1:headline "Rapid blood test to detect severe disease risk of Covid-19 patients" ;
+    ns1:keywords "blood",
+        "covid19",
+        "detect",
+        "disease",
+        "dna",
+        "levels",
+        "likely",
+        "mitochondrial",
+        "nearly",
+        "patients",
+        "rapid",
+        "risk",
+        "severe",
+        "test",
+        "type" ;
+    ns1:url "https://www.business-standard.com/article/current-affairs/rapid-blood-test-to-detect-severe-disease-risk-of-covid-19-patients-121011600849_1.html"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/news/3> a ns1:NewsArticle ;
+    ns2:IdentifiedBy 3 ;
+    ns2:PublishedIn "Times of Malta" ;
+    ns1:datePublished "2021-01-16"^^xsd:date ;
+    ns1:headline "At Gżira health centre, vaccination queues make way for calm and order" ;
+    ns1:keywords "calm",
+        "centre",
+        "clinic",
+        "gżira",
+        "health",
+        "malta",
+        "order",
+        "outside",
+        "process",
+        "queues",
+        "situation",
+        "taking",
+        "vaccination",
+        "vaccine",
+        "waiting",
+        "way" ;
+    ns1:url "https://timesofmalta.com/articles/view/at-gzira-health-centre-vaccination-queues-make-way-for-calm-and-order.845475"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/news/4> a ns1:NewsArticle ;
+    ns2:IdentifiedBy 4 ;
+    ns2:PublishedIn "India Today" ;
+    ns1:datePublished "2021-01-16"^^xsd:date ;
+    ns1:headline "'Science is resolute': Harsh Vardhan responds to Congress's vaccine nationalism jibe" ;
+    ns1:keywords "congresss",
+        "dr",
+        "efficacy",
+        "harsh",
+        "jibe",
+        "manish",
+        "mp",
+        "nationalism",
+        "resolute",
+        "responds",
+        "safety",
+        "science",
+        "tewari",
+        "vaccine",
+        "vaccines",
+        "vardhan" ;
+    ns1:url "https://www.indiatoday.in/india/story/health-minister-harsh-vardhan-says-science-is-resolute-in-response-to-congress-vaccine-nationalism-jibe-1759774-2021-01-16"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/news/5> a ns1:NewsArticle ;
+    ns2:IdentifiedBy 5 ;
+    ns2:PublishedIn "Adrian Warnock" ;
+    ns1:datePublished "2021-01-16"^^xsd:date ;
+    ns1:headline "Are COVID-19 vaccines made from aborted babies? What is HEK293?" ;
+    ns1:keywords "aborted",
+        "abortion",
+        "babies",
+        "cell",
+        "cells",
+        "christians",
+        "covid19",
+        "god",
+        "good",
+        "hek293",
+        "lines",
+        "vaccine",
+        "vaccines" ;
+    ns1:url "https://www.patheos.com/blogs/adrianwarnock/2021/01/are-covid-19-vaccines-made-from-aborted-babies-what-is-hek293/"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/news/6> a ns1:NewsArticle ;
+    ns2:IdentifiedBy 6 ;
+    ns2:PublishedIn "The Economic Times" ;
+    ns1:datePublished "2021-01-16"^^xsd:date ;
+    ns1:headline "COVID-19 vaccination drive: Assam CM attends the session site at Assam Medical College and Hospital" ;
+    ns1:keywords "assam",
+        "cm",
+        "college",
+        "covid19",
+        "dr",
+        "drive",
+        "hospital",
+        "medical",
+        "minister",
+        "session",
+        "site",
+        "vaccination",
+        "vaccine",
+        "virus",
+        "visited" ;
+    ns1:url "https://economictimes.indiatimes.com/news/politics-and-nation/covid-19-vaccination-drive-assam-cm-attends-the-session-site-at-assam-medical-college-and-hospital/articleshow/80304028.cms"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/news/7> a ns1:NewsArticle ;
+    ns2:IdentifiedBy 7 ;
+    ns2:PublishedIn 442 ;
+    ns1:datePublished "2021-01-16"^^xsd:date ;
+    ns1:headline "Pella y Londero fueron aislados en Australia por casos de coronavirus" ;
+    ns1:keywords "aislados",
+        "australia",
+        "casos",
+        "coronavirus",
+        "del",
+        "el",
+        "en",
+        "fueron",
+        "la",
+        "londero",
+        "los",
+        "para",
+        "pella",
+        "por",
+        "que",
+        "sus",
+        "tenistas",
+        "y" ;
+    ns1:url "https://442.perfil.com/noticias/tenis/pella-y-londero-fueron-aislados-en-australia-por-casos-de-coronavirus.phtml"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/news/8> a ns1:NewsArticle ;
+    ns2:IdentifiedBy 8 ;
+    ns2:PublishedIn "DN.SE" ;
+    ns1:datePublished "2021-01-16"^^xsd:date ;
+    ns1:headline "”En stor del av de som nu avlider bor på boenden”" ;
+    ns1:keywords "anders",
+        "covid19",
+        "dödstal",
+        "fler",
+        "har",
+        "intervju",
+        "mot",
+        "och",
+        "om",
+        "som",
+        "sveriges",
+        "tegnell",
+        "vintern",
+        "vågen",
+        "våras",
+        "än",
+        "ålder" ;
+    ns1:url "https://www.dn.se/sverige/tegnell-vi-forsoker-forsta-hur-smittan-tog-sin-in-i-aldrevarden/"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/news/9> a ns1:NewsArticle ;
+    ns2:IdentifiedBy 9 ;
+    ns2:PublishedIn "None" ;
+    ns1:datePublished "2021-01-16"^^xsd:date ;
+    ns1:headline "Italians pay it forward by collecting donations for COVID tests" ;
+    ns1:keywords "collecting",
+        "covid",
+        "donations",
+        "forward",
+        "italians",
+        "livesay",
+        "naples",
+        "neighbors",
+        "pandemic",
+        "pay",
+        "receive",
+        "struggling",
+        "tests",
+        "way" ;
+    ns1:url "https://www.cbsnews.com/video/italians-pay-it-forward-by-collecting-donations-for-covid-tests/"^^xsd:url .
+
 <http://localhost:8082/codapi/resources/news/CO/0> a ns1:NewsArticle ;
     ns2:IdentifiedBy 0 ;
     ns2:PublishedIn "CO" ;

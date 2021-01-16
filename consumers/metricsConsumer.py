@@ -13,7 +13,7 @@ apiMetricsInitialValuesUri = "http://127.0.0.1:5000/api/metrics/initialValues"
 class MetricsConsumer:
     def __init__(self):
         self.threadManager = ThreadManager(5,lambda resource: self.processData(resource))
-        self.countries = requests.get(countriesUri).json()[:4]
+        self.countries = requests.get(countriesUri).json()[:7]
         print(self.countries)
         self.countriesState = {}
         self.populateCountriesState()
@@ -30,20 +30,18 @@ class MetricsConsumer:
             time.sleep(self.sleepTime)
 
     def populateCountriesState(self):
-        latestState =  requests.get(apiMetricsInitialValuesUri).json()
+        latestState = requests.get(apiMetricsInitialValuesUri).json()
         for country in latestState.keys():
             try:
                 slug = next(c["Slug"] for c in self.countries if c["ISO2"] == country)
-                self.countriesState[slug] = dateutil.parser.parse(latestState[country])
+                self.countriesState[slug] = dateutil.parser.parse(latestState[country] + "T00:00:00Z")
             except:
                 pass
-
-            
 
     def processData(self, data):
         params = {}
         fromDate = None
-        if data["lastQuery"] != None:
+        if data["lastQuery"] is not None:
             fromDate = data["lastQuery"]
             params["from"] = fromDate.strftime('%Y-%m-%dT00:00:00Z')
             params["to"] = datetime.now().strftime('%Y-%m-%dT00:00:00Z')
@@ -57,7 +55,7 @@ class MetricsConsumer:
         }
 
         for item in items:
-            if fromDate == None or fromDate < dateutil.parser.parse(item["Date"]):
+            if fromDate is None or fromDate < dateutil.parser.parse(item["Date"]):
                 dataToSend.append({
                     "country": data["country"]["ISO2"],
                     "confirmed": item["Confirmed"] - previousValues["Confirmed"],
