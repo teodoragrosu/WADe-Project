@@ -63,6 +63,23 @@ class GraphHandler:
         """
         return json.dumps(self._get_country_results(query))
 
+    def get_last_case_by_country_code(self, country_code):
+        query = f"""
+            SELECT DISTINCT ?cases ?date ?type ?value ?country
+            WHERE {{
+                    ?cases rdfs:subClassOf owl:Thing .
+                    ?cases <{PATH}/properties/IsReportedOn> ?date .
+                    ?cases <{PATH}/properties/IsOfType> ?type .
+                    ?cases rdf:value ?value .
+                    ?country rdf:type SDO:Country .
+                    ?country <{PATH}/properties/IdentifiedBy> ?country_code .
+                    ?country rdf:type ?cases .
+            FILTER (?country_code = '{country_code}' )
+            }}
+            ORDER BY DESC(?date) LIMIT 1 
+        """
+        return json.dumps(self._get_country_results(query))
+
     def get_monthly_avg(self, country_code):
         query = f"""
             SELECT DISTINCT ?type (avg(?value) as ?avgValue) (sum(?value) as ?sumValue) (month(?date) as ?month)

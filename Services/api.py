@@ -2,6 +2,8 @@ import csv
 import json
 from datetime import datetime
 from flask import Flask, jsonify, request, abort, send_file
+
+from Services.decorators.apiKeyDecorator import require_app_key
 from Services.metricsService import MetricsService
 from Services.newsService import NewsService
 from coda_graph.graph_handler import GraphHandler
@@ -30,17 +32,22 @@ def server_error(error_message='Error: Internal server error'):
 
 # ==================================== METRICS ENDPOINTS ==================================================
 @app.route('/api/metrics/initialValues', methods=['GET'])
+@require_app_key
 def getMetricsInitialValues():
     result = metricsService.get_metrics_initial_values()
     return jsonify(result)
 
 
+@app.route('/api/metrics', methods=['POST'])
+@require_app_key
+def addMetrics():
+    metricsService.addMetrics(request.json["items"])
+    return jsonify({'status': 1})
+
+
 @app.route('/api/metrics', methods=['GET', 'POST'])
 def metrics():
-    if request.method == 'POST':
-        metricsService.addMetrics(request.json["items"])
-        return jsonify({'status': 1})
-    elif request.method == 'GET':
+    if request.method == 'GET':
         data = metricsService.get_all_metrics()
         return jsonify(data)
     else:
@@ -133,6 +140,7 @@ def download_country_metrics(country_code):
 # =========================================== NEWS ENDPOINTS ==============================================
 
 @app.route('/api/news', methods=['POST'])
+@require_app_key
 def add_news():
     newsService.addNews(request.json)
     return jsonify({'status': 1})

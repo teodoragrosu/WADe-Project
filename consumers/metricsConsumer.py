@@ -39,7 +39,7 @@ class MetricsConsumer:
                 pass
 
     def processData(self, data):
-        params = {}
+        params = {"apiKey": "metricsConsumerApiKey"}
         fromDate = None
         if data["lastQuery"] is not None:
             fromDate = data["lastQuery"]

@@ -19,7 +19,8 @@ class NewsConsumer:
             'pageSize': 100,
             'apiKey': apiKey,
             'sortBy': 'publishedAt',
-            'page': 1
+            'page': 1,
+            "apiKey": "newsConsumerApiKey"
         }
 
     def start(self):
