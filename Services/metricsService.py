@@ -43,5 +43,8 @@ class MetricsService:
     def get_country_metrics(self, country_code, start_date="", end_date="", download=False):
         return self.graphHandler.get_cases_by_country_code(country_code, start_date, end_date, download)
 
+    def get_country_monthly_avg(self, country_code):
+        return self.graphHandler.get_monthly_avg(country_code)
+
     def serialize(self):
         self.graph.get_serialization("cases")

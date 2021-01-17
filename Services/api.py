@@ -1,10 +1,9 @@
 import csv
 import json
 from datetime import datetime
-from flask import Flask, jsonify, request, make_response, abort, send_file
+from flask import Flask, jsonify, request, abort, send_file
 from Services.metricsService import MetricsService
 from Services.newsService import NewsService
-
 from coda_graph.graph_handler import GraphHandler
 
 
@@ -12,20 +11,21 @@ app = Flask(__name__, static_url_path="")
 metricsService = MetricsService()
 newsService = NewsService()
 
+
 # ====================================== ERROR CODES ==============================================
 @app.errorhandler(400)
-def not_found(error):
-    return make_response(jsonify({'Error': 'Bad request'}), 400)
+def bad_request(error_message="Error: Bad Request"):
+    return jsonify(error=str(error_message)), 400
 
 
 @app.errorhandler(404)
-def not_found(error):
-    return make_response(jsonify({'Error': 'Resource not found'}), 404)
+def not_found(error_message="Error: Resource not found"):
+    return jsonify(error=str(error_message)), 404
 
 
 @app.errorhandler(500)
-def not_found(error):
-    return make_response(jsonify({'Error': 'Internal server error'}), 500)
+def server_error(error_message='Error: Internal server error'):
+    return jsonify(error=str(error_message)), 500
 
 
 # ==================================== METRICS ENDPOINTS ==================================================
@@ -33,6 +33,7 @@ def not_found(error):
 def getMetricsInitialValues():
     result = metricsService.get_metrics_initial_values()
     return jsonify(result)
+
 
 @app.route('/api/metrics', methods=['GET', 'POST'])
 def metrics():
@@ -46,6 +47,14 @@ def metrics():
         return abort(405, "Method not allowed!")
 
 
+@app.route('/api/countries', methods=['GET'])
+def get_all_available_countries():
+    if request.method != "GET":
+        return abort(405, "Method not allowed!")
+
+    return metricsService.graphHandler.get_all_available_countries()
+
+
 @app.route('/api/country/<string:country_code>', methods=['GET'])
 @app.route('/api/country/<string:country_code>/latest', methods=['GET'])
 def get_country_metrics(country_code):
@@ -56,16 +65,33 @@ def get_country_metrics(country_code):
             data = metricsService.get_country_metrics(country_code, request.args["date"])
         else:
             data = metricsService.get_country_metrics(country_code, request.args.get("from", ""), request.args.get("to", ""))
-        return data
+        if data != "{}":
+            return data
+        else:
+            return jsonify("No data found for the country you selected. Please choose another date or checkout the list"
+                           " of country codes available at http://127.0.0.1:5000/api/countries")
+    else:
+        return abort(405, "Method not allowed!")
+
+
+@app.route('/api/country/monthly/<string:country_code>', methods=['GET'])
+def get_country_monthly_avg(country_code):
+    if request.method == "GET":
+        if not country_code:
+            return abort(400, "Please provide a country code!")
+        return metricsService.get_country_monthly_avg(country_code)
     else:
         return abort(405, "Method not allowed!")
 
 
 @app.route('/api/country/<string:country_code>/download', methods=['GET'])
 def download_country_metrics(country_code):
+    if request.method != "GET":
+        return abort(405, "Method not allowed!")
+
     download_format = request.args.get("format")
     if not download_format or download_format.lower() not in ["json", "csv"]:
-        abort(400, description="Download format incorrect or not specified! Available formats: CSV, JSON")
+        return abort(400, description="Download format incorrect or not specified! Available formats: CSV, JSON")
 
     data = metricsService.get_country_metrics(country_code,
                                               request.args.get("from", ""),

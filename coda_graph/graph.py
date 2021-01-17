@@ -51,7 +51,7 @@ class CovidGraph:
         self.graph.add((cases, RDFS.subClassOf, OWL.Thing))
 
         # set IsReportedOn property
-        self.graph.add((cases, URIRef(f"{PATH}/properties/IsReportedOn"), Literal(date, datatype=XSD.date)))
+        self.graph.add((cases, URIRef(f"{PATH}/properties/IsReportedOn"), Literal(date, datatype=XSD.dateTime)))
         # set IsOneOf property
         self.graph.add((cases, URIRef(f"{PATH}/properties/IsOfType"), Literal(case_type)))
 
@@ -73,7 +73,7 @@ class CovidGraph:
 
         # schema.org properties:
         self.graph.add((news_uri, SDO.headline, Literal(title)))
-        self.graph.add((news_uri, SDO.datePublished, Literal(date, datatype=XSD.date)))
+        self.graph.add((news_uri, SDO.datePublished, Literal(date, datatype=XSD.dateTime)))
         self.graph.add((news_uri, SDO.url, Literal(url_source, datatype=XSD.url)))
         if keywords:
             for k in keywords:
@@ -97,7 +97,7 @@ class CovidGraph:
         for a in authors:
             self.graph.add((article_uri, SDO.author, Literal(a)))
         self.graph.add((article_uri, SDO.abstract, Literal(abstract)))
-        self.graph.add((article_uri, SDO.datePublished, Literal(date, datatype=XSD.date)))
+        self.graph.add((article_uri, SDO.datePublished, Literal(date, datatype=XSD.dateTime)))
         self.graph.add((article_uri, SDO.url, Literal(url_source, datatype=XSD.url)))
         self.graph.add((article_uri, SDO.citation, Literal(citation)))
 

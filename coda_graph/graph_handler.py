@@ -1,6 +1,6 @@
 import datetime
 import json
-from rdflib.namespace import SDO, OWL, RDFS
+from rdflib.namespace import SDO, OWL, RDFS, XSD
 
 from coda_graph.graph_store import GraphStore
 
@@ -62,6 +62,44 @@ class GraphHandler:
             ORDER BY {'ASC' if download else 'DESC'}(?date)
         """
         return json.dumps(self._get_country_results(query))
+
+    def get_monthly_avg(self, country_code):
+        query = f"""
+            SELECT DISTINCT ?type (avg(?value) as ?avgValue) (sum(?value) as ?sumValue) (month(?date) as ?month)
+            WHERE {{
+                SELECT DISTINCT ?cases ?date ?type ?value ?country
+                WHERE {{
+                        ?cases rdfs:subClassOf owl:Thing .
+                        ?cases <{PATH}/properties/IsReportedOn> ?date .
+                        ?cases <{PATH}/properties/IsOfType> ?type .
+                        ?cases rdf:value ?value .
+                        ?country rdf:type SDO:Country .
+                        ?country <{PATH}/properties/IdentifiedBy> ?country_code .
+                        ?country rdf:type ?cases .
+                FILTER (?country_code = '{country_code}'
+                        && ?type in ('confirmed', 'active', 'recovered', 'deceased')
+                        && year(?date) = 2020)
+                }}
+                ORDER BY ASC(?date)
+            }}
+            GROUP BY month(?date) ?type
+        """
+
+        results = {}
+        for row in self.graph.query(query, initNs={'SDO': SDO, 'owl': OWL, 'rdfs': RDFS, "xsd": XSD}):
+            dict_row = row.asdict()
+            if dict_row["month"].toPython() not in results:
+                results[dict_row["month"].toPython()] = {
+                    f'avg_{dict_row["type"].toPython()}_per_day': round(float(dict_row["avgValue"].toPython()), 2),
+                    f'total_{dict_row["type"].toPython()}': float(dict_row["sumValue"].toPython())
+                }
+            else:
+                results[dict_row["month"].toPython()].update({
+                    f'avg_{dict_row["type"].toPython()}_per_day': round(float(dict_row["avgValue"].toPython()), 2),
+                    f'total_{dict_row["type"].toPython()}': float(dict_row["sumValue"].toPython())
+                })
+
+        return json.dumps(results)
 
     def _get_article_results(self, query):
         results = []
