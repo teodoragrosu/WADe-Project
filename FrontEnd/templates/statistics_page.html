@@ -1,0 +1,293 @@
+{% extends "layout.html" %}
+{% block content %}
+<div id="layoutSidenav">
+    <div id="layoutSidenav_content">
+        <main>
+            <!-- The Modal -->
+            <div class="modal" id="errorModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Date input error</h4>
+                            <button id="xModal" type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            Please make sure the selected dates are valid.
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button id="closeModal" type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <h1 class="mt-4">Statistics</h1>
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item active">Statistics</li>
+                </ol>
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <p>COVID-19 Evolution</p>
+                                <div class="filters">
+                                    <select class="form-select country-select" aria-label="Default select example">
+                                        <option selected>Country</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select>
+                                    <div class="datetimes">
+                                        <div id="start_date1" class="input-group date" data-provide="datepicker">
+                                            <input id="start_placeholder" type="text" class="form-control"
+                                                   placeholder="{{ today_date }}">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th"></span>
+                                            </div>
+                                        </div>
+                                        <div id="end_date1" class="input-group date" data-provide="datepicker">
+                                            <input id="end_placeholder" type="text" class="form-control"
+                                                   placeholder="{{ today_date }}">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button id="line_chart_button" type="button" class="btn btn-primary"
+                                            style="margin-bottom: 0.3rem;">Filter
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="lineChart" width="100%" height="40"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <p>COVID-19 Statistics</p>
+                                <div class="filters">
+                                    <select class="form-select country-select" aria-label="Default select example">
+                                        <option selected>Country</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select>
+                                    <div class="datetimes">
+                                        <div id="stats_date" class="input-group date" data-provide="datepicker">
+                                            <input id="stats_placeholder" type="text" class="form-control"
+                                                   placeholder="{{ today_date }}">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button id="pie_chart_button" type="button" class="btn btn-primary"
+                                            style="margin-bottom: 0.3rem;">Filter
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="pieChart" width="100%" height="40"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+
+<!--LINE CHART-->
+<script>
+function draw_line() {
+    $('#lineChart').removeAttr('style');
+    $('#lineChart').removeAttr('class');
+    $('#lineChart').attr('width', '100%');
+    $('#lineChart').attr('height', '40');
+
+    var getData = $.get('/line_data');
+    getData.done(function(results) {
+        var line = JSON.parse(results);
+        Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+        Chart.defaults.global.defaultFontColor = '#292b2c';
+
+        // define the chart data
+        var lineChartData = {
+          labels : line.line_labels,
+          datasets : [{
+              label: '{{ legend }}',
+              fill: true,
+              lineTension: 0.1,
+              backgroundColor: "rgba(75,192,192,0.4)",
+              borderColor: "rgba(75,192,192,1)",
+              borderCapStyle: 'butt',
+              borderDash: [],
+              borderDashOffset: 0.0,
+              borderJoinStyle: 'miter',
+              pointBorderColor: "rgba(75,192,192,1)",
+              pointBackgroundColor: "#fff",
+              pointBorderWidth: 1,
+              pointHoverRadius: 5,
+              pointHoverBackgroundColor: "rgba(75,192,192,1)",
+              pointHoverBorderColor: "rgba(220,220,220,1)",
+              pointHoverBorderWidth: 2,
+              pointRadius: 1,
+              pointHitRadius: 10,
+              data : line.line_values,
+              spanGaps: false
+          }]
+        }
+
+        // get chart canvas
+        var ctx = document.getElementById("casesChart").getContext("2d");
+
+        // create the chart using the chart canvas
+        var myLineChart = new Chart(ctx, {
+          type: 'line',
+          data: lineChartData,
+          options: {
+            scales: {
+              xAxes: [{
+                time: {
+                  unit: 'date'
+                },
+                gridLines: {
+                  display: false
+                },
+                ticks: {
+                  maxTicksLimit: 7
+                }
+              }],
+              yAxes: [{
+                ticks: {
+                  min: 0,
+                  max: 8000,
+                  maxTicksLimit: 5
+                },
+                gridLines: {
+                  color: "rgba(0, 0, 0, .125)",
+                }
+              }],
+            },
+            legend: {
+              display: false
+            }
+          }
+        });
+    })
+}
+</script>
+<!--PIE CHART-->
+<script>
+function draw_pie() {
+    $( ".chartjs-size-monitor" ).remove();
+    $('#pieChart').removeAttr('style');
+    $('#pieChart').removeAttr('class');
+    $('#pieChart').attr('width', '100%');
+    $('#pieChart').attr('height', '40');
+
+    var getData = $.get('/pie_data');
+    getData.done(function(results) {
+    var pie = JSON.parse(results);
+    window.chartColors = {
+      red: 'rgb(255, 99, 132)',
+      orange: 'rgb(255, 159, 64)',
+      yellow: 'rgb(255, 205, 86)',
+      green: 'rgb(75, 192, 192)',
+      blue: 'rgb(54, 162, 235)',
+      purple: 'rgb(153, 102, 255)',
+      grey: 'rgb(201, 203, 207)'
+    };
+
+    var pieChartData = {
+      labels : pie.pie_labels,
+      datasets : [{
+        data : pie.pie_values,
+        backgroundColor: [
+            window.chartColors.green,
+            window.chartColors.orange,
+            window.chartColors.red,
+        ],
+      }]
+    }
+
+    var pie = document.getElementById("pieChart").getContext("2d");
+
+    var myPieChart = new Chart(pie, {
+        type: 'pie',
+        data: pieChartData,
+        options: {
+            responsive: true
+        }
+    });
+});
+}
+
+</script>
+<script type=text/javascript>
+$('#xModal').on('click', function (e) {
+    $('#errorModal').hide();
+});
+
+$('#closeModal').on('click', function (e) {
+    $('#errorModal').hide();
+});
+
+$('button#line_chart_button').on('click', function (e) {
+    var start_date1 = new Date($('#start_placeholder').attr('placeholder')).toLocaleDateString();
+    var end_date1 = new Date($('#end_placeholder').attr('placeholder')).toLocaleDateString();
+
+    if($('#start_date1').datepicker('getDate') != null){
+        start_date1 = $('#start_date1').datepicker('getDate').toLocaleDateString();
+    }
+    if($('#end_date1').datepicker('getDate') != null){
+        end_date1 = $('#end_date1').datepicker('getDate').toLocaleDateString();
+    }
+
+    if(start_date1 >= end_date1){
+        $('#errorModal').show();
+    }
+    else {
+        var line_dates = {'start_date1': start_date1, 'end_date1': end_date1}
+        $.ajax({
+            type : 'POST',
+            async: false,
+            url : "{{url_for('receive_dates')}}",
+            data : line_dates
+        });
+        draw_line();
+    }
+});
+
+$('button#pie_chart_button').on('click', function (e) {
+    var stats_date = new Date($('#stats_placeholder').attr('placeholder')).toLocaleDateString();
+
+    if($('#stats_date').datepicker('getDate') != null){
+        stats_date = $('#stats_date').datepicker('getDate').toLocaleDateString();
+    }
+
+    if(stats_date >= new Date().toLocaleDateString()) {
+        $('#errorModal').show();
+    }
+    else {
+        var pie_date = {'stats_date': stats_date}
+        $.ajax({
+            type : 'POST',
+            async: false,
+            url : "{{url_for('receive_dates')}}",
+            data : pie_date
+        });
+        draw_pie();
+    }
+});
+</script>
+{% endblock content %}
