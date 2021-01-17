@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 import json
 from datetime import datetime
 import requests
@@ -26,14 +26,19 @@ def statistics_page():
     #                        today_date=today_date,
     #                        labels=dates,
     #                        values=cases)
-    with open('CI_data.json') as json_file:
-
+    with open('PL_data.json') as json_file:
         #line chart
         data = json.load(json_file)
         dates = list(data.keys())
-        cases = []
-        for case in data.values():
-            cases.append(case['active'])
+        active = []
+        confirmed = []
+        deceased = []
+        recovered = []
+        for day, cases in data.items():
+            confirmed.append(cases['confirmed'])
+            deceased.append(cases['deceased'])
+            recovered.append(cases['recovered'])
+            active.append(cases["active"])
 
         #pie chart
         pie_labels = ['Total recovered', 'Total confirmed', 'Total deceased']
@@ -42,15 +47,22 @@ def statistics_page():
         pie_values.append(data[dates[-1]]['total_confirmed'])
         pie_values.append(data[dates[-1]]['total_deceased'])
 
-        print (pie_labels,pie_values)
+    # bar chart
+    with open("LI_avg_month.json") as json_file:
+        months = json.load(json_file)
 
     return render_template("statistics_page.html",
                            line_labels=dates,
-                           line_values=cases,
+                           line_values_active=active,
+                           line_values_confirmed=confirmed,
+                           line_values_deceased=deceased,
+                           line_values_recovered=recovered,
                            today_date=today_date,
                            pie_labels=pie_labels,
-                           pie_values=pie_values
+                           pie_values=pie_values,
+                           bar_values=months,
                            )
+
 
 @app.route("/test_article")
 def test_article_page():

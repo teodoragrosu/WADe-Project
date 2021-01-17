@@ -4,38 +4,37 @@
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid">
-                <h1 class="mt-4">Statistics</h1>
-                <ol class="breadcrumb mb-4">
-                    <li class="breadcrumb-item active">Statistics</li>
-                </ol>
+                <h1 class="mt-4 title">Statistics</h1>
+                    <div class="filters">
+                        <select class="form-select country-select" aria-label="Default select example">
+                            <option selected>Country</option>
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select>
+                        <div class="datetimes">
+                            <div class="input-group date" data-provide="datepicker">
+                                <input type="text" class="form-control" placeholder="{{ today_date }}">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                            <div class="input-group date" data-provide="datepicker">
+                                <input type="text" class="form-control" placeholder="{{ today_date }}">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary" style="margin-bottom: 0.3rem;">Filter</button>
+                    </div>
+
+
                 <div class="row">
                     <div class="col-xl-6">
                         <div class="card mb-4">
                             <div class="card-header">
                                 <p>COVID-19 Evolution</p>
-                                <div class="filters">
-                                    <select class="form-select country-select" aria-label="Default select example">
-                                        <option selected>Country</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                    </select>
-                                    <div class="datetimes">
-                                        <div class="input-group date" data-provide="datepicker">
-                                            <input type="text" class="form-control" placeholder="{{ today_date }}">
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-th"></span>
-                                            </div>
-                                        </div>
-                                        <div class="input-group date" data-provide="datepicker">
-                                            <input type="text" class="form-control" placeholder="{{ today_date }}">
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-th"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn btn-primary" style="margin-bottom: 0.3rem;">Filter</button>
-                                </div>
                             </div>
                             <div class="card-body">
                                 <canvas id="casesChart" width="100%" height="40"></canvas>
@@ -46,26 +45,34 @@
                         <div class="card mb-4">
                             <div class="card-header">
                                 <p>COVID-19 Statistics</p>
-                                <div class="filters">
-                                    <select class="form-select country-select" aria-label="Default select example">
-                                        <option selected>Country</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                    </select>
-                                    <div class="datetimes">
-                                        <div class="input-group date" data-provide="datepicker">
-                                            <input type="text" class="form-control" placeholder="{{ today_date }}">
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-th"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn btn-primary" style="margin-bottom: 0.3rem;">Filter</button>
-                                </div>
                             </div>
                             <div class="card-body">
                                 <canvas id="pieChart" width="100%" height="40"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--second row-->
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <p>COVID-19 Average number of cases each month </p>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="barChart" width="100%" height="40"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <p>COVID-19 Active cases evolution over time </p>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="activeChart" width="100%" height="40"></canvas>
                             </div>
                         </div>
                     </div>
@@ -75,121 +82,70 @@
     </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+<script src="static/js/globals.js"></script>
 
-<!--LINE CHART-->
 <script>
-    Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-    Chart.defaults.global.defaultFontColor = '#292b2c';
-
-    // define the chart data
-    var lineChartData = {
-      labels : [{% for item in line_labels %}
-                 "{{item}}",
-                {% endfor %}],
-      datasets : [{
-          label: '{{ legend }}',
-          fill: true,
-          lineTension: 0.1,
-          backgroundColor: "rgba(75,192,192,0.4)",
-          borderColor: "rgba(75,192,192,1)",
-          borderCapStyle: 'butt',
-          borderDash: [],
-          borderDashOffset: 0.0,
-          borderJoinStyle: 'miter',
-          pointBorderColor: "rgba(75,192,192,1)",
-          pointBackgroundColor: "#fff",
-          pointBorderWidth: 1,
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: "rgba(75,192,192,1)",
-          pointHoverBorderColor: "rgba(220,220,220,1)",
-          pointHoverBorderWidth: 2,
-          pointRadius: 1,
-          pointHitRadius: 10,
-          data : [{% for item in line_values %}
-                    {{item}},
-                  {% endfor %}],
-          spanGaps: false
-      }]
-    }
-
-    // get chart canvas
-    var ctx = document.getElementById("casesChart").getContext("2d");
-
-    // create the chart using the chart canvas
-    var myLineChart = new Chart(ctx, {
-      type: 'line',
-      data: lineChartData,
-      options: {
-        scales: {
-          xAxes: [{
-            time: {
-              unit: 'date'
-            },
-            gridLines: {
-              display: false
-            },
-            ticks: {
-              maxTicksLimit: 7
-            }
-          }],
-          yAxes: [{
-            ticks: {
-              min: 0,
-              max: 8000,
-              maxTicksLimit: 5
-            },
-            gridLines: {
-              color: "rgba(0, 0, 0, .125)",
-            }
-          }],
-        },
-        legend: {
-          display: false
-        }
-      }
-    });
-
-</script>
-
-<!--PIE CHART-->
-<script>
-    window.chartColors = {
-      red: 'rgb(255, 99, 132)',
-      orange: 'rgb(255, 159, 64)',
-      yellow: 'rgb(255, 205, 86)',
-      green: 'rgb(75, 192, 192)',
-      blue: 'rgb(54, 162, 235)',
-      purple: 'rgb(153, 102, 255)',
-      grey: 'rgb(201, 203, 207)'
-    };
-
-    var pieChartData = {
-      labels : [{% for item in pie_labels %}
-                 "{{item}}",
-                {% endfor %}],
-      datasets : [{
-        data : [{% for item in pie_values %}
-                    {{item}},
-                  {% endfor %}],
-        backgroundColor: [
-            window.chartColors.green,
-            window.chartColors.orange,
-            window.chartColors.red,
+    window.line_chart_data = {
+        labels : [
+            {% for item in line_labels %}
+                "{{item}}",
+            {% endfor %}
         ],
-      }]
-    }
-
-    var pie = document.getElementById("pieChart").getContext("2d");
-
-    var myPieChart = new Chart(pie, {
-        type: 'pie',
-        data: pieChartData,
-        options: {
-            responsive: true
+        data : {
+         confirmed: {{ line_values_confirmed }},
+         deceased: {{ line_values_deceased }},
+         recovered: {{ line_values_recovered }}
         }
-    });
-
+    };
+    window.pie_chart_data = {
+        labels : [
+            {% for item in pie_labels %}
+                "{{item}}",
+            {% endfor %}
+        ],
+        data : [
+            {% for item in pie_values %}
+                {{item}},
+            {% endfor %}
+        ]
+    };
+    window.bar_chart_data = {
+         labels : [
+            {% for item in bar_values %}
+                "{{item}}",
+            {% endfor %}
+         ],
+         data: [
+            {% for month, cases in bar_values.items() %}
+                {{cases|tojson|safe}},
+            {% endfor %}
+         ]
+    };
+    window.active_chart_data = {
+       labels : [
+            {% for item in line_labels %}
+                "{{item}}",
+            {% endfor %}
+       ],
+       data : {
+         active: {{ line_values_active }}
+       }
+    };
 </script>
+
+<!--LINE CHART JS-->
+<script src="static/js/linechart.js"></script>
+
+<!--PIE CHART JS-->
+<script src="static/js/piechart.js"></script>
+
+<!--BAR CHART JS-->
+<script src="static/js/barchart.js"></script>
+
+<!--Active CHART JS-->
+<script src="static/js/activechart.js"></script>
+
+
 <script>
     $(document).ready(function(){
       var options={

@@ -6,13 +6,9 @@ body {
   color: #172b1c;
 }
 
-.bg-dark {
-  background-color: #172b1c!important;
-}
-
 .btn-primary {
-  color: #fff;
-  background-color: #3b6d48;
+  color: #daecec;
+  background-color: #008080;
   border-color: #3b6d48;
 }
 
@@ -23,13 +19,13 @@ body {
 }
 
 a {
-  color: #149033;
+  color: #fff!important;
   text-decoration: none;
   background-color: transparent;
 }
 
 a:hover {
-  color: #172b1c;
+  color: #ddd!important;
   text-decoration: underline;
 }
 
@@ -49,7 +45,7 @@ a:hover {
 }
 
 .bg-dark {
-  background-color: #172b1c!important;
+  background-color: #008080!important;
 }
 
 .pb-5, .py-5 {
@@ -88,3 +84,8 @@ a:hover {
     border-radius: 5px;
 }
 
+html, body {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
