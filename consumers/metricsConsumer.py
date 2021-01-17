@@ -39,7 +39,7 @@ class MetricsConsumer:
                 pass
 
     def processData(self, data):
-        params = {"apiKey": "metricsConsumerApiKey"}
+        params = {}
         fromDate = None
         if data["lastQuery"] is not None:
             fromDate = data["lastQuery"]
@@ -71,7 +71,7 @@ class MetricsConsumer:
             previousValues = item
                 
         if len(dataToSend) > 0:
-            requests.post(apiMetricsUri, json={"items": dataToSend})
+            requests.post(apiMetricsUri, params={"apiKey": "metricsConsumerApiKey"}, json={"items": dataToSend})
             self.countriesState[data["country"]["Slug"]] = dateutil.parser.parse(items[-1]["Date"])
 
 
