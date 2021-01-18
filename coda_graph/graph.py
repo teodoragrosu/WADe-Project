@@ -109,7 +109,7 @@ class CovidGraph:
 
         # custom properties:
         if art_type:
-            assert art_type in ["article", "report", "journal contribution", "dataset"]
+            assert art_type in ["article", "research", "journal contribution", "dataset"]
             self.graph.add((article_uri, URIRef(f"{PATH}/properties/hasType"), Literal(art_type)))
         else:
             self.graph.add((article_uri, URIRef(f"{PATH}/properties/hasType"), Literal("")))

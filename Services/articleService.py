@@ -8,7 +8,7 @@ class ArticlesService:
         self.graph = CovidGraph("articles")
 
     def addArticles(self, article):
-        self.graph.add_article(article["title"], article["authors"], article["abstract"], article["date"], article["url"], categories=article["categories"])
+        self.graph.add_article(article["title"], article["authors"], article["abstract"], article["date"], article["url"], art_type=article["articleType"], categories=article["categories"])
 
     def serialize(self):
         self.graph.get_serialization("articles")
