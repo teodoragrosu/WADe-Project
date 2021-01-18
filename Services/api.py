@@ -3,6 +3,7 @@ import json
 from datetime import datetime
 from flask import Flask, jsonify, request, abort, send_file
 
+from Services.articleService import ArticlesService
 from Services.decorators.apiKeyDecorator import require_app_key
 from Services.metricsService import MetricsService
 from Services.newsService import NewsService
@@ -12,6 +13,7 @@ from coda_graph.graph_handler import GraphHandler
 app = Flask(__name__, static_url_path="")
 metricsService = MetricsService()
 newsService = NewsService()
+articlesService = ArticlesService()
 
 
 # ====================================== ERROR CODES ==============================================
@@ -164,6 +166,12 @@ def get_news(publication=""):
 
 # =========================================== ARTICLE ENDPOINTS ==============================================
 
+@app.route('/api/articles', methods=['POST'])
+@require_app_key
+def add_articles():
+    articlesService.addArticles(request.json)
+    return jsonify({'status': 1})
+
 @app.route('/api/articles/latest', methods=['GET'])
 @app.route('/api/articles/filter/<int:id_>', methods=['GET'])
 @app.route('/api/articles/filter/<string:type_>', methods=['GET'])
@@ -195,8 +203,7 @@ def serialize(type_):
         elif type_ == "news":
             newsService.serialize()
         elif type_ == "articles":
-            # articleService.serialize()
-            pass
+            articlesService.serialize()
         else:
             return abort(400, "Bad Request")
         return jsonify({'status': 1})

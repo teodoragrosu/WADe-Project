@@ -1,45 +1,176 @@
 @prefix ns1: <http://localhost:8082/codapi/resources/properties/> .
 @prefix ns2: <https://schema.org/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://localhost:8082/codapi/resources/articles/0> a ns2:ScholarlyArticle ;
     ns1:IdentifiedBy 0 ;
-    ns1:hasType "dataset" ;
-    ns2:about "Medical Stuff" ;
-    ns2:abstract "abstract1" ;
-    ns2:author "auth1" ;
-    ns2:citation "citation" ;
-    ns2:datePublished "2020-06-01"^^xsd:date ;
-    ns2:headline "article about covid" ;
-    ns2:url "google.com"^^xsd:url .
+    ns1:hasType "" ;
+    ns2:about "HEALTH" ;
+    ns2:abstract "There's no doubt that 2020 was difficult for everyone and tragic for many. But now vaccines against COVID-19 are finally being administered – giving a much-needed hope of a return to normality and a happy 2021." ;
+    ns2:author "Barbara Jacquelyn Sahakia, et al., The Conversation" ;
+    ns2:citation "" ;
+    ns2:datePublished "2021-01-02T21:45:11+00:00"^^xsd:dateTime ;
+    ns2:headline "These Six Scientist-Recommended Tasks Will Help You Bounce Back From Pandemic Living" ;
+    ns2:url "https://www.sciencealert.com/scientists-recommend-these-six-easy-tasks-to-help-bounce-back-from-the-pandemic"^^xsd:url .
 
 <http://localhost:8082/codapi/resources/articles/1> a ns2:ScholarlyArticle ;
     ns1:IdentifiedBy 1 ;
-    ns1:hasType "journal contribution" ;
-    ns2:about "Research",
-        "Immunity" ;
-    ns2:abstract "abstract2" ;
-    ns2:author "auth1",
-        "auth2" ;
-    ns2:citation "citation" ;
-    ns2:datePublished "2020-12-01"^^xsd:date ;
-    ns2:headline "Article title" ;
-    ns2:url "sdcdfvfs.com"^^xsd:url .
+    ns1:hasType "" ;
+    ns2:about "PHYSICS" ;
+    ns2:abstract "Let's admit it: It's been a pretty rough year for our neck of the Solar System. But it's been a great year for scientists studying more distant reaches of the Universe. From a colossal explosion to mystery burps deciphered, here were some of the top" ;
+    ns2:author "Jeanna Bryner, Live Science" ;
+    ns2:citation "" ;
+    ns2:datePublished "2021-01-02T17:00:00+00:00"^^xsd:dateTime ;
+    ns2:headline "These 10 Amazing Physics Stories Were Massive News in 2020" ;
+    ns2:url "https://www.sciencealert.com/these-10-amazing-physics-stories-were-massive-news-in-2020"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/articles/10> a ns2:ScholarlyArticle ;
+    ns1:IdentifiedBy 10 ;
+    ns1:hasType "" ;
+    ns2:about "research-article" ;
+    ns2:abstract "The COVID-19 pandemic has created a public health crisis. Because SARS-CoV-2 can spread from individuals with presymptomatic, symptomatic, and asymptomatic infections, the reopening of societies and the control of virus spread will be facilitated by robust po…" ;
+    ns2:author "Larremore, D. B., Wilder, B., Lester, E., Shehata, S., Burke, J. M., Hay, J. A., Tambe, M., Mina, M. J., Parker, R." ;
+    ns2:citation "" ;
+    ns2:datePublished "2021-01-01T18:50:28+00:00"^^xsd:dateTime ;
+    ns2:headline "Test sensitivity is secondary to frequency and turnaround time for COVID-19 screening" ;
+    ns2:url "https://advances.sciencemag.org/content/7/1/eabd5393.full"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/articles/11> a ns2:ScholarlyArticle ;
+    ns1:IdentifiedBy 11 ;
+    ns1:hasType "" ;
+    ns2:about "research-article" ;
+    ns2:abstract "Despite past extensive studies, the mechanisms underlying pulmonary fibrosis (PF) still remain poorly understood. Here, we demonstrated that lungs originating from different types of patients with PF, including coronavirus disease 2019, systemic sclerosis–ass…" ;
+    ns2:author "Wang, Y., Zhang, L., Wu, G.-R., Zhou, Q., Yue, H., Rao, L.-Z., Yuan, T., Mo, B., Wang, F.-X., Chen, L.-M., Sun, F., Song, J., Xiong, F., Zhang, S., Yu, Q., Yang, P., Xu, Y., Zhao, J., Zhang, H., Xiong, W., Wang, C.-Y." ;
+    ns2:citation "" ;
+    ns2:datePublished "2021-01-01T18:50:28+00:00"^^xsd:dateTime ;
+    ns2:headline "MBD2 serves as a viable target against pulmonary fibrosis by inhibiting macrophage M2 program" ;
+    ns2:url "https://advances.sciencemag.org/content/7/1/eabb6075.full"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/articles/12> a ns2:ScholarlyArticle ;
+    ns1:IdentifiedBy 12 ;
+    ns1:hasType "" ;
+    ns2:about "HEALTH" ;
+    ns2:abstract "A major study has suggested that the new, possibly more contagious coronavirus variant that has been spreading in Europe - and, as of Tuesday, in Colorado - does not cause more severe illness or have a higher death rate." ;
+    ns2:author "Samuel Horti, Business Insider" ;
+    ns2:citation "" ;
+    ns2:datePublished "2021-01-01T09:41:49+00:00"^^xsd:dateTime ;
+    ns2:headline "New Coronavirus Variant Now in US And UK Doesn't Cause More Severe Illness, Says Study" ;
+    ns2:url "https://www.sciencealert.com/new-coronavirus-variant-now-in-us-and-uk-doesn-t-cause-more-severe-illness-says-study"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/articles/14> a ns2:ScholarlyArticle ;
+    ns1:IdentifiedBy 14 ;
+    ns1:hasType "" ;
+    ns2:about "COMMENT & OPINION" ;
+    ns2:abstract "It's been twelve months since we counted down the final minutes of 2019 and joyfully screamed 'Happy New Year'. We were so blissfully unaware of what was in store for us in the days ahead." ;
+    ns2:author "Mike McRae" ;
+    ns2:citation "" ;
+    ns2:datePublished "2021-01-01T00:06:00+00:00"^^xsd:dateTime ;
+    ns2:headline "Yep, 2020 Was Tough. But Here Are 5 Things We're Relieved Didn't Happen" ;
+    ns2:url "https://www.sciencealert.com/sure-2020-was-bad-but-here-are-five-things-that-didn-t-happen"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/articles/15> a ns2:ScholarlyArticle ;
+    ns1:IdentifiedBy 15 ;
+    ns1:hasType "" ;
+    ns2:about "research-article" ;
+    ns2:abstract "Here, we report the topology-matched design of heteromultivalent nanostructures as potent and broad-spectrum virus entry inhibitors based on the host cell membrane. Initially, we investigate the virus binding dynamics to validate the better binding performanc…" ;
+    ns2:author "Nie, C., Stadtmüller, M., Parshad, B., Wallert, M., Ahmadi, V., Kerkhoff, Y., Bhatia, S., Block, S., Cheng, C., Wolff, T., Haag, R." ;
+    ns2:citation "" ;
+    ns2:datePublished "2021-01-01T18:50:28+00:00"^^xsd:dateTime ;
+    ns2:headline "Heteromultivalent topology-matched nanostructures as potent and broad-spectrum influenza A virus inhibitors" ;
+    ns2:url "https://advances.sciencemag.org/content/7/1/eabd3803.full"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/articles/17> a ns2:ScholarlyArticle ;
+    ns1:IdentifiedBy 17 ;
+    ns1:hasType "" ;
+    ns2:about "None" ;
+    ns2:abstract "The relationship between gambling and suicidality is now more apparent than ever. In The Lancet Public Health, Heather Wardle and Sally McManus1 provide an important addition to a growing body of literature on this important and greatly worrying issue. The fa…" ;
+    ns2:author "Charles Livingstone, Angela Rintoul" ;
+    ns2:citation "" ;
+    ns2:datePublished "2021-01-01T00:00:00+00:00"^^xsd:dateTime ;
+    ns2:headline "[Comment] Gambling-related suicidality: stigma, shame, and neglect" ;
+    ns2:url "https://www.thelancet.com/journals/lanpub/article/PIIS2468-2667(20)30257-7/fulltext?rss=yes"^^xsd:url .
 
 <http://localhost:8082/codapi/resources/articles/2> a ns2:ScholarlyArticle ;
     ns1:IdentifiedBy 2 ;
-    ns1:hasType "dataset" ;
-    ns2:about "Research Stuff",
-        "Immunity" ;
-    ns2:abstract "abstract3" ;
-    ns2:author "auth1",
-        "auth2" ;
-    ns2:citation "citation" ;
-    ns2:datePublished "2020-12-01"^^xsd:date ;
-    ns2:headline "Article title 3" ;
-    ns2:url "sdcdfvfs.com"^^xsd:url .
+    ns1:hasType "" ;
+    ns2:about "None" ;
+    ns2:abstract """Here’s how we fight back
+
+-- Read more on ScientificAmerican.com""" ;
+    ns2:author "Thomas Hall" ;
+    ns2:citation "" ;
+    ns2:datePublished "2021-01-02T14:00:00+00:00"^^xsd:dateTime ;
+    ns2:headline "A New Strain of Drug-Resistant Malaria Has Sprung Up in Africa" ;
+    ns2:url "https://www.scientificamerican.com/article/a-new-strain-of-drug-resistant-malaria-has-sprung-up-in-africa/"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/articles/3> a ns2:ScholarlyArticle ;
+    ns1:IdentifiedBy 3 ;
+    ns1:hasType "" ;
+    ns2:about "HEALTH" ;
+    ns2:abstract "After a year which resulted in over 1.7 million deaths and multiple lockdowns, many people are welcoming the news that COVID-19 vaccines are starting to be given to the public. Widespread vaccination may mean that life can return to pre-pandemic norm" ;
+    ns2:author "Eva Hamrud, Metafact" ;
+    ns2:citation "" ;
+    ns2:datePublished "2021-01-02T04:46:20+00:00"^^xsd:dateTime ;
+    ns2:headline "How Scientists Know The Approved COVID-19 Vaccines Are Safe" ;
+    ns2:url "https://www.sciencealert.com/how-scientists-know-the-approved-covid-19-vaccines-are-safe"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/articles/4> a ns2:ScholarlyArticle ;
+    ns1:IdentifiedBy 4 ;
+    ns1:hasType "" ;
+    ns2:about "HEALTH" ;
+    ns2:abstract "The Centres for Disease Control and Prevention unveiled major updates to its vaccine tracking dashboard on Thursday, including an interactive map that shows how vaccine distribution and administration is going in every US state and territory." ;
+    ns2:author "Susie Neilson, Business Insider" ;
+    ns2:citation "" ;
+    ns2:datePublished "2021-01-01T22:55:26+00:00"^^xsd:dateTime ;
+    ns2:headline "New Interactive US Map Tracks The COVID-19 Vaccine Rollout in Your State" ;
+    ns2:url "https://www.sciencealert.com/new-interactive-map-reveals-how-the-covid-19-vaccine-rollout-is-going-in-your-state"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/articles/5> a ns2:ScholarlyArticle ;
+    ns1:IdentifiedBy 5 ;
+    ns1:hasType "" ;
+    ns2:about "None" ;
+    ns2:abstract """Linguist Ben Zimmer says the pandemic has turned us all into amateur epidemiologists, utilizing terms like "superspreader" and "asymptomatic." Christopher Intagliata reports.
+
+-- Read more on ScientificAmerican.com""" ;
+    ns2:author "Christopher Intagliata, Scientific American" ;
+    ns2:citation "" ;
+    ns2:datePublished "2021-01-01T20:00:00+00:00"^^xsd:dateTime ;
+    ns2:headline "How the Coronavirus Pandemic Shaped Our Language in 2020" ;
+    ns2:url "https://www.scientificamerican.com/podcast/episode/how-the-coronavirus-pandemic-shaped-our-language-2020/"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/articles/7> a ns2:ScholarlyArticle ;
+    ns1:IdentifiedBy 7 ;
+    ns1:hasType "" ;
+    ns2:about "research-article" ;
+    ns2:abstract "Using AI, we identified baricitinib as having antiviral and anticytokine efficacy. We now show a 71% (95% CI 0.15 to 0.58) mortality benefit in 83 patients with moderate-severe SARS-CoV-2 pneumonia with few drug-induced adverse events, including a large elder…" ;
+    ns2:author "Stebbing, J., Sanchez Nievas, G., Falcone, M., Youhanna, S., Richardson, P., Ottaviani, S., Shen, J. X., Sommerauer, C., Tiseo, G., Ghiadoni, L., Virdis, A., Monzani, F., Rizos, L. R., Forfori, F., Avendano Cespedes, A., De Marco, S., Carrozzi, L., Lena, F., Sanchez-Jurado, P. M., Lacerenza, L. G., Cesira, N., Caldevilla Bernardo, D., Perrella, A., Niccoli, L., Mendez, L. S., Matarrese, D., Goletti, D., Tan, Y.-J., Monteil, V., Dranitsaris, G., Cantini, F., Farcomeni, A., Dutta, S., Burley, S. K., Zhang, H., Pistello, M., Li, W., Romero, M. M., Andres Pretel, F., Simon-Talero, R. S., Garcia-Molina, R., Kutter, C., Felce, J. H., Nizami, Z. F., Miklosi, A. G., Penninger, J. M., Menichetti, F., Mirazimi, A., Abizanda, P., Lauschke, V. M." ;
+    ns2:citation "" ;
+    ns2:datePublished "2021-01-01T18:50:28+00:00"^^xsd:dateTime ;
+    ns2:headline "JAK inhibition reduces SARS-CoV-2 liver infectivity and modulates inflammatory responses to reduce morbidity and mortality" ;
+    ns2:url "https://advances.sciencemag.org/content/7/1/eabe4724.full"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/articles/8> a ns2:ScholarlyArticle ;
+    ns1:IdentifiedBy 8 ;
+    ns1:hasType "" ;
+    ns2:about "research-article" ;
+    ns2:abstract "The recent outbreaks of SARS-CoV-2 pose a global health emergency. The SARS-CoV-2 trimeric spike (S) glycoprotein interacts with the human ACE2 receptor to mediate viral entry into host cells. We report the cryo-EM structures of a tightly closed SARS-CoV-2 S …" ;
+    ns2:author "Xu, C., Wang, Y., Liu, C., Zhang, C., Han, W., Hong, X., Wang, Y., Hong, Q., Wang, S., Zhao, Q., Wang, Y., Yang, Y., Chen, K., Zheng, W., Kong, L., Wang, F., Zuo, Q., Huang, Z., Cong, Y." ;
+    ns2:citation "" ;
+    ns2:datePublished "2021-01-01T18:50:28+00:00"^^xsd:dateTime ;
+    ns2:headline "Conformational dynamics of SARS-CoV-2 trimeric spike glycoprotein in complex with receptor ACE2 revealed by cryo-EM" ;
+    ns2:url "https://advances.sciencemag.org/content/7/1/eabe5575.full"^^xsd:url .
+
+<http://localhost:8082/codapi/resources/articles/9> a ns2:ScholarlyArticle ;
+    ns1:IdentifiedBy 9 ;
+    ns1:hasType "" ;
+    ns2:about "research-article" ;
+    ns2:abstract "The recovery process of COVID-19 patients is unclear. Some recovered patients complain of continued shortness of breath. Vasculopathy has been reported in COVID-19, stressing the importance of probing pulmonary microstructure and function at the alveolar-capi…" ;
+    ns2:author "Li, H., Zhao, X., Wang, Y., Lou, X., Chen, S., Deng, H., Shi, L., Xie, J., Tang, D., Zhao, J., Bouchard, L.-S., Xia, L., Zhou, X." ;
+    ns2:citation "" ;
+    ns2:datePublished "2021-01-01T18:50:28+00:00"^^xsd:dateTime ;
+    ns2:headline "Damaged lung gas exchange function of discharged COVID-19 patients detected by hyperpolarized 129Xe MRI" ;
+    ns2:url "https://advances.sciencemag.org/content/7/1/eabc8180.full"^^xsd:url .
 
 ns1:IdentifiedBy a rdf:Property .
 
