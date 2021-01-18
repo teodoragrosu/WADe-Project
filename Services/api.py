@@ -2,14 +2,20 @@ import csv
 import json
 from datetime import datetime
 from flask import Flask, jsonify, request, abort, send_file
+from flask_cors import CORS
+
+from Services.articleService import ArticlesService
+from Services.decorators.apiKeyDecorator import require_app_key
 from Services.metricsService import MetricsService
 from Services.newsService import NewsService
 from coda_graph.graph_handler import GraphHandler
 
 
 app = Flask(__name__, static_url_path="")
+CORS(app)
 metricsService = MetricsService()
 newsService = NewsService()
+articlesService = ArticlesService()
 
 
 # ====================================== ERROR CODES ==============================================
@@ -30,17 +36,22 @@ def server_error(error_message='Error: Internal server error'):
 
 # ==================================== METRICS ENDPOINTS ==================================================
 @app.route('/api/metrics/initialValues', methods=['GET'])
+@require_app_key
 def getMetricsInitialValues():
     result = metricsService.get_metrics_initial_values()
     return jsonify(result)
 
 
+@app.route('/api/metrics', methods=['POST'])
+@require_app_key
+def addMetrics():
+    metricsService.addMetrics(request.json["items"])
+    return jsonify({'status': 1})
+
+
 @app.route('/api/metrics', methods=['GET', 'POST'])
 def metrics():
-    if request.method == 'POST':
-        metricsService.addMetrics(request.json["items"])
-        return jsonify({'status': 1})
-    elif request.method == 'GET':
+    if request.method == 'GET':
         data = metricsService.get_all_metrics()
         return jsonify(data)
     else:
@@ -133,6 +144,7 @@ def download_country_metrics(country_code):
 # =========================================== NEWS ENDPOINTS ==============================================
 
 @app.route('/api/news', methods=['POST'])
+@require_app_key
 def add_news():
     newsService.addNews(request.json)
     return jsonify({'status': 1})
@@ -155,6 +167,12 @@ def get_news(publication=""):
 
 
 # =========================================== ARTICLE ENDPOINTS ==============================================
+
+@app.route('/api/articles', methods=['POST'])
+@require_app_key
+def add_articles():
+    articlesService.addArticles(request.json)
+    return jsonify({'status': 1})
 
 @app.route('/api/articles/latest', methods=['GET'])
 @app.route('/api/articles/filter/<int:id_>', methods=['GET'])
@@ -187,8 +205,7 @@ def serialize(type_):
         elif type_ == "news":
             newsService.serialize()
         elif type_ == "articles":
-            # articleService.serialize()
-            pass
+            articlesService.serialize()
         else:
             return abort(400, "Bad Request")
         return jsonify({'status': 1})
