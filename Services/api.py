@@ -2,14 +2,12 @@ import csv
 import json
 from datetime import datetime
 from flask import Flask, jsonify, request, abort, send_file
-from flask_cors import CORS
 from Services.metricsService import MetricsService
 from Services.newsService import NewsService
 from coda_graph.graph_handler import GraphHandler
 
 
 app = Flask(__name__, static_url_path="")
-CORS(app)
 metricsService = MetricsService()
 newsService = NewsService()
 

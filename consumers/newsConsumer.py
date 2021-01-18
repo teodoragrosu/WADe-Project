@@ -38,7 +38,7 @@ class NewsConsumer:
         if not any(item in news.keywords for item in ['covid', 'coronavirus', 'covid19', 'lockdown', 'virus', 'vaccine', 'illness', 'symptom', 'pandemic']):
             return
 
-        requests.post(apiNewsUri, json={"url": resource[0], "date": resource[1], "title": resource[2], "keywords": news.keywords, "publication": news.publication })
+        requests.post(apiNewsUri, params={"apiKey": "newsConsumerApiKey"}, json={"url": resource[0], "date": resource[1], "title": resource[2], "keywords": news.keywords, "publication": news.publication })
 
 
 consumer = NewsConsumer()
