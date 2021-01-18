@@ -19,43 +19,15 @@ def statistics_page():
     open('templates/line_data.json', 'w').close()
     open('templates/pie_data.json', 'w').close()
     today_date = datetime.today().strftime('%m/%d/%Y')
-    # response = requests.get('http://localhost:5000/api/country/CI')
-    # data = response.json()
-    # dates = list(data.keys())
-    # cases = []
-    # for case in data.values():
-    #     cases.append(case['active'])
-    #
-    # return render_template("statistics_page.html",
-    #                        today_date=today_date,
-    #                        labels=dates,
-    #                        values=cases)
-    with open('CI_data.json') as json_file:
-        json_data = json.load(json_file)
 
-        line_labels, line_values = sd.line_chart_data(json_data)
-        pie_labels, pie_values = sd.pie_chart_data(json_data)
-
-        with open("templates/line_data.json", "w") as data:
-            line_json = {'line_labels': line_labels, 'line_values': line_values}
-            json.dump(line_json, data)
-
-        with open("templates/pie_data.json", "w") as data:
-            pie_json = {'pie_labels': pie_labels, 'pie_values': pie_values}
-            json.dump(pie_json, data)
-
-    return render_template("statistics_page.html",
-                           line_labels=line_labels,
-                           line_values=line_values,
-                           today_date=today_date,
-                           pie_labels=pie_labels,
-                           pie_values=pie_values)
-
+    response = requests.get('http://localhost:5000/api/countries')
+    countries = response.json().keys()
+    return render_template("statistics_page.html", today_date=today_date, countries=countries)
 
 @app.route('/statistics', methods=['POST'])
 def receive_dates():
     if request.method == "POST":
-        with open('CI_data.json') as json_file:
+        with open('templates/country_data.json') as json_file:
             json_data = json.load(json_file)
 
             if len(request.form) == 2:
@@ -76,6 +48,17 @@ def receive_dates():
                     json.dump(pie_json, data)
 
     return 'Data uploaded'
+
+
+@app.route('/country_data', methods=['POST', 'GET'])
+def country_data():
+    if request.method == "POST":
+        with open("templates/country_data.json", "w") as data:
+            data.write(request.form['country_data'])
+    if request.method == "GET":
+        return render_template("country_data.json")
+
+    return "Data uploaded"
 
 
 @app.route('/line_data')

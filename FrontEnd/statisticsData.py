@@ -11,7 +11,7 @@ def line_chart_data(json_data, start_date='', end_date=''):
 
         return line_labels, line_values
     else:
-        interval_labels = line_labels[line_labels.index(start_date):line_labels.index(end_date) + 1]
+        interval_labels = line_labels[line_labels.index(end_date):line_labels.index(start_date) + 1]
         for date in interval_labels:
             line_values.append(json_data[date]['active'])
 

@@ -7,21 +7,19 @@
             <div class="modal" id="errorModal">
                 <div class="modal-dialog">
                     <div class="modal-content">
-
                         <!-- Modal Header -->
                         <div class="modal-header">
                             <h4 class="modal-title">Date input error</h4>
                             <button id="xModal" type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
-
                         <!-- Modal body -->
                         <div class="modal-body">
                             Please make sure the selected dates are valid.
                         </div>
-
                         <!-- Modal footer -->
                         <div class="modal-footer">
-                            <button id="closeModal" type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <button id="closeModal" type="button" class="btn btn-primary" data-dismiss="modal">Close
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -29,7 +27,13 @@
             <div class="container-fluid">
                 <h1 class="mt-4">Statistics</h1>
                 <ol class="breadcrumb mb-4">
-                    <li class="breadcrumb-item active">Statistics</li>
+                    <li class="breadcrumb-item active" style="padding: 5px;">Select the country: </li>
+                    <select id="country-selector" class="form-select country-select" aria-label="Default select example">
+                        <option selected>Country</option>
+                        {% for country in countries %}
+                            <option value="{{ country }}">{{ country }}</option>
+                        {% endfor %}
+                    </select>
                 </ol>
                 <div class="row">
                     <div class="col-xl-6">
@@ -37,12 +41,6 @@
                             <div class="card-header">
                                 <p>COVID-19 Evolution</p>
                                 <div class="filters">
-                                    <select class="form-select country-select" aria-label="Default select example">
-                                        <option selected>Country</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                    </select>
                                     <div class="datetimes">
                                         <div id="start_date1" class="input-group date" data-provide="datepicker">
                                             <input id="start_placeholder" type="text" class="form-control"
@@ -65,6 +63,7 @@
                                 </div>
                             </div>
                             <div class="card-body">
+                                <p id="waiting1" style="text-align: center;">Waiting for input</p>
                                 <canvas id="lineChart" width="100%" height="40"></canvas>
                             </div>
                         </div>
@@ -74,12 +73,6 @@
                             <div class="card-header">
                                 <p>COVID-19 Statistics</p>
                                 <div class="filters">
-                                    <select class="form-select country-select" aria-label="Default select example">
-                                        <option selected>Country</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                    </select>
                                     <div class="datetimes">
                                         <div id="stats_date" class="input-group date" data-provide="datepicker">
                                             <input id="stats_placeholder" type="text" class="form-control"
@@ -95,6 +88,7 @@
                                 </div>
                             </div>
                             <div class="card-body">
+                                <p id="waiting2" style="text-align: center;">Waiting for input</p>
                                 <canvas id="pieChart" width="100%" height="40"></canvas>
                             </div>
                         </div>
@@ -108,105 +102,99 @@
 
 <!--LINE CHART-->
 <script>
-function draw_line() {
-    $('#lineChart').removeAttr('style');
-    $('#lineChart').removeAttr('class');
-    $('#lineChart').attr('width', '100%');
-    $('#lineChart').attr('height', '40');
+var noLine = true;
+var myLineChart;
 
-    var getData = $.get('/line_data');
-    getData.done(function(results) {
-        var line = JSON.parse(results);
-        Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-        Chart.defaults.global.defaultFontColor = '#292b2c';
+function generate_line_chart(line_data) {
+    var line = JSON.parse(line_data);
 
-        // define the chart data
-        var lineChartData = {
-          labels : line.line_labels,
-          datasets : [{
-              label: '{{ legend }}',
-              fill: true,
-              lineTension: 0.1,
-              backgroundColor: "rgba(75,192,192,0.4)",
-              borderColor: "rgba(75,192,192,1)",
-              borderCapStyle: 'butt',
-              borderDash: [],
-              borderDashOffset: 0.0,
-              borderJoinStyle: 'miter',
-              pointBorderColor: "rgba(75,192,192,1)",
-              pointBackgroundColor: "#fff",
-              pointBorderWidth: 1,
-              pointHoverRadius: 5,
-              pointHoverBackgroundColor: "rgba(75,192,192,1)",
-              pointHoverBorderColor: "rgba(220,220,220,1)",
-              pointHoverBorderWidth: 2,
-              pointRadius: 1,
-              pointHitRadius: 10,
-              data : line.line_values,
-              spanGaps: false
-          }]
-        }
+    // define the chart data
+    var lineChartData = {
+      labels : line.line_labels,
+      datasets : [{
+          fill: true,
+          lineTension: 0.1,
+          backgroundColor: "rgba(75,192,192,0.4)",
+          borderColor: "rgba(75,192,192,1)",
+          borderCapStyle: 'butt',
+          borderDashOffset: 0.0,
+          borderJoinStyle: 'miter',
+          pointBorderColor: "rgba(75,192,192,1)",
+          pointBackgroundColor: "#fff",
+          pointBorderWidth: 1,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: "rgba(75,192,192,1)",
+          pointHoverBorderColor: "rgba(220,220,220,1)",
+          pointHoverBorderWidth: 2,
+          pointRadius: 1,
+          pointHitRadius: 10,
+          data : line.line_values,
+          spanGaps: false
+      }]
+    }
 
-        // get chart canvas
-        var ctx = document.getElementById("casesChart").getContext("2d");
+    // get chart canvas
+    var ctx = document.getElementById("lineChart").getContext("2d");
 
-        // create the chart using the chart canvas
-        var myLineChart = new Chart(ctx, {
-          type: 'line',
-          data: lineChartData,
-          options: {
-            scales: {
-              xAxes: [{
-                time: {
-                  unit: 'date'
-                },
-                gridLines: {
-                  display: false
-                },
-                ticks: {
-                  maxTicksLimit: 7
-                }
-              }],
-              yAxes: [{
-                ticks: {
-                  min: 0,
-                  max: 8000,
-                  maxTicksLimit: 5
-                },
-                gridLines: {
-                  color: "rgba(0, 0, 0, .125)",
-                }
-              }],
+    // create the chart using the chart canvas
+    myLineChart = new Chart(ctx, {
+      type: 'line',
+      data: lineChartData,
+      options: {
+        scales: {
+          xAxes: [{
+            time: {
+              unit: 'date'
             },
-            legend: {
+            gridLines: {
               display: false
+            },
+            ticks: {
+              maxTicksLimit: 7
             }
-          }
-        });
-    })
+          }],
+          yAxes: [{
+            ticks: {
+              min: 0,
+              max: 8000,
+              maxTicksLimit: 5
+            },
+            gridLines: {
+              color: "rgba(0, 0, 0, .125)",
+            }
+          }],
+        },
+        legend: {
+          display: false
+        }
+      }
+    });
+};
+
+function update_line(line_results){
+    var line = JSON.parse(line_results);
+    myLineChart.data.labels = line.line_labels
+    myLineChart.data.datasets[0].data = line.line_values
+    myLineChart.update();
 }
 </script>
+
 <!--PIE CHART-->
 <script>
-function draw_pie() {
-    $( ".chartjs-size-monitor" ).remove();
-    $('#pieChart').removeAttr('style');
-    $('#pieChart').removeAttr('class');
-    $('#pieChart').attr('width', '100%');
-    $('#pieChart').attr('height', '40');
+var noPie = true;
+var myPieChart;
 
-    var getData = $.get('/pie_data');
-    getData.done(function(results) {
-    var pie = JSON.parse(results);
+function generate_pie_chart(pie_data) {
+    var pie = JSON.parse(pie_data);
     window.chartColors = {
-      red: 'rgb(255, 99, 132)',
-      orange: 'rgb(255, 159, 64)',
-      yellow: 'rgb(255, 205, 86)',
-      green: 'rgb(75, 192, 192)',
-      blue: 'rgb(54, 162, 235)',
-      purple: 'rgb(153, 102, 255)',
-      grey: 'rgb(201, 203, 207)'
-    };
+          red: 'rgb(255, 99, 132)',
+          orange: 'rgb(255, 159, 64)',
+          yellow: 'rgb(255, 205, 86)',
+          green: 'rgb(75, 192, 192)',
+          blue: 'rgb(54, 162, 235)',
+          purple: 'rgb(153, 102, 255)',
+          grey: 'rgb(201, 203, 207)'
+        };
 
     var pieChartData = {
       labels : pie.pie_labels,
@@ -222,17 +210,45 @@ function draw_pie() {
 
     var pie = document.getElementById("pieChart").getContext("2d");
 
-    var myPieChart = new Chart(pie, {
+    myPieChart = new Chart(pie, {
         type: 'pie',
         data: pieChartData,
         options: {
             responsive: true
         }
     });
-});
 }
 
+function update_pie(pie_results){
+    var pie = JSON.parse(pie_results);
+    myPieChart.data.labels = pie.pie_labels;
+    myPieChart.data.datasets[0].data = pie.pie_values;
+    myPieChart.update();
+}
 </script>
+
+<!--COUNTRY DATA DOWNLOAD-->
+<script>
+$("#country-selector").change(function(){
+    var countryCode = $("#country-selector").val();
+
+    $.ajax({
+        url: "http://127.0.0.1:5000/api/country/"+countryCode,
+        type: 'get',
+        success: save_country_data
+    });
+});
+
+function save_country_data(country_data) {
+    var cdata = {'country_data': country_data}
+    $.ajax({
+        url: "{{url_for('country_data')}}",
+        type: 'post',
+        data: cdata
+    });
+}
+</script>
+
 <script type=text/javascript>
 $('#xModal').on('click', function (e) {
     $('#errorModal').hide();
@@ -243,20 +259,25 @@ $('#closeModal').on('click', function (e) {
 });
 
 $('button#line_chart_button').on('click', function (e) {
-    var start_date1 = new Date($('#start_placeholder').attr('placeholder')).toLocaleDateString();
-    var end_date1 = new Date($('#end_placeholder').attr('placeholder')).toLocaleDateString();
+    var start_date1 = $('#start_placeholder').attr('placeholder');
+    var end_date1 = $('#end_placeholder').attr('placeholder');
 
     if($('#start_date1').datepicker('getDate') != null){
-        start_date1 = $('#start_date1').datepicker('getDate').toLocaleDateString();
+        start_date1 = $('#start_date1').datepicker('getDate');
     }
     if($('#end_date1').datepicker('getDate') != null){
-        end_date1 = $('#end_date1').datepicker('getDate').toLocaleDateString();
+        end_date1 = $('#end_date1').datepicker('getDate');
     }
 
-    if(start_date1 >= end_date1){
+    if((Date.parse(start_date1) >= Date.parse(end_date1)) ||
+       (Date.parse(start_date1) > Date.now()) ||
+       (Date.parse(end_date1) > Date.now())){
         $('#errorModal').show();
     }
     else {
+        start_date1 = new Date(start_date1).toLocaleDateString();
+        end_date1 = new Date(end_date1).toLocaleDateString();
+
         var line_dates = {'start_date1': start_date1, 'end_date1': end_date1}
         $.ajax({
             type : 'POST',
@@ -264,21 +285,42 @@ $('button#line_chart_button').on('click', function (e) {
             url : "{{url_for('receive_dates')}}",
             data : line_dates
         });
-        draw_line();
+
+        if(noLine){
+            $('#waiting1').remove();
+            $.ajax({
+                url: "{{url_for('line_data')}}",
+                type: 'get',
+                dataType: 'html',
+                async: false,
+                success: generate_line_chart
+             });
+            noLine=false;
+        }
+        else {
+            $.ajax({
+                url: "{{url_for('line_data')}}",
+                type: 'get',
+                dataType: 'html',
+                async: false,
+                success: update_line
+            });
+        }
     }
 });
 
 $('button#pie_chart_button').on('click', function (e) {
-    var stats_date = new Date($('#stats_placeholder').attr('placeholder')).toLocaleDateString();
+    var stats_date = $('#stats_placeholder').attr('placeholder');
 
     if($('#stats_date').datepicker('getDate') != null){
-        stats_date = $('#stats_date').datepicker('getDate').toLocaleDateString();
+        stats_date = $('#stats_date').datepicker('getDate');
     }
 
-    if(stats_date >= new Date().toLocaleDateString()) {
+    if(Date.parse(stats_date) >= Date.now()) {
         $('#errorModal').show();
     }
     else {
+        stats_date = new Date(stats_date).toLocaleDateString();
         var pie_date = {'stats_date': stats_date}
         $.ajax({
             type : 'POST',
@@ -286,7 +328,27 @@ $('button#pie_chart_button').on('click', function (e) {
             url : "{{url_for('receive_dates')}}",
             data : pie_date
         });
-        draw_pie();
+
+        if(noPie){
+            $('#waiting2').remove();
+            $.ajax({
+                url: "{{url_for('pie_data')}}",
+                type: 'get',
+                dataType: 'html',
+                async: false,
+                success: generate_pie_chart
+             });
+            noPie=false;
+        }
+        else {
+            $.ajax({
+                url: "{{url_for('pie_data')}}",
+                type: 'get',
+                dataType: 'html',
+                async: false,
+                success: update_pie
+            });
+        }
     }
 });
 </script>
