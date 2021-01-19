@@ -2,9 +2,12 @@ from flask import Flask, render_template, request, jsonify, redirect
 import json
 from datetime import datetime
 import requests
+from flask_cors import CORS
+
 import FrontEnd.statisticsData as sd
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/articles")
 def article_list_page():
