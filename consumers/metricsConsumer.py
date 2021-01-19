@@ -17,7 +17,7 @@ class MetricsConsumer:
         print(self.countries)
         self.countriesState = {}
         self.populateCountriesState()
-        self.sleepTime = 900 #seconds
+        self.sleepTime = 3600 #seconds
 
     def start(self):
         while True:

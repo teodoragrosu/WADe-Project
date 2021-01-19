@@ -18,7 +18,7 @@ with open("../consumers/articleSources.json", "r") as sourcesFile:
 class ArticlesConsumer:
     def __init__(self):
         self.threadManager = ThreadManager(3, lambda resource: self.processData(resource))
-        self.sleepTime = 960  # seconds
+        self.sleepTime = 3600 * 6  # seconds
         self.params = {
             'q': 'covid',
             'pageSize': 100,
@@ -26,18 +26,22 @@ class ArticlesConsumer:
             'sortBy': 'publishedAt',
             'page': 1,
             'language': "en",
-            'from': "2021-01-03",
-            'to': "2021-01-04",
             'domains': ','.join(sources)
         }
 
     def start(self):
         while True:
-            news = requests.get(newsApiUri, params=self.params).json()["articles"]
-            for n in news:
-                self.threadManager.addResource((n['url'], n["publishedAt"], n["title"], n["description"], n["author"]))
+            try:
+                self.params["from"] = (datetime.now() + timedelta(hours = -12)).strftime('%Y-%m-%dT%H:%M:%SZ')
+                self.params["to"] = (datetime.now() + timedelta(hours = -6)).strftime('%Y-%m-%dT%H:%M:%SZ')
+                print(self.params)
+                news = requests.get(newsApiUri, params=self.params).json()["articles"]
+                for n in news:
+                    self.threadManager.addResource((n['url'], n["publishedAt"], n["title"], n["description"], n["author"]))
+            except:
+                pass
 
-            return
+            time.sleep(self.sleepTime)
     
     def processData(self, resource):
         article = newspaper(resource[0])
