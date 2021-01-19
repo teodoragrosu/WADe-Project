@@ -78,7 +78,11 @@ a:hover {
 }
 
 .fixed-bottom {
-    position: sticky;
+    position: inherit;
+}
+
+.fixed-top {
+    position: absolute;
 }
 
 .card-header {
@@ -95,6 +99,7 @@ a:hover {
 .datetimes {
     display: inline-flex;
     width: fit-content;
+    justify-content: flex-end;
 }
 
 .input-group {
@@ -109,4 +114,22 @@ a:hover {
     color: #fff;
     background-color: #3b6d48;
     border-color: #3b6d48;
+}
+
+.date-box {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    border-style: revert;
+    border-width: thin;
+    border-radius: 5px;
+    width: 40%;
+    border: 1px solid #ced4da;
+    padding: 6px;
+    text-align: center;
+}
+
+.date-box:focus {
+    border-color: #ced4da;
 }

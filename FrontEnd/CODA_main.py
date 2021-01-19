@@ -21,7 +21,7 @@ def about_page():
 def statistics_page():
     open('templates/line_data.json', 'w').close()
     open('templates/pie_data.json', 'w').close()
-    today_date = datetime.today().strftime('%m/%d/%Y')
+    today_date = datetime.today().strftime('%Y-%m-%d')
 
     response = requests.get('http://localhost:5000/api/countries')
     countries = response.json().keys()
@@ -34,17 +34,15 @@ def receive_dates():
             json_data = json.load(json_file)
 
             if len(request.form) == 2:
-                start_date1, end_date1 = sd.format_date(request.form['start_date1']), sd.format_date(request.form['end_date1'])
-                print(start_date1, end_date1)
-                line_labels, line_values = sd.line_chart_data(json_data, start_date1, end_date1)
+                print(request.form['start_date'], request.form['end_date'])
+                line_labels, line_values = sd.line_chart_data(json_data, request.form['start_date'], request.form['end_date'])
 
                 with open("templates/line_data.json", "w") as data:
                     line_json = {'line_labels': line_labels, 'line_values': line_values}
                     json.dump(line_json, data)
 
             if len(request.form) == 1:
-                stats_date = sd.format_date(request.form['stats_date'])
-                pie_labels, pie_values = sd.pie_chart_data(json_data, stats_date)
+                pie_labels, pie_values = sd.pie_chart_data(json_data, request.form['pie_date'])
 
                 with open("templates/pie_data.json", "w") as data:
                     pie_json = {'pie_labels': pie_labels, 'pie_values': pie_values}
@@ -72,6 +70,10 @@ def line_data():
 @app.route('/pie_data')
 def pie_data():
     return render_template("pie_data.json")
+
+@app.route('/bar_data')
+def bar_data():
+    return render_template("bar_data.json")
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)

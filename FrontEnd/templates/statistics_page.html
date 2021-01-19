@@ -27,13 +27,17 @@
             <div class="container-fluid">
                 <h1 class="mt-4">Statistics</h1>
                 <ol class="breadcrumb mb-4">
-                    <li class="breadcrumb-item active" style="padding: 5px;">Select the country: </li>
-                    <select id="country-selector" class="form-select country-select" aria-label="Default select example">
+                    <li class="breadcrumb-item active" style="padding: 5px;">Select the country:</li>
+                    <select id="country-selector" class="form-select country-select"
+                            aria-label="Default select example">
                         <option selected>Country</option>
                         {% for country in countries %}
-                            <option value="{{ country }}">{{ country }}</option>
+                        <option value="{{ country }}">{{ country }}</option>
                         {% endfor %}
                     </select>
+                    <div class="spinner-border text-success invisible" role="status" style="margin-left: 2rem;">
+                            <span class="sr-only">Loading...</span>
+                    </div>
                 </ol>
                 <div class="row">
                     <div class="col-xl-6">
@@ -42,20 +46,10 @@
                                 <p>COVID-19 Evolution</p>
                                 <div class="filters">
                                     <div class="datetimes">
-                                        <div id="start_date1" class="input-group date" data-provide="datepicker">
-                                            <input id="start_placeholder" type="text" class="form-control"
-                                                   placeholder="{{ today_date }}">
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-th"></span>
-                                            </div>
-                                        </div>
-                                        <div id="end_date1" class="input-group date" data-provide="datepicker">
-                                            <input id="end_placeholder" type="text" class="form-control"
-                                                   placeholder="{{ today_date }}">
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-th"></span>
-                                            </div>
-                                        </div>
+                                        <input type="text" id="start_placeholder" class="date-box"
+                                               placeholder="{{ today_date }}">
+                                        <input type="text" id="end_placeholder" class="date-box"
+                                               placeholder="{{ today_date }}">
                                     </div>
                                     <button id="line_chart_button" type="button" class="btn btn-primary"
                                             style="margin-bottom: 0.3rem;">Filter
@@ -73,14 +67,9 @@
                             <div class="card-header">
                                 <p>COVID-19 Statistics</p>
                                 <div class="filters">
-                                    <div class="datetimes">
-                                        <div id="stats_date" class="input-group date" data-provide="datepicker">
-                                            <input id="stats_placeholder" type="text" class="form-control"
-                                                   placeholder="{{ today_date }}">
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-th"></span>
-                                            </div>
-                                        </div>
+                                    <div class="datetimes" style="justify-content: flex-end;">
+                                        <input type="text" id="pie_placeholder" class="date-box"
+                                               placeholder="{{ today_date }}" size="30" style="width: 50%">
                                     </div>
                                     <button id="pie_chart_button" type="button" class="btn btn-primary"
                                             style="margin-bottom: 0.3rem;">Filter

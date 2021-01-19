@@ -1,17 +1,23 @@
 $.getScript("static/js/statistics_page/pie_chart.js");
 $.getScript("static/js/statistics_page/line_chart.js");
 $.getScript("static/js/statistics_page/active_chart.js");
-
+$.getScript("static/js/statistics_page/bar_chart.js");
 $.getScript("static/js/statistics_page/country_data.js");
 
 var noPie = true;
 var noLine = true;
+var noBar = true
 
 var myPieChart;
 var myLineChart;
+var myBarChart;
 
-console.log('LOADED');
+$( function() {
+    $( ".date-box" ).datepicker({ format: 'yyyy-mm-dd', startDate: "2020-01-01", endDate: "0" });
+});
+
 $("#country-selector").change(function(){
+    $('.spinner-border').removeClass('invisible').addClass('visible');
     var countryCode = $("#country-selector").val();
 
     $.ajax({
@@ -30,26 +36,26 @@ $('#closeModal').on('click', function (e) {
 });
 
 $('button#line_chart_button').on('click', function (e) {
-    var start_date1 = $('#start_placeholder').attr('placeholder');
-    var end_date1 = $('#end_placeholder').attr('placeholder');
+    var start_date = $('#start_placeholder').attr('placeholder');
+    var end_date = $('#end_placeholder').attr('placeholder');
 
-    if($('#start_date1').datepicker('getDate') != null){
-        start_date1 = $('#start_date1').datepicker('getDate');
+    if($('#start_placeholder').datepicker('getDate') != null){
+        start_date = $('#start_placeholder').datepicker('getDate');
     }
-    if($('#end_date1').datepicker('getDate') != null){
-        end_date1 = $('#end_date1').datepicker('getDate');
+    if($('#end_placeholder').datepicker('getDate') != null){
+        end_date = $('#end_placeholder').datepicker('getDate');
     }
 
-    if((Date.parse(start_date1) >= Date.parse(end_date1)) ||
-       (Date.parse(start_date1) > Date.now()) ||
-       (Date.parse(end_date1) > Date.now())){
+    if((Date.parse(start_date) >= Date.parse(end_date)) ||
+       (Date.parse(start_date) > Date.now()) ||
+       (Date.parse(end_date) > Date.now())){
         $('#errorModal').show();
     }
     else {
-        start_date1 = new Date(start_date1).toLocaleDateString();
-        end_date1 = new Date(end_date1).toLocaleDateString();
+        start_date = $.format.date(new Date(start_date),'yyyy-MM-dd');
+        end_date = $.format.date(new Date(end_date),'yyyy-MM-dd');
 
-        var line_dates = {'start_date1': start_date1, 'end_date1': end_date1}
+        var line_dates = {'start_date': start_date, 'end_date': end_date}
         $.ajax({
             type : 'POST',
             async: false,
@@ -81,23 +87,23 @@ $('button#line_chart_button').on('click', function (e) {
 });
 
 $('button#pie_chart_button').on('click', function (e) {
-    var stats_date = $('#stats_placeholder').attr('placeholder');
+    var pie_date = $('#pie_placeholder').attr('placeholder');
 
-    if($('#stats_date').datepicker('getDate') != null){
-        stats_date = $('#stats_date').datepicker('getDate');
+    if($('#pie_placeholder').datepicker('getDate') != null){
+        pie_date = $('#pie_placeholder').datepicker('getDate');
     }
 
-    if(Date.parse(stats_date) >= Date.now()) {
+    if(Date.parse(pie_date) >= Date.now()) {
         $('#errorModal').show();
     }
     else {
-        stats_date = new Date(stats_date).toLocaleDateString();
-        var pie_date = {'stats_date': stats_date}
+        pie_date = $.format.date(new Date(pie_date),'yyyy-MM-dd');
+        var post_pie_date = {'pie_date': pie_date}
         $.ajax({
             type : 'POST',
             async: false,
             url : "http://127.0.0.1:8000/statistics",
-            data : pie_date
+            data : post_pie_date
         });
 
         if(noPie){
@@ -110,12 +116,22 @@ $('button#pie_chart_button').on('click', function (e) {
                 success: generate_pie_chart
              });
             noPie=false;
+
+            // To EDIT THIS with request data
             $.ajax({
                 url: "http://127.0.0.1:8000/pie_data",
                 type: 'get',
                 dataType: 'html',
                 async: false,
                 success: generate_active_chart
+             });
+
+             $.ajax({
+                url: "http://127.0.0.1:8000/bar_data",
+                type: 'get',
+                dataType: 'html',
+                async: false,
+                success: generate_bar_chart
              });
         }
         else {
@@ -129,3 +145,17 @@ $('button#pie_chart_button').on('click', function (e) {
         }
     }
 });
+
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
