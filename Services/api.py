@@ -71,7 +71,7 @@ def get_all_available_countries():
 def get_country_metrics(country_code):
     if request.method == "GET":
         if "latest" in request.url_rule.rule:
-            data = metricsService.get_country_metrics(country_code, request.args[datetime.now().strftime("%Y-%m-%d")])
+            data = metricsService.get_country_metrics(country_code, latest=True)
         elif request.args.get("date"):
             data = metricsService.get_country_metrics(country_code, request.args["date"])
         else:
@@ -107,6 +107,7 @@ def download_country_metrics(country_code):
     data = metricsService.get_country_metrics(country_code,
                                               request.args.get("from", ""),
                                               request.args.get("to", ""),
+                                              latest=False,
                                               download=True)
     file_path = f"{country_code}_data.{request.args['format']}"
     with open(file_path, "w") as metrics_file:
@@ -128,13 +129,13 @@ def download_country_metrics(country_code):
             for date, values in _data.items():
                 writer.writerow({
                     "Date": date,
-                    "Confirmed": values["confirmed"],
-                    "Recovered": values["recovered"],
-                    "Deceased": values["deceased"],
-                    "Active": values["active"],
-                    "Total Confirmed": values["total_confirmed"],
-                    "Total Recovered": values["total_recovered"],
-                    "Total Deceased": values["total_deceased"],
+                    "Confirmed": values.get("confirmed", 0),
+                    "Recovered": values.get("recovered", 0),
+                    "Deceased": values.get("deceased", 0),
+                    "Active": values.get("active", 0),
+                    "Total Confirmed": values.get("total_confirmed", 0),
+                    "Total Recovered": values.get("total_recovered", 0),
+                    "Total Deceased": values.get("total_deceased", 0),
                 })
             mimetype = "text/csv"
 
@@ -174,41 +175,23 @@ def add_articles():
     articlesService.addArticles(request.json)
     return jsonify({'status': 1})
 
+
 @app.route('/api/articles/latest', methods=['GET'])
 @app.route('/api/articles/filter/<int:id_>', methods=['GET'])
 @app.route('/api/articles/filter/<string:type_>', methods=['GET'])
 def get_articles(id_=-1, type_=""):
     if request.method == 'GET':
-        # TODO: remove this after ArticleService is added
-        handler = GraphHandler("articles")
         if "latest" in request.url_rule.rule:
-            data = handler.get_articles(limit=request.args.get("limit", 20),
-                                        offset=request.args.get("offset", 0))
+            data = articlesService.get_articles(
+                        id_=-1, type_="",
+                        limit=request.args.get("limit", 20),
+                        offset=request.args.get("offset", 0))
         elif "filter" in request.url_rule.rule:
-            data = handler.get_articles(id_=id_,
-                                        type_=type_,
-                                        limit=request.args.get("limit", 20),
-                                        offset=request.args.get("offset", 0))
+            data = articlesService.get_articles(id_=id_,
+                                                type_=type_,
+                                                limit=request.args.get("limit", 20),
+                                                offset=request.args.get("offset", 0))
         return data
-    else:
-        return abort(405, "Method not allowed!")
-
-# =========================================== GRAPH ENDPOINTS ==============================================
-
-
-@app.route('/api/graph/serialize/<string:type_>', methods=['GET'])
-def serialize(type_):
-    # type -> what graph to serialize (cases, news, articles)
-    if request.method == "GET":
-        if type_ == "cases":
-            metricsService.serialize()
-        elif type_ == "news":
-            newsService.serialize()
-        elif type_ == "articles":
-            articlesService.serialize()
-        else:
-            return abort(400, "Bad Request")
-        return jsonify({'status': 1})
     else:
         return abort(405, "Method not allowed!")
 

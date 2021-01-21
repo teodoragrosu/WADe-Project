@@ -13,7 +13,7 @@ apiMetricsInitialValuesUri = "http://127.0.0.1:5000/api/metrics/initialValues"
 class MetricsConsumer:
     def __init__(self):
         self.threadManager = ThreadManager(5,lambda resource: self.processData(resource))
-        self.countries = requests.get(countriesUri).json()[:7]
+        self.countries = requests.get(countriesUri).json()[:3]
         print(self.countries)
         self.countriesState = {}
         self.populateCountriesState()
@@ -30,7 +30,10 @@ class MetricsConsumer:
             time.sleep(self.sleepTime)
 
     def populateCountriesState(self):
-        latestState = requests.get(apiMetricsInitialValuesUri).json()
+        try:
+            latestState = requests.get(apiMetricsInitialValuesUri).json()
+        except:
+            return
         for country in latestState.keys():
             try:
                 slug = next(c["Slug"] for c in self.countries if c["ISO2"] == country)
