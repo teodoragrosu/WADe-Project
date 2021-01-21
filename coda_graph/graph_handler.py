@@ -203,6 +203,7 @@ class GraphHandler:
         """
         )
         response = self.wrapper.query().convert()
+        print(response)
         return int(response["results"]["bindings"][0]["max"]["value"])
 
     @staticmethod
@@ -355,8 +356,8 @@ class GraphHandler:
                     <http://coda.org/resources/news/{id_}> ns2:url '{url_source}'^^xsd:url .
                     <http://coda.org/resources/news/{id_}> ns2:keywords {keywords} .
                     <http://coda.org/resources/news/{id_}> ns1:IdentifiedBy '{id_}'^^xsd:integer .
-                    <http://coda.org/resources/news/{id_}> ns2:PublishedIn '{publication}' .
-                    <http://coda.org/resources/news/{id_}> ns2:hasImage '{img_url}' .
+                    <http://coda.org/resources/news/{id_}> ns1:PublishedIn '{publication}' .
+                    <http://coda.org/resources/news/{id_}> ns1:hasImage '{img_url}' .
                 }}
             }}
         """
