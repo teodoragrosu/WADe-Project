@@ -1,5 +1,13 @@
 function generate_pie_chart(pie_data) {
-    var pie = JSON.parse(pie_data);
+    var pie;
+
+    if(pie_data) {
+        pie = JSON.parse(pie_data);
+    }
+    else {
+        pie = {"pie_labels": ["Total recovered", "Total confirmed", "Total deceased"], "pie_values": ["0", "0", "0"]}
+    }
+
     window.chartColors = {
           red: 'rgb(255, 99, 132)',
           orange: 'rgb(255, 159, 64)',

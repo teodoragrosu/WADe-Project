@@ -1,10 +1,24 @@
 function generate_bar_chart(bar_data) {
-    var bar = JSON.parse(bar_data);
-    console.log(bar);
+    var bar;
+
+    if(bar_data) {
+        bar = JSON.parse(bar_data);
+    }
+    else {
+        bar = {avg_active_per_day: 0, avg_confirmed_per_day: 0, avg_deceased_per_day: 0, avg_recovered_per_day: 0 };
+    }
     Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
     Chart.defaults.global.defaultFontColor = '#292b2c';
+    window.chartColors = {
+          red: 'rgb(255, 99, 132)',
+          orange: 'rgb(255, 159, 64)',
+          yellow: 'rgb(255, 205, 86)',
+          green: 'rgb(75, 192, 192)',
+          blue: 'rgb(54, 162, 235)',
+          purple: 'rgb(153, 102, 255)',
+          grey: 'rgb(201, 203, 207)'
+        };
 
-    console.log(Object.keys(bar).map(function (key) { return key.avg_deceased_per_day;}))
     // define the chart data
     var barChartData = {
       labels : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
@@ -70,6 +84,34 @@ function generate_bar_chart(bar_data) {
 
 function update_bar(bar_results){
     var bar = JSON.parse(bar_results);
-    myBarChart.data.datasets[0].data = bar.bar_values;
+    console.log('BARTEST');
+    console.log(bar);
+    myBarChart.data.datasets = [
+      {
+          label: "deceased",
+          backgroundColor: chartColors.red,
+          borderColor: chartColors.red,
+          data : Object.values(bar).map(function (value) { return value.avg_deceased_per_day;}),
+      },
+      {
+          label: "confirmed",
+          lineTension: 0.1,
+          backgroundColor: chartColors.orange,
+          borderColor: chartColors.orange,
+          data : Object.values(bar).map(function (value) { return value.avg_confirmed_per_day;}),
+      },
+      {
+          label: "recovered",
+          backgroundColor: chartColors.green,
+          borderColor: chartColors.green,
+          data : Object.values(bar).map(function (value) { return value.avg_recovered_per_day;}),
+      },
+      {
+          label: "active",
+          backgroundColor: chartColors.purple,
+          borderColor: chartColors.blue,
+          data : Object.values(bar).map(function (value) { return value.avg_active_per_day;}),
+      }
+      ]
     myBarChart.update();
 }

@@ -1,5 +1,28 @@
+var getDaysArray = function(start, end) {
+    for(var arr=[],dt=new Date(start); dt<=end; dt.setDate(dt.getDate()+1)){
+        arr.push($.format.date(new Date(dt),'yyyy-MM-dd'));
+    }
+    return arr;
+};
+
 function generate_line_chart(line_data) {
-    var line = JSON.parse(line_data);
+    var line;
+    var upper_threshold = 1000;
+
+    if(line_data){
+        line = JSON.parse(line_data);
+
+        var maxOfList = Math.max(...line.line_values);
+        var zeroes = maxOfList.toString().length-1;
+        upper_threshold = Math.ceil(maxOfList / Math.pow(10, zeroes)) * Math.pow(10, zeroes);
+    }
+    else{
+        var dayList = getDaysArray(new Date("2020-01-01"),new Date());
+
+        (arr = []).length =  dayList.length;
+         arr.fill(0);
+        line = {"line_labels": dayList,"line_values": arr};
+    }
 
     // define the chart data
     var lineChartData = {
@@ -28,9 +51,6 @@ function generate_line_chart(line_data) {
 
     // get chart canvas
     var ctx = document.getElementById("lineChart").getContext("2d");
-    var maxOfList = Math.max(...line.line_values);
-    var zeroes = maxOfList.toString().length-1;
-    var upper_threshold = Math.ceil(maxOfList / Math.pow(10, zeroes)) * Math.pow(10, zeroes);
 
     // create the chart using the chart canvas
     myLineChart = new Chart(ctx, {
@@ -69,7 +89,11 @@ function generate_line_chart(line_data) {
 
 function update_line(line_results){
     var line = JSON.parse(line_results);
-    myLineChart.data.labels = line.line_labels
-    myLineChart.data.datasets[0].data = line.line_values
+    var maxOfList = Math.max(...line.line_values);
+    var zeroes = maxOfList.toString().length-1;
+    var upper_threshold = Math.ceil(maxOfList / Math.pow(10, zeroes)) * Math.pow(10, zeroes);
+    myLineChart.data.labels = line.line_labels;
+    myLineChart.data.datasets[0].data = line.line_values;
+    myLineChart.options.scales.yAxes[0].ticks.max = upper_threshold;
     myLineChart.update();
 }

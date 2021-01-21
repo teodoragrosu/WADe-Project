@@ -1,16 +1,14 @@
-$.getScript("static/js/statistics_page/pie_chart.js");
-$.getScript("static/js/statistics_page/line_chart.js");
-$.getScript("static/js/statistics_page/active_chart.js");
-$.getScript("static/js/statistics_page/bar_chart.js");
+$.getScript("static/js/statistics_page/line_chart.js", function() {generate_line_chart("");});
+$.getScript("static/js/statistics_page/pie_chart.js", function() {generate_pie_chart("");});
+$.getScript("static/js/statistics_page/bar_chart.js", function() {generate_bar_chart("");});
+$.getScript("static/js/statistics_page/evol_chart.js", function() {generate_evol_chart("");});
 $.getScript("static/js/statistics_page/country_data.js");
-
-var noPie = true;
-var noLine = true;
-var noBar = true
 
 var myPieChart;
 var myLineChart;
 var myBarChart;
+var myEvolChart;
+
 
 $( function() {
     $( ".date-box" ).datepicker({ format: 'yyyy-mm-dd', startDate: "2020-01-01", endDate: "0" });
@@ -21,9 +19,37 @@ $("#country-selector").change(function(){
     var countryCode = $("#country-selector").val();
 
     $.ajax({
-        url: "http://127.0.0.1:5000/api/country/"+countryCode,
-        type: 'get',
-        success: save_country_data
+        url: "https://coda-apiv1.herokuapp.com/api/country/"+countryCode,
+        type: 'GET',
+        success: save_country_data,
+        complete: function(){
+            $.ajax({
+                url: "http://127.0.0.1:8000/line_data",
+                type: 'get',
+                dataType: 'html',
+                success: update_line
+             });
+            $.ajax({
+                url: "http://127.0.0.1:8000/pie_data",
+                type: 'get',
+                dataType: 'html',
+                success: update_pie
+             });
+            $.ajax({
+                url: "http://127.0.0.1:8000/bar_data",
+                type: 'get',
+                dataType: 'html',
+                async: false,
+                success: update_bar
+            });
+            $.ajax({
+                url: "http://127.0.0.1:8000/evol_data",
+                type: 'get',
+                dataType: 'html',
+                async: false,
+                success: update_evol
+            });
+        }
     });
 });
 
@@ -63,26 +89,13 @@ $('button#line_chart_button').on('click', function (e) {
             data : line_dates
         });
 
-        if(noLine){
-            $('#waiting1').remove();
-            $.ajax({
-                url: "http://127.0.0.1:8000/line_data",
-                type: 'get',
-                dataType: 'html',
-                async: false,
-                success: generate_line_chart
-             });
-            noLine=false;
-        }
-        else {
-            $.ajax({
-                url: "http://127.0.0.1:8000/line_data",
-                type: 'get',
-                dataType: 'html',
-                async: false,
-                success: update_line
-            });
-        }
+        $.ajax({
+            url: "http://127.0.0.1:8000/line_data",
+            type: 'get',
+            dataType: 'html',
+            async: false,
+            success: update_line
+        });
     }
 });
 
@@ -99,6 +112,7 @@ $('button#pie_chart_button').on('click', function (e) {
     else {
         pie_date = $.format.date(new Date(pie_date),'yyyy-MM-dd');
         var post_pie_date = {'pie_date': pie_date}
+
         $.ajax({
             type : 'POST',
             async: false,
@@ -106,43 +120,13 @@ $('button#pie_chart_button').on('click', function (e) {
             data : post_pie_date
         });
 
-        if(noPie){
-            $('#waiting2').remove();
-            $.ajax({
-                url: "http://127.0.0.1:8000/pie_data",
-                type: 'get',
-                dataType: 'html',
-                async: false,
-                success: generate_pie_chart
-             });
-            noPie=false;
-
-            // To EDIT THIS with request data
-            $.ajax({
-                url: "http://127.0.0.1:8000/pie_data",
-                type: 'get',
-                dataType: 'html',
-                async: false,
-                success: generate_active_chart
-             });
-
-             $.ajax({
-                url: "http://127.0.0.1:8000/bar_data",
-                type: 'get',
-                dataType: 'html',
-                async: false,
-                success: generate_bar_chart
-             });
-        }
-        else {
-            $.ajax({
-                url: "http://127.0.0.1:8000/pie_data",
-                type: 'get',
-                dataType: 'html',
-                async: false,
-                success: update_pie
-            });
-        }
+        $.ajax({
+            url: "http://127.0.0.1:8000/pie_data",
+            type: 'get',
+            dataType: 'html',
+            async: false,
+            success: update_pie
+        });
     }
 });
 

@@ -23,7 +23,7 @@ def statistics_page():
     open('templates/pie_data.json', 'w').close()
     today_date = datetime.today().strftime('%Y-%m-%d')
 
-    response = requests.get('http://localhost:5000/api/countries')
+    response = requests.get('https://coda-apiv1.herokuapp.com/api/countries')
     countries = response.json().keys()
     return render_template("statistics_page.html", today_date=today_date, countries=countries)
 
@@ -32,6 +32,11 @@ def receive_dates():
     if request.method == "POST":
         with open('templates/country_data.json') as json_file:
             json_data = json.load(json_file)
+
+            with open("templates/evol_data.json", "w") as data:
+                evol_labels, evol_recovered, evol_deceased = sd.evol_chart_data(json_data)
+                evol_json = {'evol_labels': evol_labels, 'evol_recovered': evol_recovered, 'evol_deceased': evol_deceased}
+                json.dump(evol_json, data)
 
             if len(request.form) == 2:
                 print(request.form['start_date'], request.form['end_date'])
@@ -56,6 +61,7 @@ def country_data():
     if request.method == "POST":
         with open("templates/country_data.json", "w") as data:
             data.write(request.form['country_data'])
+        sd.save_chart_data()
     if request.method == "GET":
         return render_template("country_data.json")
 
@@ -66,7 +72,6 @@ def country_data():
 def line_data():
     return render_template("line_data.json")
 
-
 @app.route('/pie_data')
 def pie_data():
     return render_template("pie_data.json")
@@ -74,6 +79,10 @@ def pie_data():
 @app.route('/bar_data')
 def bar_data():
     return render_template("bar_data.json")
+
+@app.route('/evol_data')
+def evol_data():
+    return render_template("evol_data.json")
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
