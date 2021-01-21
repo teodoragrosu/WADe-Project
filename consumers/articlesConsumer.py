@@ -15,6 +15,9 @@ sources = []
 with open("../consumers/articleSources.json", "r") as sourcesFile:
     sources = json.load(sourcesFile)
 
+def sanitize(string):
+    return string.replace("\"", "'").replace("\n","")
+
 class ArticlesConsumer:
     def __init__(self):
         self.threadManager = ThreadManager(3, lambda resource: self.processData(resource))
@@ -78,7 +81,7 @@ class ArticlesConsumer:
         if 'politics' in article.keywords:
             categories.append('politics')
 
-        requests.post(apiArticlesUri, params={"apiKey": "articlesConsumerApiKey"}, json={"url": resource[0], "date": resource[1], "title": resource[2], "authors": [resource[4]], "abstract": resource[3], "categories": list(set(categories)), "articleType": articleType})
+        requests.post(apiArticlesUri, params={"apiKey": "articlesConsumerApiKey"}, json={"url": resource[0], "date": resource[1], "title": sanitize(resource[2]), "authors": [sanitize(resource[4])], "abstract": sanitize(resource[3]), "categories": list(set(categories)), "articleType": articleType})
 
 c = ArticlesConsumer()
 c.start()
