@@ -6,6 +6,7 @@ class ArticlesService:
         self.graphHandler = GraphHandler()
 
     def addArticles(self, article):
+        print(article)
         self.graphHandler.add_articles(article["title"], article["authors"], article["abstract"], article["date"], article["url"], art_type=article["articleType"], categories=article["categories"])
 
     def get_articles(self, id_=-1, type_="", limit=20, offset=0):

@@ -1,5 +1,6 @@
 import json
 from SPARQLWrapper import SPARQLWrapper, JSON, POST
+import random
 
 
 # PATH = "http://localhost:7200/repositories/coda"
@@ -263,12 +264,14 @@ class GraphHandler:
         return json.dumps(self._get_article_results(response))
 
     def add_articles(self, title, authors, abstract, date, url, art_type, categories):
-        id_ = self._get_latest_id("ScholarlyArticle") + 1
+        id_ = random.randint(0, 999999)
+            #self._get_latest_id("ScholarlyArticle") + 1
 
         self.wrapper = SPARQLWrapper(f"{PATH}/statements")
         self.wrapper.user = "admin"
         self.wrapper.passwd = "root"
         self.wrapper.setMethod(POST)
+        categories_str = ",".join(categories)
 
         self.wrapper.setQuery(
             f"""
@@ -277,12 +280,12 @@ class GraphHandler:
                 GRAPH <http://coda.org/articles> {{
                     <http://coda.org/resources/articles/{id_}> rdf:type ns2:ScholarlyArticle .
                     <http://coda.org/resources/articles/{id_}> ns2:headline '{title}' .
-                    <http://coda.org/resources/articles/{id_}> ns2:authors '{authors}' .
+                    <http://coda.org/resources/articles/{id_}> ns2:authors "{authors}" .
                     <http://coda.org/resources/articles/{id_}> ns2:abstract '{abstract}' .
                     <http://coda.org/resources/articles/{id_}> ns1:hasType '{art_type}' .
                     <http://coda.org/resources/articles/{id_}> ns2:datePublished '{date}'^^xsd:date .
                     <http://coda.org/resources/articles/{id_}> ns2:url '{url}'^^xsd:url .
-                    <http://coda.org/resources/articles/{id_}> ns2:about {categories} .
+                    <http://coda.org/resources/articles/{id_}> ns2:about '{categories_str}' .
                     <http://coda.org/resources/articles/{id_}> ns1:IdentifiedBy '{id_}'^^xsd:integer .
                     <http://coda.org/resources/articles/{id_}> ns1:hasType '{id_}' .
                 }}

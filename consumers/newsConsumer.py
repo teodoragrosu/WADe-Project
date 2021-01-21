@@ -16,9 +16,12 @@ articleSources = []
 with open("../consumers/articleSources.json", "r") as sourcesFile:
     articleSources = json.load(sourcesFile)
 
+def sanitize(string):
+    return string.replace("\"", "'").replace("\n","")
+
 class NewsConsumer:
     def __init__(self):
-        self.threadManager = ThreadManager(3, lambda resource: self.processData(resource))
+        self.threadManager = ThreadManager(1, lambda resource: self.processData(resource))
         self.sleepTime = 960  # seconds
         self.params = {
             'q': 'covid',
@@ -35,7 +38,7 @@ class NewsConsumer:
                 self.params["to"] = (datetime.now() + timedelta(minutes = -285)).strftime('%Y-%m-%dT%H:%M:%SZ')
                 news = requests.get(newsApiUri, params=self.params).json()["articles"]
                 for n in news:
-                    self.threadManager.addResource((n['url'], n["publishedAt"], n["title"]))
+                    self.threadManager.addResource((n['url'], n["publishedAt"], n["title"], n['urlToImage']))
             except:
                 pass
             
@@ -50,7 +53,7 @@ class NewsConsumer:
         if not any(item in news.keywords for item in ['covid', 'coronavirus', 'covid19', 'lockdown', 'virus', 'vaccine', 'illness', 'symptom', 'pandemic']):
             return
 
-        requests.post(apiNewsUri, params={"apiKey": "newsConsumerApiKey"}, json={"url": resource[0], "date": resource[1], "title": resource[2], "keywords": news.keywords, "publication": news.publication })
+        requests.post(apiNewsUri, params={"apiKey": "newsConsumerApiKey"}, json={"url": resource[0], "date": resource[1], "title": sanitize(resource[2]), "keywords": news.keywords, "publication": sanitize(news.publication), 'imgUrl': resource[3] })
 
 
 consumer = NewsConsumer()

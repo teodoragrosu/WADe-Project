@@ -32,13 +32,12 @@ def threadWrapperFunction(parent, threadIndex, innerFunction):
             time.sleep(1)
         else:
             tries = 0
-            innerFunction(resource)
-            #while tries <= 10:
-            #   try:
-            #        innerFunction(resource)
-            #    except:
-            #       tries += 1
-            #       time.sleep(5)
-            #       continue
-            #   break
+            while tries <= 10:
+                try:
+                    innerFunction(resource)
+                except:
+                   tries += 1
+                   time.sleep(5)
+                   continue
+                break
             time.sleep(1)
