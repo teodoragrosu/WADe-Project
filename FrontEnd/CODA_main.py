@@ -3,15 +3,24 @@ import json
 from datetime import datetime
 import requests
 from flask_cors import CORS
+import dateutil.parser
 
 import FrontEnd.statisticsData as sd
 
+localApiPath = 'http://127.0.0.1:5000/api/'
 app = Flask(__name__)
 CORS(app)
 
+@app.template_filter('formatdate')
+def formatdate(s):
+    return dateutil.parser.parse(s).strftime('%H:%M %d.%m.%Y')
+
+
 @app.route("/articles")
 def article_list_page():
-    return render_template("article_list_page.html")
+    response = requests.get(localApiPath + 'articles/page/1')
+    articles = list(response.json().values())
+    return render_template("article_list_page.html", articles=articles)
 
 @app.route("/about")
 def about_page():

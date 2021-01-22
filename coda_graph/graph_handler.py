@@ -3,9 +3,9 @@ from SPARQLWrapper import SPARQLWrapper, JSON, POST
 import random
 
 
-# PATH = "http://localhost:7200/repositories/coda"
+PATH = "http://localhost:7200/repositories/coda"
 API_PATH = "http://localhost:5000/api/country/"
-PATH = "http://35.190.193.250:7200/repositories/coda"   # cloud path
+#PATH = "http://35.190.193.250:7200/repositories/coda"   # cloud path
 
 
 class GraphHandler:
@@ -263,6 +263,45 @@ class GraphHandler:
         response = self.wrapper.query().convert()
         return json.dumps(self._get_article_results(response))
 
+    def get_articles_filtered(self, type_="", limit=20, offset=0, search_term="", categories=[]):
+
+        filter_condition = ""
+        if type_:
+            filter_condition += f"?art_type = '{type_}' &&"
+        if search_term:
+            filter_condition += f"contains(?title, \"{search_term}\" ) &&"
+        if len(categories) >= 0:
+            for category in categories:
+                filter_condition += f"contains(?categories, \"{category}\" ) &&"
+
+        if filter_condition:
+            filter_condition = f"FILTER ({filter_condition[:-3]})"
+
+        self.wrapper.setQuery(f"""
+            {self.PREFIXES}
+            SELECT DISTINCT ?id ?title 
+                            (group_concat(distinct ?a;separator=';') as ?authors) 
+                            ?abstract ?date ?url ?art_type 
+                            (group_concat(distinct ?c;separator=';') as ?categories)
+            WHERE {{
+                ?uri rdf:type ns2:ScholarlyArticle .
+                ?uri ns1:IdentifiedBy ?id .
+                ?uri ns2:headline ?title .
+                ?uri ns2:author ?a .
+                ?uri ns2:abstract ?abstract .
+                ?uri ns2:datePublished ?date .
+                ?uri ns2:url ?url .
+                ?uri ns1:hasType ?art_type .
+                ?uri ns2:about ?c .
+            {filter_condition}
+            }}
+            GROUP BY ?id ?title ?abstract ?date ?url ?art_type 
+            ORDER BY DESC(?date) LIMIT {limit} OFFSET {offset}
+            """)
+
+        response = self.wrapper.query().convert()
+        return json.dumps(self._get_article_results(response))
+
     def add_articles(self, title, authors, abstract, date, url, art_type, categories):
         id_ = random.randint(0, 999999)
             #self._get_latest_id("ScholarlyArticle") + 1
@@ -341,7 +380,7 @@ class GraphHandler:
         return json.dumps(self._get_news_results(response))
 
     def add_news(self, title, date, url_source, publication, keywords, img_url):
-        id_ = self._get_latest_id("NewsArticle") + 1
+        id_ = random.randint(0, 999999)
 
         self.wrapper = SPARQLWrapper(f"{PATH}/statements")
         self.wrapper.user = "admin"
