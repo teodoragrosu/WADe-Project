@@ -41,12 +41,6 @@ function generate_bar_chart(bar_data) {
           backgroundColor: chartColors.green,
           borderColor: chartColors.green,
           data : Object.values(bar).map(function (value) { return value.avg_recovered_per_day;}),
-      },
-      {
-          label: "active",
-          backgroundColor: chartColors.purple,
-          borderColor: chartColors.blue,
-          data : Object.values(bar).map(function (value) { return value.avg_active_per_day;}),
       }
       ]
     }
@@ -105,12 +99,6 @@ function update_bar(bar_results){
           backgroundColor: chartColors.green,
           borderColor: chartColors.green,
           data : Object.values(bar).map(function (value) { return value.avg_recovered_per_day;}),
-      },
-      {
-          label: "active",
-          backgroundColor: chartColors.purple,
-          borderColor: chartColors.blue,
-          data : Object.values(bar).map(function (value) { return value.avg_active_per_day;}),
       }
       ]
     myBarChart.update();

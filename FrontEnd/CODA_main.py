@@ -28,21 +28,21 @@ def about_page():
 
 @app.route("/statistics")
 def statistics_page():
-    open('templates/line_data.json', 'w').close()
-    open('templates/pie_data.json', 'w').close()
+    open('templates/chart_data/line_data.json', 'w').close()
+    open('templates/chart_data/pie_data.json', 'w').close()
     today_date = datetime.today().strftime('%Y-%m-%d')
 
-    response = requests.get('https://coda-apiv1.herokuapp.com/api/countries')
+    response = requests.get('http://127.0.0.1:5000/api/countries')
     countries = response.json().keys()
     return render_template("statistics_page.html", today_date=today_date, countries=countries)
 
 @app.route('/statistics', methods=['POST'])
 def receive_dates():
     if request.method == "POST":
-        with open('templates/country_data.json') as json_file:
+        with open('templates/chart_data/country_data.json') as json_file:
             json_data = json.load(json_file)
 
-            with open("templates/evol_data.json", "w") as data:
+            with open("templates/chart_data/evol_data.json", "w") as data:
                 evol_labels, evol_recovered, evol_deceased = sd.evol_chart_data(json_data)
                 evol_json = {'evol_labels': evol_labels, 'evol_recovered': evol_recovered, 'evol_deceased': evol_deceased}
                 json.dump(evol_json, data)
@@ -51,14 +51,14 @@ def receive_dates():
                 print(request.form['start_date'], request.form['end_date'])
                 line_labels, line_values = sd.line_chart_data(json_data, request.form['start_date'], request.form['end_date'])
 
-                with open("templates/line_data.json", "w") as data:
+                with open("templates/chart_data/line_data.json", "w") as data:
                     line_json = {'line_labels': line_labels, 'line_values': line_values}
                     json.dump(line_json, data)
 
             if len(request.form) == 1:
                 pie_labels, pie_values = sd.pie_chart_data(json_data, request.form['pie_date'])
 
-                with open("templates/pie_data.json", "w") as data:
+                with open("templates/chart_data/pie_data.json", "w") as data:
                     pie_json = {'pie_labels': pie_labels, 'pie_values': pie_values}
                     json.dump(pie_json, data)
 
@@ -68,30 +68,30 @@ def receive_dates():
 @app.route('/country_data', methods=['POST', 'GET'])
 def country_data():
     if request.method == "POST":
-        with open("templates/country_data.json", "w") as data:
+        with open("templates/chart_data/country_data.json", "w") as data:
             data.write(request.form['country_data'])
         sd.save_chart_data()
     if request.method == "GET":
-        return render_template("country_data.json")
+        return render_template("chart_data/country_data.json")
 
     return "Data uploaded"
 
 
 @app.route('/line_data')
 def line_data():
-    return render_template("line_data.json")
+    return render_template("chart_data/line_data.json")
 
 @app.route('/pie_data')
 def pie_data():
-    return render_template("pie_data.json")
+    return render_template("chart_data/pie_data.json")
 
 @app.route('/bar_data')
 def bar_data():
-    return render_template("bar_data.json")
+    return render_template("chart_data/bar_data.json")
 
 @app.route('/evol_data')
 def evol_data():
-    return render_template("evol_data.json")
+    return render_template("chart_data/evol_data.json")
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)

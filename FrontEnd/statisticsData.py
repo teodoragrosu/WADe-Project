@@ -46,20 +46,20 @@ def pie_chart_data(json_data, selected_date=''):
 
 
 def save_chart_data():
-    with open('templates/country_data.json') as json_file:
+    with open('templates/chart_data/country_data.json') as json_file:
         json_data = json.load(json_file)
 
-        with open("templates/evol_data.json", "w") as data:
+        with open("templates/chart_data/evol_data.json", "w") as data:
             evol_labels, evol_recovered, evol_deceased = evol_chart_data(json_data)
             evol_json = {'evol_labels': evol_labels, 'evol_recovered': evol_recovered, 'evol_deceased': evol_deceased}
             json.dump(evol_json, data)
 
-        with open("templates/line_data.json", "w") as data:
+        with open("templates/chart_data/line_data.json", "w") as data:
             line_labels, line_values = line_chart_data(json_data, list(json_data.keys())[-1], list(json_data.keys())[0])
             line_json = {'line_labels': line_labels, 'line_values': line_values}
             json.dump(line_json, data)
 
-        with open("templates/pie_data.json", "w") as data:
+        with open("templates/chart_data/pie_data.json", "w") as data:
             pie_labels, pie_values = pie_chart_data(json_data, list(json_data.keys())[0])
             pie_json = {'pie_labels': pie_labels, 'pie_values': pie_values}
             json.dump(pie_json, data)
