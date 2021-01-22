@@ -202,6 +202,14 @@ def get_articles(id_=-1, type_=""):
     else:
         return abort(405, "Method not allowed!")
 
+@app.route('/api/articles/page/<int:page>', methods=['GET'])
+def get_articles_filtered(page):
+    search_term = request.args.get('search_term')
+    #categories = request.args.getlist('categories')
+    categories = []
+    data = articlesService.get_articles_filtered('', 10, (page - 1) * 10, search_term, categories)
+    return data
+
 
 if __name__ == '__main__':
     app.run(debug=True)

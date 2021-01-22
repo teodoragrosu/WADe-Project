@@ -11,3 +11,6 @@ class ArticlesService:
 
     def get_articles(self, id_=-1, type_="", limit=20, offset=0):
         return self.graphHandler.get_articles(id_, type_, limit, offset)
+
+    def get_articles_filtered(self, type_="", limit=20, offset=0, search_term="", categories=[] ):
+        return self.graphHandler.get_articles_filtered(type_, limit, offset, search_term, categories)
