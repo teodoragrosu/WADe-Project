@@ -2,12 +2,20 @@ $.getScript("static/js/statistics_page/line_chart.js", function() {generate_line
 $.getScript("static/js/statistics_page/pie_chart.js", function() {generate_pie_chart("");});
 $.getScript("static/js/statistics_page/bar_chart.js", function() {generate_bar_chart("");});
 $.getScript("static/js/statistics_page/evol_chart.js", function() {generate_evol_chart("");});
+$.getScript("static/js/statistics_page/totals_chart.js",
+function() {$.ajax({
+            url: "http://127.0.0.1:5000/api/metrics/totals",
+            type: 'GET',
+            success:generate_totals_chart});
+            });
 $.getScript("static/js/statistics_page/country_data.js");
 
+var myTotalsChart;
 var myPieChart;
 var myLineChart;
 var myBarChart;
 var myEvolChart;
+
 
 
 $( function() {
@@ -19,7 +27,7 @@ $("#country-selector").change(function(){
     var countryCode = $("#country-selector").val();
 
     $.ajax({
-        url: "https://coda-apiv1.herokuapp.com/api/country/"+countryCode,
+        url: "http://127.0.0.1:5000/api/country/"+countryCode,
         type: 'GET',
         success: save_country_data,
         complete: function(){

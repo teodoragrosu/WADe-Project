@@ -26,6 +26,9 @@
             </div>
             <div class="container-fluid">
                 <h1 class="mt-4">Statistics</h1>
+                <div class="card-body">
+                    <canvas id="totalsChart" width="100%" height="40"></canvas>
+                </div>
                 <ol class="breadcrumb mb-4">
                     <li class="breadcrumb-item active" style="padding: 5px;">Select the country:</li>
                     <select id="country-selector" class="form-select country-select"
@@ -36,7 +39,7 @@
                         {% endfor %}
                     </select>
                     <div class="spinner-border text-success invisible" role="status" style="margin-left: 2rem;">
-                            <span class="sr-only">Loading...</span>
+                        <span class="sr-only">Loading...</span>
                     </div>
                 </ol>
                 <div class="row">
@@ -94,11 +97,10 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-xl-6">
                         <div class="card mb-4">
                             <div class="card-header">
-                                <p>Recoveries and deaths  evolution over time </p>
+                                <p>Recoveries and deaths evolution over time </p>
                             </div>
                             <div class="card-body">
                                 <canvas id="evolChart" width="100%" height="40"></canvas>

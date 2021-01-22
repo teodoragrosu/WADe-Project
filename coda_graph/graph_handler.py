@@ -3,9 +3,9 @@ from SPARQLWrapper import SPARQLWrapper, JSON, POST
 import random
 
 
-# PATH = "http://localhost:7200/repositories/coda"
+PATH = "http://localhost:7200/repositories/coda"
 API_PATH = "http://localhost:5000/api/country/"
-PATH = "http://35.190.193.250:7200/repositories/coda"   # cloud path
+#PATH = "http://35.190.193.250:7200/repositories/coda"   # cloud path
 
 
 class GraphHandler:
@@ -117,6 +117,33 @@ class GraphHandler:
 
         response = self.wrapper.query().convert()
         return json.dumps(self._get_country_results(response))
+
+    def get_country_totals(self):
+        self.wrapper.setQuery(
+            f"""
+                    {self.PREFIXES}
+            SELECT ?cases ?date ?type ?value ?country_code ?country
+            WHERE {{
+                    ?cases rdfs:subClassOf owl:Thing .
+                    ?cases ns1:IsReportedOn ?date .
+                    ?cases ns1:IsOfType ?type .
+                    ?cases rdf:value ?value .
+                    ?country rdf:type ns2:Country .
+                    ?country ns1:IdentifiedBy ?country_code .
+                    ?country rdf:type ?cases .
+            FILTER (?type = 'total_confirmed' && ?date = '2021-01-19'^^xsd:dateTime)
+            }}
+            """
+        )
+        response = self.wrapper.query().convert()
+        return json.dumps(self._get_country_totals(response))
+
+    @staticmethod
+    def _get_country_totals(response):
+        results = {}
+        for r in response["results"]["bindings"]:
+            results[r["country_code"]["value"]] = r["value"]["value"]
+        return results
 
     def get_monthly_avg(self, country_code):
         self.wrapper.setQuery(

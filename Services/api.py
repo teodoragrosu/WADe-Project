@@ -84,6 +84,13 @@ def get_country_metrics(country_code):
     else:
         return abort(405, "Method not allowed!")
 
+@app.route('/api/metrics/totals', methods=['GET'])
+def get_country_totals():
+    if request.method == "GET":
+        data = metricsService.get_country_totals()
+        return data
+    else:
+        return abort(405, "Method not allowed!")
 
 @app.route('/api/country/monthly/<string:country_code>', methods=['GET'])
 def get_country_monthly_avg(country_code):

@@ -24,11 +24,13 @@ function generate_evol_chart(evol_data) {
         data: evol.evol_recovered,
         label: "Recovered",
         borderColor: "#3e95cd",
+        pointRadius: 0.5,
         fill: false
       }, {
         data: evol.evol_deceased,
         label: "Deceased",
         borderColor: "#8e5ea2",
+        pointRadius: 0.5,
         fill: false
       }]
     }
