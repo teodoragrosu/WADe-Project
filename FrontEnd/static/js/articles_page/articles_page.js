@@ -53,7 +53,22 @@ function refreshData(){
                }
 
         $("#articlesList").html(divHtml);
+        updatePaginationButtons();
     }});
+}
+
+function updatePaginationButtons(){
+    if(page > 1){
+        $("#previousPageLi").removeClass("disabled");
+    } else {
+        $("#previousPageLi").addClass("disabled");
+    }
+
+    if(numberOfResults == 10){
+        $("#nextPageLi").removeClass("disabled");
+    } else {
+        $("#nextPageLi").addClass("disabled");
+    }
 }
 
 function formatDate(date) {
@@ -78,17 +93,13 @@ function formatDate(date) {
 
 
 $("#previousPage").click(function(){
-    if(page > 1){
-        page--;
-        refreshData();
-    }
+    page--;
+    refreshData();
 });
 
 $("#nextPage").click(function(){
-    if(numberOfResults == 10){
-        page++;
-        refreshData();
-    }
+    page++;
+    refreshData();
 });
 
 $("#searchTermButton").click(function(){
