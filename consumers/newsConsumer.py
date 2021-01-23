@@ -21,7 +21,7 @@ def sanitize(string):
 
 class NewsConsumer:
     def __init__(self):
-        self.threadManager = ThreadManager(1, lambda resource: self.processData(resource))
+        self.threadManager = ThreadManager(3, lambda resource: self.processData(resource))
         self.sleepTime = 960  # seconds
         self.params = {
             'q': 'covid',
