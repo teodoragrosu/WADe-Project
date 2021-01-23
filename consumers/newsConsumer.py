@@ -28,6 +28,7 @@ class NewsConsumer:
             'pageSize': 100,
             'apiKey': apiKey,
             'sortBy': 'publishedAt',
+            'language': 'en',
             'page': 1
         }
 
@@ -45,6 +46,7 @@ class NewsConsumer:
             time.sleep(self.sleepTime)
 
     def processData(self, resource):
+        print(resource)
         if any((resource[0] in source) for source in articleSources):
             return
             
