@@ -33,7 +33,7 @@ function refreshData(){
                 for( var keyword in item.keywords){
                     keywordsInnerHtml += `<a href="http://127.0.0.1:8000/news?keyword=${item.keywords[keyword]}">${ item.keywords[keyword] } </a>`
                 }
-                keywordsHtml = `<div class="card-footer text-muted"> Some keywords: ${keywordsInnerHtml}</div>`
+                keywordsHtml = `<div class="card-footer text-muted"> Keywords: ${keywordsInnerHtml}</div>`
             }
 
             var itemHtml = `

@@ -78,7 +78,7 @@ a:hover {
 }
 
 .fixed-bottom {
-    position: inherit;
+    position: absolute;
 }
 
 .fixed-top {
@@ -100,10 +100,6 @@ a:hover {
     display: inline-flex;
     width: fit-content;
     justify-content: flex-end;
-}
-
-.input-group {
-    width: 7rem;
 }
 
 .input-group>.custom-select:not(:last-child), .input-group>.form-control:not(:last-child) {
@@ -138,4 +134,19 @@ a:hover {
     position: absolute;
     top: 50%;
     left: 50%;
+}
+
+h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    padding-top: 1rem;
+}
+
+header {
+    height: 5rem;
+}
+
+.card-footer {
+    border-radius: 5px;
+    margin: 5px 0px 15px 0px;
+    background: #e8ede9;
+    box-shadow: 5px 5px 5px 0px #0000002b;
 }
