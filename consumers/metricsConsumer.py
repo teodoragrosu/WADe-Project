@@ -13,7 +13,7 @@ apiMetricsInitialValuesUri = "http://127.0.0.1:5000/api/metrics/initialValues"
 class MetricsConsumer:
     def __init__(self):
         self.threadManager = ThreadManager(1,lambda resource: self.processData(resource))
-        self.countries = requests.get(countriesUri).json()[:5]
+        self.countries = requests.get(countriesUri).json()[:20]
         self.countriesState = {}
         self.populateCountriesState()
         self.sleepTime = 3600 #seconds

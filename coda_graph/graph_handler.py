@@ -4,8 +4,7 @@ import shortuuid
 
 PATH = "http://localhost:7200/repositories/coda"
 API_PATH = "http://localhost:5000/api/country/"
-# PATH = "http://35.190.193.250:7200/repositories/coda"   # cloud path
-
+# PATH = "http://35.233.64.185:7200/repositories/coda"   # cloud path
 
 
 class GraphHandler:

@@ -35,8 +35,8 @@ class ArticlesConsumer:
     def start(self):
         while True:
             try:
-                self.params["from"] = (datetime.now() + timedelta(hours = -12)).strftime('%Y-%m-%dT%H:%M:%SZ')
-                self.params["to"] = (datetime.now() + timedelta(hours = -6)).strftime('%Y-%m-%dT%H:%M:%SZ')
+                self.params["from"] = (datetime.now() - timedelta(days=3)).strftime('%Y-%m-%dT%H:%M:%SZ')
+                self.params["to"] = (datetime.now()).strftime('%Y-%m-%dT%H:%M:%SZ')
                 print(self.params)
                 news = requests.get(newsApiUri, params=self.params).json()["articles"]
                 for n in news:

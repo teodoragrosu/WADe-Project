@@ -102,23 +102,60 @@
             <h3>REST API</h3>
             <blockquote>
                 <p>
-                    <b>CodAPI</b>, the REST API developed for CODA is used by the other application services, but some endpoints are also available for users. This API offers the options to get various data on COVID19 numbers or articles present on the website as well as download it in CSV and JSON format.
-                    If the user wishes to see data on countries they can get the list of countries with available data, latest cases counts for a country, total cases in a day and in a date range.
-                    For news related to the pandemic, the user can request the latest news, filter news by country, by date range or by keywords.
-                    If article data is desired, the user can use a request to get the latest article, filter them by type (dataset, journal, report etc.) and so on.
-                    TODO: add "pragmatic examples"
+                <b>CodAPI</b>, the REST API developed for CODA is used by the other application services, but some
+                endpoints are also available for users. This API offers the options to get various data on COVID19 numbers, news or articles present on the website
+                as well as download it in CSV and JSON format.
+                If the user wishes to see data on countries they can get the list of countries with available data, latest cases counts for a country,
+                total cases in a day and in a date range.
+                For news related to the pandemic, the user can request the latest news, filter news in a specific date range or by keywords.
+                If article data is desired, the user can use a request to get the latest articles, filter them by type (dataset, journal, report etc.) or search for news
+                containing a specific term in the title.
+                TODO: add "pragmatic examples"
                 </p>
+                <h4><b>Communication between the REST API and THE OTHER SERVICES</b></h4>
+                <p>The API is used by both the website microservice and the data crawlers. The crawlers used for retrieving data from the internet
+                make an authenticated request to specific endpoints in order to add data in the graph database. These endpoints are not available for 'regular' users.
+                The metrics crawler, for example, will first make a request to the API to get the date of the latest available cases in the graph for a specific country and
+                then, use that date to filter out the information retrieved from external resources. By doing this, we ensure that the crawlers will only add new data in the graphs
+                and no duplicates exist.</p>
+                <p>The website on the other hand, makes requests to the API in order to retrieve the data necessary for populating the charts and getting the latest news and articles.
+                The download functionality is also possible thanks to the API. The 'download' button available in the UI will generate a call to the appropriate
+                endpoint of the <b>CodAPI</b>, which in turn will return the file in the specified format.</p>
+
+                <h4><b>Communication between the USERS and the REST API</b></h4>
+                Users can also retrieve data by making unauthenticated requests to the <b>CodAPI</b>. Possible use case scenarios include:
+                    <p><b>Getting all available countries</b> - /api/countries</p>
+                    <p><b>Getting all cases recorded in a specific country</b> - /api/country/RO</p>
+                    <p><b>Getting the cases recorded in a specific day for a given country</b> - /api/country/RO?date=2020-01-23 </p>
+                    <p><b>Getting the cases recorded in a date range for a given country</b> - /api/country/RO?from=2020-01-23&to=2020-01-26 </p>
+                    <p><b>Getting the average number of cases that occurred on a daily basis in each month of 2020 for a given country</b> - /api/country/monthly/RO </p>
+                <p><b>Downloading the cases info for a specified country</b> - /api/country/RO/download?format=csv</p>
+                    <p><b>Searching for the latest news related to COVID-19*</b> - /api/news/latest </p>
+                    <p><b>Filtering the news by their publication source*</b> - /api/news/filter/bbcNews </p>
+                    <p><b>Searching for the latest research articles related to COVID-19*</b> - /api/articles/latest </p>
+                    <p><b>Filtering the articles by their type*</b> - /api/articles/filter/journal%20contribution </p>
+                    <p><b>Searching for articles containing a specific term in the title*</b> - /api/articles/page/1?search_term=covid </p>
+
+                * all these endpoints will return the latest 20 results by default, but a limit and/or offset can be explicitly specified
+                <p>The documentation of the API can be found <a href="https://coda-documentation.herokuapp.com/v1/ui/">here</a></p>
             </blockquote>
             <h3>Graph Handler</h3>
             <blockquote>
                 <p>
-                    TODO
+                    The graph handler is an intermediate layer between the API and the graphs. It runs queries against
+                    a SPARQL endpoint in order to get/insert data in the graphs. The SPARQLWrapper library is used as
+                    a Python interface for the endpoint, creating the query invocation and converting the results into
+                    JSON format.
+                    For SPARQL query examples, see section <a href="#sparql">Accessing RDF Graph data using SPARQL</a>
                 </p>
             </blockquote>
-            <h3>GRAPH DB</h3>
+            <h3>GraphDB</h3>
             <blockquote>
                 <p>
-                    TODO
+                    Ontotext GraphDB is a highly efficient and robust graph database with RDF and SPARQL support.
+                    The three graphs that the application uses are stored in a repository on a remote GraphDB instance,
+                    hosted in Google Cloud. The GraphDB Workbench (which is a web-based administration tool) is used for
+                    managing the CODA repository and monitoring queries.
                 </p>
             </blockquote>
             <figure typeof="sa:Image1">
