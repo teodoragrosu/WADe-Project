@@ -11,3 +11,6 @@ class NewsService:
     def get_news(self, id_=-1, publication="", limit=20, offset=0):
         return self.graphHandler.get_news(id_, publication, limit, offset)
 
+    def get_news_filtered(self, publication="", limit=20, offset=0, search_term=""):
+        return self.graphHandler.get_news_filtered(publication, limit, offset, search_term)
+

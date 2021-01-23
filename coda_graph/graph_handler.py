@@ -291,12 +291,15 @@ class GraphHandler:
             filter_condition += f"?art_type = '{type_}' &&"
         if search_term:
             filter_condition += f"contains(?title, \"{search_term}\" ) &&"
-        if len(categories) >= 0:
+        if len(categories) > 0:
+            category_condition = ""
             for category in categories:
-                filter_condition += f"contains(?categories, \"{category}\" ) &&"
+                category_condition += f"contains(?categories, \"{category}\" ) ||"
+            filter_condition += "( " + category_condition[:-3] + " ) &&"
 
         if filter_condition:
             filter_condition = f"FILTER ({filter_condition[:-3]})"
+
         self.wrapper.setQuery(f"""
             {self.PREFIXES}
             SELECT DISTINCT ?id ?title ?authors
@@ -386,6 +389,39 @@ class GraphHandler:
                 ?uri schema:keywords ?keywords .
             {filter_condition}
             }}
+            ORDER BY DESC(?date) LIMIT {limit} OFFSET {offset}
+        """
+        )
+        response = self.wrapper.query().convert()
+        return json.dumps(self._get_news_results(response))
+
+    def get_news_filtered(self, publication="", limit=20, offset=0, search_term=""):
+        filter_condition = ""
+        if publication:
+            filter_condition += f"?publication = '{publication}' &&"
+        if search_term:
+            filter_condition += f"contains(?title, \"{search_term}\" ) &&"
+
+        if filter_condition:
+            filter_condition = f"FILTER ({filter_condition[:-3]})"
+
+        self.wrapper.setQuery(
+            f"""
+            {self.PREFIXES}
+            SELECT DISTINCT ?id ?publication ?title ?date ?url_source ?img_url
+                            (group_concat(distinct ?k;separator=';') as ?keywords)
+            WHERE {{
+                ?uri rdf:type schema:NewsArticle .
+                ?uri ns1:IdentifiedBy ?id .
+                ?uri ns1:PublishedIn ?publication .
+                ?uri schema:url ?url_source .
+                ?uri schema:headline ?title .
+                ?uri schema:datePublished ?date .
+                OPTIONAL {{?uri ns1:hasImage ?img_url}}
+                ?uri schema:keywords ?k .
+            {filter_condition}
+            }}
+            GROUP BY ?id ?publication ?title ?date ?url_source ?img_url
             ORDER BY DESC(?date) LIMIT {limit} OFFSET {offset}
         """
         )

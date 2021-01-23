@@ -1,26 +1,19 @@
 var page = 1;
 var searchTerm = '';
 var numberOfResults = 0;
-var selectedCategories = [];
-
-var urlParams = new URLSearchParams(window.location.search);
-if(urlParams.has('category')){
-    var queryCategory = urlParams.get('category');
-    $("#"+queryCategory+"Category").css("color", "rgb(0,75,0)");
-    selectedCategories.push(queryCategory);
-}
 
 function refreshData(){
     var categoryQueryParam = "categories=" + selectedCategories.join("&categories=")
-    $.ajax({url: "http://127.0.0.1:5000/api/articles/page/" + page +"?search_term=" + searchTerm + "&" + categoryQueryParam, success: function(result){
+    $.ajax({url: "http://127.0.0.1:5000/api/news/page/" + page +"?search_term=" + searchTerm + "&" + categoryQueryParam, success: function(result){
         console.log(selectedCategories);
         var articles = JSON.parse(result);
-        numberOfResults = articles.length;
+        numberOfResults = Object.keys(articles).length;
         var divHtml = '';
-        for(var i in articles){
-            article = articles[i];
+        for(var key in articles){
+            var article = articles[key];
             var authorsHtml = '';
             var categoriesHtml = '';
+
             if(article.authors.length > 0 && article.authors[0] != "None" ){
                 authorsHtml = article.authors.join(", ");
                 if(authorsHtml.length > 50){
@@ -108,53 +101,5 @@ $("#searchTermButton").click(function(){
     refreshData();
 });
 
-function manageCategory(category){
-    var index = selectedCategories.indexOf(category);
-    if(index == -1){
-        selectedCategories.push(category);
-        $("#"+category+"Category").css("color", "rgb(0,75,0)");
-    } else {
-        selectedCategories.splice(index, 1);
-        $("#"+category+"Category").css("color", "rgb(20,144,51)");
-    }
-
-    refreshData();
-}
-
-$("#healthCategory").click(function(){
-    manageCategory("health");
-});
-
-$("#lifeCategory").click(function(){
-    manageCategory("life");
-});
-
-$("#scienceCategory").click(function(){
-    manageCategory("science");
-});
-
-$("#physicsCategory").click(function(){
-    manageCategory("physics");
-});
-
-$("#economicCategory").click(function(){
-    manageCategory("economic");
-});
-
-$("#virusCategory").click(function(){
-    manageCategory("virus");
-});
-
-$("#socialCategory").click(function(){
-    manageCategory("social");
-});
-
-$("#historyCategory").click(function(){
-    manageCategory("history");
-});
-
-$("#politicsCategory").click(function(){
-    manageCategory("politics");
-});
 
 refreshData();

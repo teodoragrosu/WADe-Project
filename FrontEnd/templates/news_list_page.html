@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block content %}
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <div class="row">
+
+      <!-- Blog Entries Column -->
+      <div class="col-md-8">
+
+        <h1 class="my-4 title">Browse the latest news regarding Covid-19
+          <!-- <small>Secondary Text</small> -->
+        </h1>
+
+        <div id="newsList">
+        </div>
+
+        <!-- Pagination -->
+        <ul class="pagination justify-content-center mb-4">
+          <li id="previousPageLi" class="page-item">
+            <a id="previousPage" class="page-link">&larr; Previous</a>
+          </li>
+          <li id="nextPageLi" class="page-item">
+            <a id="nextPage" class="page-link">Next &rarr;</a>
+          </li>
+        </ul>
+
+      </div>
+
+      <!-- Sidebar Widgets Column -->
+      <div class="col-md-4">
+
+        <!-- Search Widget -->
+        <div class="card my-4">
+          <h5 class="card-header">Search</h5>
+          <div class="card-body">
+            <div class="input-group">
+              <input id="searchTermInput" type="text" class="form-control" placeholder="Search for...">
+              <span class="input-group-append">
+                <button id="searchTermButton" class="btn btn-secondary" type="button">Go!</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- /.row -->
+
+  </div>
+  <!-- /.container -->
+<script src="{{ url_for('static', filename='js/news_page/news_page.js') }}"></script>
+{% endblock content %}
