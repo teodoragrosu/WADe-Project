@@ -1,6 +1,5 @@
 import csv
 import json
-from datetime import datetime
 from flask import Flask, jsonify, request, abort, send_file
 from flask_cors import CORS
 
@@ -8,7 +7,6 @@ from Services.articleService import ArticlesService
 from Services.decorators.apiKeyDecorator import require_app_key
 from Services.metricsService import MetricsService
 from Services.newsService import NewsService
-from coda_graph.graph_handler import GraphHandler
 
 
 app = Flask(__name__, static_url_path="")
@@ -16,6 +14,12 @@ CORS(app)
 metricsService = MetricsService()
 newsService = NewsService()
 articlesService = ArticlesService()
+
+
+# ====================================== INDEX ====================================================
+@app.route('/', methods=['GET'])
+def index():
+    return jsonify({"Welcome to the CODA API! Check out the documentation at": "https://coda-documentation.herokuapp.com/v1/ui/"})
 
 
 # ====================================== ERROR CODES ==============================================
@@ -43,13 +47,13 @@ def getMetricsInitialValues():
 
 
 @app.route('/api/metrics', methods=['POST'])
-@require_app_key
+# @require_app_key
 def addMetrics():
     metricsService.addMetrics(request.json["items"])
     return jsonify({'status': 1})
 
 
-@app.route('/api/metrics', methods=['GET', 'POST'])
+@app.route('/api/metrics', methods=['GET'])
 def metrics():
     if request.method == 'GET':
         data = metricsService.get_all_metrics()
@@ -152,7 +156,7 @@ def download_country_metrics(country_code):
 # =========================================== NEWS ENDPOINTS ==============================================
 
 @app.route('/api/news', methods=['POST'])
-@require_app_key
+# @require_app_key
 def add_news():
     newsService.addNews(request.json)
     return jsonify({'status': 1})
@@ -184,7 +188,6 @@ def add_articles():
 
 
 @app.route('/api/articles/latest', methods=['GET'])
-@app.route('/api/articles/filter/<int:id_>', methods=['GET'])
 @app.route('/api/articles/filter/<string:type_>', methods=['GET'])
 def get_articles(id_=-1, type_=""):
     if request.method == 'GET':
@@ -201,6 +204,7 @@ def get_articles(id_=-1, type_=""):
         return data
     else:
         return abort(405, "Method not allowed!")
+
 
 @app.route('/api/articles/page/<int:page>', methods=['GET'])
 def get_articles_filtered(page):

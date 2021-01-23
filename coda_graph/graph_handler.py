@@ -1,11 +1,11 @@
 import json
 from SPARQLWrapper import SPARQLWrapper, JSON, POST
-import random
-
+import shortuuid
 
 PATH = "http://localhost:7200/repositories/coda"
 API_PATH = "http://localhost:5000/api/country/"
-#PATH = "http://35.190.193.250:7200/repositories/coda"   # cloud path
+# PATH = "http://35.190.193.250:7200/repositories/coda"   # cloud path
+
 
 
 class GraphHandler:
@@ -17,10 +17,10 @@ class GraphHandler:
         self.PREFIXES = """
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
             PREFIX ns1: <http://coda.org/resources/properties/>
-            PREFIX ns2: <https://schema.org/>
             PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
             PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
             PREFIX owl: <http://www.w3.org/2002/07/owl#>
+            PREFIX schema: <https://schema.org/>
         """
 
     @staticmethod
@@ -56,7 +56,7 @@ class GraphHandler:
             {self.PREFIXES}
             ASK 
                 WHERE {{
-                    ?country rdf:type ns2:Country .
+                    ?country rdf:type schema:Country .
                     ?country ns1:IdentifiedBy ?country_code .
                 FILTER (?country_code = '{country_code}')
                 }}
@@ -71,7 +71,7 @@ class GraphHandler:
             {self.PREFIXES}
             SELECT DISTINCT ?uri ?country_code
             WHERE {{
-                    ?uri rdf:type ns2:Country .
+                    ?uri rdf:type schema:Country .
                     ?uri ns1:IdentifiedBy ?country_code .
         }} """
         )
@@ -106,9 +106,9 @@ class GraphHandler:
                     ?cases ns1:IsReportedOn ?date .
                     ?cases ns1:IsOfType ?type .
                     ?cases rdf:value ?value .
-                    ?country rdf:type ns2:Country .
+                    ?country rdf:type schema:Country .
                     ?country ns1:IdentifiedBy ?country_code .
-                    ?country rdf:type ?cases .
+                    ?country ns1:hasCases ?cases .
             FILTER (?country_code = '{country_code}' {filter_condition})
             }}
             ORDER BY {'ASC' if download else 'DESC'}(?date) {'LIMIT 7' if latest else ''}
@@ -157,9 +157,9 @@ class GraphHandler:
                     ?cases ns1:IsReportedOn ?date .
                     ?cases ns1:IsOfType ?type .
                     ?cases rdf:value ?value .
-                    ?country rdf:type ns2:Country .
+                    ?country rdf:type schema:Country .
                     ?country ns1:IdentifiedBy ?country_code .
-                    ?country rdf:type ?cases .
+                    ?country ns1:hasCases ?cases .
                     FILTER (?country_code = '{country_code}'
                         && ?type in ('confirmed', 'active', 'recovered', 'deceased')
                         && YEAR(?date) = 2020)
@@ -184,7 +184,7 @@ class GraphHandler:
             {self.PREFIXES}
             INSERT DATA {{
                 GRAPH <http://coda.org/countries> {{
-                    <http://coda.org/resources/countries/{country_code}> rdf:type ns2:Country .
+                    <http://coda.org/resources/countries/{country_code}> rdf:type schema:Country .
                     <http://coda.org/resources/countries/{country_code}> ns1:IdentifiedBy '{country_code}' .
                 }}
             }}
@@ -210,7 +210,7 @@ class GraphHandler:
                     _:a ns1:IsReportedOn '{date_}'^^xsd:dateTime .
                     _:a ns1:IsOfType '{type_}' .
                     _:a rdf:value '{number}'^^xsd:integer .
-                    <http://coda.org/resources/countries/{country_code}> rdf:type _:a .
+                    <http://coda.org/resources/countries/{country_code}> ns1:hasCases _:a .
                 }}
             }}
         """
@@ -225,28 +225,27 @@ class GraphHandler:
             {self.PREFIXES}
             SELECT DISTINCT (MAX(?id) as ?max)
             WHERE {{
-                ?uri rdf:type ns2:{_type} .
+                ?uri rdf:type schema:{_type} .
                 ?uri ns1:IdentifiedBy ?id .
             }}
         """
         )
         response = self.wrapper.query().convert()
-        print(response)
         return int(response["results"]["bindings"][0]["max"]["value"])
 
     @staticmethod
     def _get_article_results(response):
-        results = {}
+        results = []
         for r in response["results"]["bindings"]:
-            results[r["id"]["value"]] = {
+            results.append({
                 "date": r["date"]["value"],
                 "title": r["title"]["value"],
-                "authors": r["authors"]["value"].split(";"),
+                "authors": r["authors"]["value"].split(", "),
                 "categories": r["categories"]["value"].split(";"),
                 "type": r["art_type"]["value"],
                 "abstract": r["abstract"]["value"],
                 "url": r["url"]["value"],
-            }
+            })
         return results
 
     def get_articles(self, id_=-1, type_="", limit=20, offset=0):
@@ -266,23 +265,19 @@ class GraphHandler:
         self.wrapper.setQuery(
             f"""
             {self.PREFIXES}
-            SELECT DISTINCT ?id ?title 
-                            (group_concat(distinct ?a;separator=';') as ?authors) 
-                            ?abstract ?date ?url ?art_type 
-                            (group_concat(distinct ?c;separator=';') as ?categories)
+            SELECT DISTINCT ?id ?title ?authors ?abstract ?date ?url ?art_type ?categories
             WHERE {{
-                ?uri rdf:type ns2:ScholarlyArticle .
+                ?uri rdf:type schema:ScholarlyArticle .
                 ?uri ns1:IdentifiedBy ?id .
-                ?uri ns2:headline ?title .
-                ?uri ns2:author ?a .
-                ?uri ns2:abstract ?abstract .
-                ?uri ns2:datePublished ?date .
-                ?uri ns2:url ?url .
+                ?uri schema:headline ?title .
+                ?uri schema:author ?authors .
+                ?uri schema:abstract ?abstract .
+                ?uri schema:datePublished ?date .
+                ?uri schema:url ?url .
                 ?uri ns1:hasType ?art_type .
-                ?uri ns2:about ?c .
+                ?uri schema:about ?categories .
             {filter_condition}
             }}
-            GROUP BY ?id ?title ?abstract ?date ?url ?art_type 
             ORDER BY DESC(?date) LIMIT {limit} OFFSET {offset}
         """
         )
@@ -291,7 +286,6 @@ class GraphHandler:
         return json.dumps(self._get_article_results(response))
 
     def get_articles_filtered(self, type_="", limit=20, offset=0, search_term="", categories=[]):
-
         filter_condition = ""
         if type_:
             filter_condition += f"?art_type = '{type_}' &&"
@@ -303,26 +297,23 @@ class GraphHandler:
 
         if filter_condition:
             filter_condition = f"FILTER ({filter_condition[:-3]})"
-
         self.wrapper.setQuery(f"""
             {self.PREFIXES}
-            SELECT DISTINCT ?id ?title 
-                            (group_concat(distinct ?a;separator=';') as ?authors) 
+            SELECT DISTINCT ?id ?title ?authors
                             ?abstract ?date ?url ?art_type 
-                            (group_concat(distinct ?c;separator=';') as ?categories)
+                            ?categories
             WHERE {{
-                ?uri rdf:type ns2:ScholarlyArticle .
+                ?uri rdf:type schema:ScholarlyArticle .
                 ?uri ns1:IdentifiedBy ?id .
-                ?uri ns2:headline ?title .
-                ?uri ns2:author ?a .
-                ?uri ns2:abstract ?abstract .
-                ?uri ns2:datePublished ?date .
-                ?uri ns2:url ?url .
+                ?uri schema:headline ?title .
+                ?uri schema:author ?authors .
+                ?uri schema:abstract ?abstract .
+                ?uri schema:datePublished ?date .
+                ?uri schema:url ?url .
                 ?uri ns1:hasType ?art_type .
-                ?uri ns2:about ?c .
+                ?uri schema:about ?categories .
             {filter_condition}
             }}
-            GROUP BY ?id ?title ?abstract ?date ?url ?art_type 
             ORDER BY DESC(?date) LIMIT {limit} OFFSET {offset}
             """)
 
@@ -330,30 +321,27 @@ class GraphHandler:
         return json.dumps(self._get_article_results(response))
 
     def add_articles(self, title, authors, abstract, date, url, art_type, categories):
-        id_ = random.randint(0, 999999)
-            #self._get_latest_id("ScholarlyArticle") + 1
+        id_ = shortuuid.uuid()
 
         self.wrapper = SPARQLWrapper(f"{PATH}/statements")
         self.wrapper.user = "admin"
         self.wrapper.passwd = "root"
         self.wrapper.setMethod(POST)
-        categories_str = ",".join(categories)
 
         self.wrapper.setQuery(
             f"""
             {self.PREFIXES}
             INSERT DATA {{
                 GRAPH <http://coda.org/articles> {{
-                    <http://coda.org/resources/articles/{id_}> rdf:type ns2:ScholarlyArticle .
-                    <http://coda.org/resources/articles/{id_}> ns2:headline '{title}' .
-                    <http://coda.org/resources/articles/{id_}> ns2:authors "{authors}" .
-                    <http://coda.org/resources/articles/{id_}> ns2:abstract '{abstract}' .
+                    <http://coda.org/resources/articles/{id_}> rdf:type schema:ScholarlyArticle .
+                    <http://coda.org/resources/articles/{id_}> schema:headline "{title}" .
+                    <http://coda.org/resources/articles/{id_}> schema:author "{authors}" .
+                    <http://coda.org/resources/articles/{id_}> schema:abstract "{abstract}" .
                     <http://coda.org/resources/articles/{id_}> ns1:hasType '{art_type}' .
-                    <http://coda.org/resources/articles/{id_}> ns2:datePublished '{date}'^^xsd:date .
-                    <http://coda.org/resources/articles/{id_}> ns2:url '{url}'^^xsd:url .
-                    <http://coda.org/resources/articles/{id_}> ns2:about '{categories_str}' .
-                    <http://coda.org/resources/articles/{id_}> ns1:IdentifiedBy '{id_}'^^xsd:integer .
-                    <http://coda.org/resources/articles/{id_}> ns1:hasType '{id_}' .
+                    <http://coda.org/resources/articles/{id_}> schema:datePublished '{date}'^^xsd:date .
+                    <http://coda.org/resources/articles/{id_}> schema:url '{url}'^^xsd:url .
+                    <http://coda.org/resources/articles/{id_}> schema:about "{';'.join(categories)}" .
+                    <http://coda.org/resources/articles/{id_}> ns1:IdentifiedBy '{id_}' .
                 }}
             }}
         """
@@ -364,16 +352,16 @@ class GraphHandler:
 
     @staticmethod
     def _get_news_results(response):
-        results = {}
+        results = []
         for r in response["results"]["bindings"]:
-            results[r["id"]["value"]] = {
+            results.append({
                 "date": r["date"]["value"],
                 "title": r["title"]["value"],
                 "publication": r["publication"]["value"],
                 "keywords": r["keywords"]["value"].split(";"),
                 "source": r["url_source"]["value"],
                 "img_url": r["img_url"]["value"] if r.get("img_url") else "",
-            }
+            })
         return results
 
     def get_news(self, id_=-1, publication="", limit=20, offset=0):
@@ -386,20 +374,18 @@ class GraphHandler:
         self.wrapper.setQuery(
             f"""
             {self.PREFIXES}
-            SELECT DISTINCT ?id ?publication ?title ?date ?url_source ?img_url
-                            (group_concat(distinct ?k;separator=';') as ?keywords)
+            SELECT DISTINCT ?id ?publication ?title ?date ?url_source ?img_url ?keywords
             WHERE {{
-                ?uri rdf:type ns2:NewsArticle .
+                ?uri rdf:type schema:NewsArticle .
                 ?uri ns1:IdentifiedBy ?id .
                 ?uri ns1:PublishedIn ?publication .
-                ?uri ns2:url ?url_source .
-                ?uri ns2:headline ?title .
-                ?uri ns2:datePublished ?date .
+                ?uri schema:url ?url_source .
+                ?uri schema:headline ?title .
+                ?uri schema:datePublished ?date .
                 OPTIONAL {{?uri ns1:hasImage ?img_url}}
-                ?uri ns2:keywords ?k .
+                ?uri schema:keywords ?keywords .
             {filter_condition}
             }}
-            GROUP BY ?id ?publication ?title ?date ?url_source ?img_url
             ORDER BY DESC(?date) LIMIT {limit} OFFSET {offset}
         """
         )
@@ -407,25 +393,24 @@ class GraphHandler:
         return json.dumps(self._get_news_results(response))
 
     def add_news(self, title, date, url_source, publication, keywords, img_url):
-        id_ = random.randint(0, 999999)
-
         self.wrapper = SPARQLWrapper(f"{PATH}/statements")
         self.wrapper.user = "admin"
         self.wrapper.passwd = "root"
         self.wrapper.setMethod(POST)
 
+        id_ = shortuuid.uuid()
         self.wrapper.setQuery(
             f"""
             {self.PREFIXES}
             INSERT DATA {{
                 GRAPH <http://coda.org/news> {{
-                    <http://coda.org/resources/news/{id_}> rdf:type ns2:NewsArticle .
-                    <http://coda.org/resources/news/{id_}> ns2:headline '{title}' .
-                    <http://coda.org/resources/news/{id_}> ns2:datePublished '{date}'^^xsd:date .
-                    <http://coda.org/resources/news/{id_}> ns2:url '{url_source}'^^xsd:url .
-                    <http://coda.org/resources/news/{id_}> ns2:keywords {keywords} .
-                    <http://coda.org/resources/news/{id_}> ns1:IdentifiedBy '{id_}'^^xsd:integer .
-                    <http://coda.org/resources/news/{id_}> ns1:PublishedIn '{publication}' .
+                    <http://coda.org/resources/news/{id_}> rdf:type schema:NewsArticle .
+                    <http://coda.org/resources/news/{id_}> schema:headline "{title}" .
+                    <http://coda.org/resources/news/{id_}> schema:datePublished '{date}'^^xsd:date .
+                    <http://coda.org/resources/news/{id_}> schema:url '{url_source}'^^xsd:url .
+                    <http://coda.org/resources/news/{id_}> schema:keywords "{';'.join(keywords)}" .
+                    <http://coda.org/resources/news/{id_}> ns1:IdentifiedBy '{id_}' .
+                    <http://coda.org/resources/news/{id_}> ns1:PublishedIn "{publication}" .
                     <http://coda.org/resources/news/{id_}> ns1:hasImage '{img_url}' .
                 }}
             }}
