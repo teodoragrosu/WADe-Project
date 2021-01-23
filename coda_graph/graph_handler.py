@@ -128,11 +128,12 @@ class GraphHandler:
                     ?cases ns1:IsReportedOn ?date .
                     ?cases ns1:IsOfType ?type .
                     ?cases rdf:value ?value .
-                    ?country rdf:type ns2:Country .
+                    ?country rdf:type schema:Country .
                     ?country ns1:IdentifiedBy ?country_code .
                     ?country rdf:type ?cases .
             FILTER (?type = 'total_confirmed' && ?date = '2021-01-19'^^xsd:dateTime)
             }}
+            ORDER BY DESC (?value) LIMIT 22
             """
         )
         response = self.wrapper.query().convert()
@@ -143,6 +144,142 @@ class GraphHandler:
         results = {}
         for r in response["results"]["bindings"]:
             results[r["country_code"]["value"]] = r["value"]["value"]
+        return results
+
+    def get_active_totals(self, start_date='', end_date=''):
+
+        if start_date and end_date:
+            filter_condition = f"&& ?date >= '{start_date}'^^xsd:dateTime && ?date <='{end_date}'^^xsd:dateTime"
+        else:
+            filter_condition = ''
+
+        self.wrapper.setQuery(
+            f"""
+                    {self.PREFIXES}
+            SELECT DISTINCT ?date (SUM(?value) as ?sumValue) WHERE {{
+                SELECT ?date ?value
+                WHERE {{
+                        ?cases rdfs:subClassOf owl:Thing .
+                        ?cases ns1:IsReportedOn ?date .
+                        ?cases ns1:IsOfType ?type .
+                        ?cases rdf:value ?value .
+                        ?country rdf:type ?cases .
+                FILTER (?type = 'active' {filter_condition})
+                }}
+            ORDER BY ASC (?date)}}
+            GROUP BY ?date
+            """
+        )
+        response = self.wrapper.query().convert()
+        return json.dumps(self._get_active_totals(response))
+
+    @staticmethod
+    def _get_active_totals(response):
+        results = {}
+        for r in response["results"]["bindings"]:
+            results[r["date"]["value"][:10]] = r["sumValue"]["value"]
+        return results
+
+    def get_evol_totals(self):
+        self.wrapper.setQuery(
+            f"""
+                    {self.PREFIXES}
+            SELECT DISTINCT ?type (Sum(?value) as ?sumValue) ?date
+            WHERE {{
+                SELECT DISTINCT ?cases ?date ?type ?value
+                WHERE {{
+                    ?cases rdfs:subClassOf owl:Thing .
+                    ?cases ns1:IsReportedOn ?date .
+                    ?cases ns1:IsOfType ?type .
+                    ?cases rdf:value ?value .
+                    FILTER (?type in ('recovered', 'deceased'))
+                }}
+                ORDER BY ASC(?date)
+            }}
+            GROUP BY ?type ?date
+            """
+        )
+        response = self.wrapper.query().convert()
+        return json.dumps(self._get_evol_totals(response))
+
+    @staticmethod
+    def _get_evol_totals(response):
+        results = { 'date': [],
+                    'recovered': [],
+                    'deceased': []}
+        for r in response["results"]["bindings"]:
+            results["date"].append(r["date"]["value"][:10])
+            results[r["type"]["value"]].append(r["sumValue"]["value"])
+
+        results['date'] = list(set(results['date']))
+        results['date'].sort()
+
+        return results
+
+    def get_pie_totals(self, pie_date=""):
+        if pie_date:
+            filter_condition = f"&& ?date <= '{pie_date}'^^xsd:dateTime"
+        else:
+            filter_condition = ''
+
+        self.wrapper.setQuery(
+            f"""
+            {self.PREFIXES}
+            SELECT DISTINCT ?type (SUM(?value) as ?sumValue) WHERE {{
+            SELECT ?type ?value
+            WHERE {{
+                    ?cases rdfs:subClassOf owl:Thing .
+                    ?cases ns1:IsReportedOn ?date .
+                    ?cases ns1:IsOfType ?type .
+                    ?cases rdf:value ?value .
+                    ?country rdf:type ?cases .
+            FILTER (?type in ('total_confirmed', 'total_recovered', 'total_deceased') {filter_condition})
+            }}
+            }}
+            GROUP BY ?type
+            """
+        )
+        response = self.wrapper.query().convert()
+        return json.dumps(self._get_pie_totals(response))
+
+    @staticmethod
+    def _get_pie_totals(response):
+        results = {}
+        for r in response["results"]["bindings"]:
+            results[r["type"]["value"]] = r["sumValue"]["value"]
+        return results
+
+    def get_average_totals(self):
+        self.wrapper.setQuery(
+            f"""
+            {self.PREFIXES}
+            SELECT DISTINCT ?type (AVG(?value) as ?avgValue) ?month
+            WHERE {{
+                SELECT DISTINCT ?cases ?date ?type ?value
+                WHERE {{
+                    ?cases rdfs:subClassOf owl:Thing .
+                    ?cases ns1:IsReportedOn ?date .
+                    ?cases ns1:IsOfType ?type .
+                    ?cases rdf:value ?value .
+                    FILTER (?type in ('confirmed', 'recovered', 'deceased')
+                        && YEAR(?date) = 2020)
+                }}
+                ORDER BY ASC(?date)
+            }}
+            GROUP BY ?type (MONTH(?date) as ?month)
+            """
+        )
+        response = self.wrapper.query().convert()
+        return json.dumps(self._get_average_totals(response))
+
+    @staticmethod
+    def _get_average_totals(response):
+        results = {}
+        for r in response["results"]["bindings"]:
+            results[r["month"]["value"]] = {}
+        for r in response["results"]["bindings"]:
+            updt = {'avg_'+r["type"]["value"]+'_per_day': r["avgValue"]["value"]}
+            results[r["month"]["value"]].update(updt)
         return results
 
     def get_monthly_avg(self, country_code):

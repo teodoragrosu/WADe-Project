@@ -133,3 +133,9 @@ a:hover {
 .date-box:focus {
     border-color: #ced4da;
 }
+
+.spinner-grow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}

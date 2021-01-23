@@ -46,5 +46,17 @@ class MetricsService:
     def get_country_totals(self):
         return self.graphHandler.get_country_totals()
 
+    def get_pie_totals(self, pie_date=""):
+        return self.graphHandler.get_pie_totals(pie_date)
+
+    def get_average_totals(self):
+        return self.graphHandler.get_average_totals()
+
+    def get_active_totals(self, start_date="", end_date=""):
+        return self.graphHandler.get_active_totals(start_date, end_date)
+
+    def get_evol_totals(self):
+        return self.graphHandler.get_evol_totals()
+
     def serialize(self):
         self.graph.get_serialization("cases")

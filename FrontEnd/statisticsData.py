@@ -2,6 +2,7 @@ import json
 
 
 def line_chart_data(json_data, start_date='', end_date=''):
+    line_dict = {}
     line_labels = list(json_data.keys())
     line_values = []
 
@@ -13,24 +14,25 @@ def line_chart_data(json_data, start_date='', end_date=''):
     else:
         interval_labels = line_labels[line_labels.index(end_date):line_labels.index(start_date) + 1]
         for date in interval_labels:
-            line_values.append(json_data[date]['active'])
+            line_dict[date] = json_data[date]['active']
 
-        return interval_labels[::-1], line_values[::-1]
+        return line_dict
 
 
 def evol_chart_data(json_data, start_date='', end_date=''):
-    evol_labels = list(json_data.keys())
-    evol_recovered = []
-    evol_deceased = []
+    date = list(json_data.keys())
+    recovered = []
+    deceased = []
 
-    for date in json_data.values():
-        evol_recovered.append(date['recovered'])
-        evol_deceased.append(date['deceased'])
+    for item in json_data.values():
+        recovered.append(item['recovered'])
+        deceased.append(item['deceased'])
 
-    return evol_labels[::-1], evol_recovered[::-1], evol_deceased[::-1]
+    return date[::-1], recovered[::-1], deceased[::-1]
 
 
 def pie_chart_data(json_data, selected_date=''):
+    pie_dict = {}
     dates = list(json_data.keys())
 
     pie_labels = ['Total recovered', 'Total confirmed', 'Total deceased']
@@ -39,10 +41,11 @@ def pie_chart_data(json_data, selected_date=''):
         pie_values = [json_data[dates[-1]]['total_recovered'], json_data[dates[-1]]['total_confirmed'],
                       json_data[dates[-1]]['total_deceased']]
     else:
-        pie_values = [json_data[selected_date]['total_recovered'], json_data[selected_date]['total_confirmed'],
-                      json_data[selected_date]['total_deceased']]
+        pie_dict['Total recovered'] = json_data[selected_date]['total_recovered']
+        pie_dict['Total confirmed'] = json_data[selected_date]['total_confirmed']
+        pie_dict['Total deceased'] = json_data[selected_date]['total_deceased']
 
-    return pie_labels, pie_values
+    return pie_dict
 
 
 def save_chart_data():

@@ -12,7 +12,7 @@ function generate_line_chart(line_data) {
     if(line_data){
         line = JSON.parse(line_data);
 
-        var maxOfList = Math.max(...line.line_values);
+        var maxOfList = Math.max(...Object.values(line));//line.line_values);
         var zeroes = maxOfList.toString().length-1;
         upper_threshold = Math.ceil(maxOfList / Math.pow(10, zeroes)) * Math.pow(10, zeroes);
     }
@@ -26,7 +26,7 @@ function generate_line_chart(line_data) {
 
     // define the chart data
     var lineChartData = {
-      labels : line.line_labels,
+      labels : Object.keys(line),
       datasets : [{
           fill: true,
           lineTension: 0.1,
@@ -44,7 +44,7 @@ function generate_line_chart(line_data) {
           pointHoverBorderWidth: 2,
           pointRadius: 1,
           pointHitRadius: 10,
-          data : line.line_values,
+          data : Object.values(line),
           spanGaps: false
       }]
     }
@@ -57,6 +57,17 @@ function generate_line_chart(line_data) {
       type: 'line',
       data: lineChartData,
       options: {
+        tooltips: {
+            callbacks: {
+					label: function(tooltipItem, data) {
+						var value = data.datasets[0].data[tooltipItem.index];
+						value = value.toString();
+						value = value.split(/(?=(?:...)*$)/);
+						value = value.join(',');
+						return value;
+					}
+			}
+        },
         scales: {
           xAxes: [{
             time: {
@@ -73,7 +84,14 @@ function generate_line_chart(line_data) {
             ticks: {
               min: 0,
               max: upper_threshold,
-              maxTicksLimit: 5
+              maxTicksLimit: 5,
+              userCallback: function(value, index, values) {
+							// Convert the number to a string and splite the string every 3 charaters from the end
+							value = value.toString();
+							value = value.split(/(?=(?:...)*$)/);
+							value = value.join(',');
+							return value;
+						}
             },
             gridLines: {
               color: "rgba(0, 0, 0, .125)",
@@ -89,11 +107,11 @@ function generate_line_chart(line_data) {
 
 function update_line(line_results){
     var line = JSON.parse(line_results);
-    var maxOfList = Math.max(...line.line_values);
+    var maxOfList = Math.max(...Object.values(line));
     var zeroes = maxOfList.toString().length-1;
     var upper_threshold = Math.ceil(maxOfList / Math.pow(10, zeroes)) * Math.pow(10, zeroes);
-    myLineChart.data.labels = line.line_labels;
-    myLineChart.data.datasets[0].data = line.line_values;
+    myLineChart.data.labels = Object.keys(line);
+    myLineChart.data.datasets[0].data = Object.values(line);
     myLineChart.options.scales.yAxes[0].ticks.max = upper_threshold;
     myLineChart.update();
 }

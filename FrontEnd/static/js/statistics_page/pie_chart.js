@@ -5,7 +5,7 @@ function generate_pie_chart(pie_data) {
         pie = JSON.parse(pie_data);
     }
     else {
-        pie = {"pie_labels": ["Total recovered", "Total confirmed", "Total deceased"], "pie_values": ["0", "0", "0"]}
+        pie = {"pie_labels": ["Total confirmed", "Total recovered", "Total deceased"], "pie_values": ["0", "0", "0"]}
     }
 
     window.chartColors = {
@@ -19,9 +19,9 @@ function generate_pie_chart(pie_data) {
         };
 
     var pieChartData = {
-      labels : pie.pie_labels,
+      labels : Object.keys(pie),
       datasets : [{
-        data : pie.pie_values,
+        data : Object.values(pie),
         backgroundColor: [
             window.chartColors.green,
             window.chartColors.orange,
@@ -36,14 +36,25 @@ function generate_pie_chart(pie_data) {
         type: 'pie',
         data: pieChartData,
         options: {
-            responsive: true
+            responsive: true,
+            tooltips: {
+            callbacks: {
+					label: function(tooltipItem, data) {
+						var value = data.datasets[0].data[tooltipItem.index];
+						value = value.toString();
+						value = value.split(/(?=(?:...)*$)/);
+						value = value.join(',');
+						return value;
+					}
+			    }
+            }
         }
     });
 }
 
 function update_pie(pie_results){
     var pie = JSON.parse(pie_results);
-    myPieChart.data.labels = pie.pie_labels;
-    myPieChart.data.datasets[0].data = pie.pie_values;
+    myPieChart.data.labels = Object.keys(pie);
+    myPieChart.data.datasets[0].data = Object.values(pie);
     myPieChart.update();
 }

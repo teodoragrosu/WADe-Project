@@ -5,7 +5,7 @@ function generate_evol_chart(evol_data) {
     if(evol_data){
         evol = JSON.parse(evol_data);
 
-        var maxOfList = Math.max(...evol.evol_recovered);
+        var maxOfList = Math.max(...evol.recovered);
         var zeroes = maxOfList.toString().length-1;
         upper_threshold = Math.ceil(maxOfList / Math.pow(10, zeroes)) * Math.pow(10, zeroes);
     }
@@ -19,15 +19,15 @@ function generate_evol_chart(evol_data) {
 
     // define the chart data
     var evolChartData = {
-      labels : evol.evol_labels,
+      labels : evol.date,
       datasets : [{
-        data: evol.evol_recovered,
+        data: evol.recovered,
         label: "Recovered",
         borderColor: "#3e95cd",
         pointRadius: 0.5,
         fill: false
       }, {
-        data: evol.evol_deceased,
+        data: evol.deceased,
         label: "Deceased",
         borderColor: "#8e5ea2",
         pointRadius: 0.5,
@@ -43,6 +43,17 @@ function generate_evol_chart(evol_data) {
       type: 'line',
       data: evolChartData,
       options: {
+        tooltips: {
+            callbacks: {
+					label: function(tooltipItem, data) {
+						var value = data.datasets[0].data[tooltipItem.index];
+						value = value.toString();
+						value = value.split(/(?=(?:...)*$)/);
+						value = value.join(',');
+						return value;
+					}
+			}
+        },
         scales: {
           xAxes: [{
             time: {
@@ -59,7 +70,14 @@ function generate_evol_chart(evol_data) {
             ticks: {
               min: 0,
               max: upper_threshold,
-              maxTicksLimit: 5
+              maxTicksLimit: 5,
+              userCallback: function(value, index, values) {
+							// Convert the number to a string and splite the string every 3 charaters from the end
+							value = value.toString();
+							value = value.split(/(?=(?:...)*$)/);
+							value = value.join(',');
+							return value;
+						}
             },
             gridLines: {
               color: "rgba(0, 0, 0, .125)",
@@ -72,12 +90,12 @@ function generate_evol_chart(evol_data) {
 
 function update_evol(evol_results){
     var evol = JSON.parse(evol_results);
-    var maxOfList = Math.max(...evol.evol_recovered);
+    var maxOfList = Math.max(...evol.recovered);
     var zeroes = maxOfList.toString().length-1;
     var upper_threshold = Math.ceil(maxOfList / Math.pow(10, zeroes)) * Math.pow(10, zeroes);
-    myEvolChart.data.labels = evol.evol_labels;
-    myEvolChart.data.datasets[0].data = evol.evol_recovered;
-    myEvolChart.data.datasets[1].data = evol.evol_deceased;
+    myEvolChart.data.labels = evol.date;
+    myEvolChart.data.datasets[0].data = evol.recovered;
+    myEvolChart.data.datasets[1].data = evol.deceased;
     myEvolChart.options.scales.yAxes[0].ticks.max = upper_threshold;
     myEvolChart.update();
 }

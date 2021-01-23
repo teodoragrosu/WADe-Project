@@ -1,11 +1,10 @@
 function generate_bar_chart(bar_data) {
     var bar;
-
     if(bar_data) {
         bar = JSON.parse(bar_data);
     }
     else {
-        bar = {avg_active_per_day: 0, avg_confirmed_per_day: 0, avg_deceased_per_day: 0, avg_recovered_per_day: 0 };
+        bar = {avg_confirmed_per_day: 0, avg_deceased_per_day: 0, avg_recovered_per_day: 0 };
     }
     Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
     Chart.defaults.global.defaultFontColor = '#292b2c';
@@ -27,20 +26,20 @@ function generate_bar_chart(bar_data) {
           label: "deceased",
           backgroundColor: chartColors.red,
           borderColor: chartColors.red,
-          data : Object.values(bar).map(function (value) { return value.avg_deceased_per_day;}),
+          data : Object.values(bar).map(function (value) { return parseFloat(value.avg_deceased_per_day).toFixed(2);}),
       },
       {
           label: "confirmed",
           lineTension: 0.1,
           backgroundColor: chartColors.orange,
           borderColor: chartColors.orange,
-          data : Object.values(bar).map(function (value) { return value.avg_confirmed_per_day;}),
+          data : Object.values(bar).map(function (value) { return parseFloat(value.avg_confirmed_per_day).toFixed(2);}),
       },
       {
           label: "recovered",
           backgroundColor: chartColors.green,
           borderColor: chartColors.green,
-          data : Object.values(bar).map(function (value) { return value.avg_recovered_per_day;}),
+          data : Object.values(bar).map(function (value) { return parseFloat(value.avg_recovered_per_day).toFixed(2);}),
       }
       ]
     }

@@ -96,6 +96,38 @@ def get_country_totals():
     else:
         return abort(405, "Method not allowed!")
 
+@app.route('/api/metrics/active', methods=['GET'])
+def get_active_totals():
+    if request.method == "GET":
+        data = metricsService.get_active_totals(request.args.get("from", ""), request.args.get("to", ""))
+        return data
+    else:
+        return abort(405, "Method not allowed!")
+
+@app.route('/api/metrics/pie', methods=['GET'])
+def get_pie_totals():
+    if request.method == "GET":
+        data = metricsService.get_pie_totals(request.args.get("date", ""))
+        return data
+    else:
+        return abort(405, "Method not allowed!")
+
+@app.route('/api/metrics/averages', methods=['GET'])
+def get_average_totals():
+    if request.method == "GET":
+        data = metricsService.get_average_totals()
+        return data
+    else:
+        return abort(405, "Method not allowed!")
+
+@app.route('/api/metrics/evols', methods=['GET'])
+def get_evol_totals():
+    if request.method == "GET":
+        data = metricsService.get_evol_totals()
+        return data
+    else:
+        return abort(405, "Method not allowed!")
+
 @app.route('/api/country/monthly/<string:country_code>', methods=['GET'])
 def get_country_monthly_avg(country_code):
     if request.method == "GET":

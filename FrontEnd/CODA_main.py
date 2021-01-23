@@ -40,23 +40,21 @@ def receive_dates():
 
             with open("templates/chart_data/evol_data.json", "w") as data:
                 evol_labels, evol_recovered, evol_deceased = sd.evol_chart_data(json_data)
-                evol_json = {'evol_labels': evol_labels, 'evol_recovered': evol_recovered, 'evol_deceased': evol_deceased}
+                evol_json = {'date': evol_labels, 'recovered': evol_recovered, 'deceased': evol_deceased}
                 json.dump(evol_json, data)
 
             if len(request.form) == 2:
                 print(request.form['start_date'], request.form['end_date'])
-                line_labels, line_values = sd.line_chart_data(json_data, request.form['start_date'], request.form['end_date'])
+                line_dict = sd.line_chart_data(json_data, request.form['start_date'], request.form['end_date'])
 
                 with open("templates/chart_data/line_data.json", "w") as data:
-                    line_json = {'line_labels': line_labels, 'line_values': line_values}
-                    json.dump(line_json, data)
+                    json.dump(line_dict, data)
 
             if len(request.form) == 1:
-                pie_labels, pie_values = sd.pie_chart_data(json_data, request.form['pie_date'])
+                pie_dict = sd.pie_chart_data(json_data, request.form['pie_date'])
 
                 with open("templates/chart_data/pie_data.json", "w") as data:
-                    pie_json = {'pie_labels': pie_labels, 'pie_values': pie_values}
-                    json.dump(pie_json, data)
+                    json.dump(pie_dict, data)
 
     return 'Data uploaded'
 

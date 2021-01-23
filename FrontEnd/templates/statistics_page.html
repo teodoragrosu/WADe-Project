@@ -1,7 +1,10 @@
 {% extends "layout.html" %}
 {% block content %}
 <div id="layoutSidenav">
-    <div id="layoutSidenav_content">
+    <div id='mainLoader' class="spinner-grow text-success" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <div id="layoutSidenav_content" class="invisible">
         <main>
             <!-- The Modal -->
             <div class="modal" id="errorModal">
@@ -33,7 +36,7 @@
                     <li class="breadcrumb-item active" style="padding: 5px;">Select the country:</li>
                     <select id="country-selector" class="form-select country-select"
                             aria-label="Default select example">
-                        <option selected>Country</option>
+                        <option selected>ALL</option>
                         {% for country in countries %}
                         <option value="{{ country }}">{{ country }}</option>
                         {% endfor %}
@@ -46,7 +49,7 @@
                     <div class="col-xl-6">
                         <div class="card mb-4">
                             <div class="card-header">
-                                <p>COVID-19 Evolution</p>
+                                <p>COVID-19 Evolution of active cases</p>
                                 <div class="filters">
                                     <div class="datetimes">
                                         <input type="text" id="start_placeholder" class="date-box"
