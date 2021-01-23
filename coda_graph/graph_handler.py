@@ -291,12 +291,15 @@ class GraphHandler:
             filter_condition += f"?art_type = '{type_}' &&"
         if search_term:
             filter_condition += f"contains(?title, \"{search_term}\" ) &&"
-        if len(categories) >= 0:
+        if len(categories) > 0:
+            category_condition = ""
             for category in categories:
-                filter_condition += f"contains(?categories, \"{category}\" ) &&"
+                category_condition += f"contains(?categories, \"{category}\" ) ||"
+            filter_condition += "( " + category_condition[:-3] + " ) &&"
 
         if filter_condition:
             filter_condition = f"FILTER ({filter_condition[:-3]})"
+
         self.wrapper.setQuery(f"""
             {self.PREFIXES}
             SELECT DISTINCT ?id ?title ?authors
@@ -408,14 +411,14 @@ class GraphHandler:
             SELECT DISTINCT ?id ?publication ?title ?date ?url_source ?img_url
                             (group_concat(distinct ?k;separator=';') as ?keywords)
             WHERE {{
-                ?uri rdf:type ns2:NewsArticle .
+                ?uri rdf:type schema:NewsArticle .
                 ?uri ns1:IdentifiedBy ?id .
                 ?uri ns1:PublishedIn ?publication .
-                ?uri ns2:url ?url_source .
-                ?uri ns2:headline ?title .
-                ?uri ns2:datePublished ?date .
+                ?uri schema:url ?url_source .
+                ?uri schema:headline ?title .
+                ?uri schema:datePublished ?date .
                 OPTIONAL {{?uri ns1:hasImage ?img_url}}
-                ?uri ns2:keywords ?k .
+                ?uri schema:keywords ?k .
             {filter_condition}
             }}
             GROUP BY ?id ?publication ?title ?date ?url_source ?img_url

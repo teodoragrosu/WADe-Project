@@ -7,6 +7,7 @@ var urlParams = new URLSearchParams(window.location.search);
 if(urlParams.has('category')){
     var queryCategory = urlParams.get('category');
     $("#"+queryCategory+"Category").css("color", "rgb(0,75,0)");
+    selectedCategories.push(queryCategory);
 }
 
 function refreshData(){
@@ -14,13 +15,12 @@ function refreshData(){
     $.ajax({url: "http://127.0.0.1:5000/api/articles/page/" + page +"?search_term=" + searchTerm + "&" + categoryQueryParam, success: function(result){
         console.log(selectedCategories);
         var articles = JSON.parse(result);
-        numberOfResults = Object.keys(articles).length;
+        numberOfResults = articles.length;
         var divHtml = '';
-        for(var key in articles){
-            var article = articles[key];
+        for(var i in articles){
+            article = articles[i];
             var authorsHtml = '';
             var categoriesHtml = '';
-
             if(article.authors.length > 0 && article.authors[0] != "None" ){
                 authorsHtml = article.authors.join(", ");
                 if(authorsHtml.length > 50){

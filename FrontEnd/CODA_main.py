@@ -11,7 +11,7 @@ app = Flask(__name__)
 CORS(app)
 
 @app.route("/news")
-def article_list_page():
+def news_list_page():
     return render_template("news_list_page.html")
 
 @app.route("/articles")
