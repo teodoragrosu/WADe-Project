@@ -291,7 +291,6 @@ class GraphHandler:
         return json.dumps(self._get_article_results(response))
 
     def get_articles_filtered(self, type_="", limit=20, offset=0, search_term="", categories=[]):
-
         filter_condition = ""
         if type_:
             filter_condition += f"?art_type = '{type_}' &&"
@@ -382,6 +381,39 @@ class GraphHandler:
             filter_condition = f"FILTER (?id = {id_})"
         elif publication:
             filter_condition = f"FILTER (?publication = '{publication}')"
+
+        self.wrapper.setQuery(
+            f"""
+            {self.PREFIXES}
+            SELECT DISTINCT ?id ?publication ?title ?date ?url_source ?img_url
+                            (group_concat(distinct ?k;separator=';') as ?keywords)
+            WHERE {{
+                ?uri rdf:type ns2:NewsArticle .
+                ?uri ns1:IdentifiedBy ?id .
+                ?uri ns1:PublishedIn ?publication .
+                ?uri ns2:url ?url_source .
+                ?uri ns2:headline ?title .
+                ?uri ns2:datePublished ?date .
+                OPTIONAL {{?uri ns1:hasImage ?img_url}}
+                ?uri ns2:keywords ?k .
+            {filter_condition}
+            }}
+            GROUP BY ?id ?publication ?title ?date ?url_source ?img_url
+            ORDER BY DESC(?date) LIMIT {limit} OFFSET {offset}
+        """
+        )
+        response = self.wrapper.query().convert()
+        return json.dumps(self._get_news_results(response))
+
+    def get_news_filtered(self, publication="", limit=20, offset=0, search_term=""):
+        filter_condition = ""
+        if publication:
+            filter_condition += f"?publication = '{publication}' &&"
+        if search_term:
+            filter_condition += f"contains(?title, \"{search_term}\" ) &&"
+
+        if filter_condition:
+            filter_condition = f"FILTER ({filter_condition[:-3]})"
 
         self.wrapper.setQuery(
             f"""

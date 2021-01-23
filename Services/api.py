@@ -174,6 +174,14 @@ def get_news(publication=""):
         return abort(405, "Method not allowed!")
 
 
+@app.route('/api/news/page/<int:page>', methods=['GET'])
+def get_news_filtered(page):
+    search_term = request.args.get('search_term')
+    publication = request.args.get('publication')
+    data = newsService.get_news_filtered(publication, 10, (page - 1) * 10, search_term)
+    return data
+
+
 # =========================================== ARTICLE ENDPOINTS ==============================================
 
 @app.route('/api/articles', methods=['POST'])
