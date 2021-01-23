@@ -1,51 +1,60 @@
 var page = 1;
 var searchTerm = '';
+var publicationTerm = '';
 var numberOfResults = 0;
 
-function refreshData(){
-    var categoryQueryParam = "categories=" + selectedCategories.join("&categories=")
-    $.ajax({url: "http://127.0.0.1:5000/api/news/page/" + page +"?search_term=" + searchTerm + "&" + categoryQueryParam, success: function(result){
-        console.log(selectedCategories);
-        var articles = JSON.parse(result);
-        numberOfResults = Object.keys(articles).length;
-        var divHtml = '';
-        for(var key in articles){
-            var article = articles[key];
-            var authorsHtml = '';
-            var categoriesHtml = '';
+var urlParams = new URLSearchParams(window.location.search);
+if(urlParams.has('keyword')){
+    searchTerm = urlParams.get('keyword');
+    $("#searchTermInput").val(searchTerm);
+}
 
-            if(article.authors.length > 0 && article.authors[0] != "None" ){
-                authorsHtml = article.authors.join(", ");
-                if(authorsHtml.length > 50){
-                    authorsHtml = authorsHtml.substring(0,50) + "...";
-                }
-                authorsHtml = `<small>By ${authorsHtml}</small>`
+function refreshData(){
+    $.ajax({url: "http://127.0.0.1:5000/api/news/page/" + page +"?search_term=" + searchTerm + "&publication=" + publicationTerm, success: function(result){
+        var news = JSON.parse(result);
+        numberOfResults = Object.keys(news).length;
+        var divHtml = '';
+        for(var i in news){
+            var item = news[i];
+            var keywordsHtml = '';
+            var publishedByHtml = '';
+            var imgHtml = '';
+
+            if(item.img_url.length > 0 && item.img_url != "None"){
+                imgHtml = `<img class="card-img-top" src="${item.img_url}" alt="image">`;
             }
 
-            if(article.categories.length > 0 && article.categories[0] != "" ){
-                var categoriesInnerHtml = "";
-                for( var category in article.categories){
-                    categoriesInnerHtml += `<a href="http://127.0.0.1:8000/articles?category=${article.categories[category]}">${ article.categories[category] } </a>`
+            if(item.publication != "None"){
+                publishedByHtml = `<div class="col-5"><small>Published by: ${ item.publication }</small></div>`;
+            }
+
+            if(item.keywords.length > 0 && item.keywords[0] != "" ){
+                var keywordsInnerHtml = "";
+                for( var keyword in item.keywords){
+                    keywordsInnerHtml += `<a href="http://127.0.0.1:8000/news?keyword=${item.keywords[keyword]}">${ item.keywords[keyword] } </a>`
                 }
-                categoriesHtml = `<div class="card-footer text-muted"> Categories: ${categoriesInnerHtml}</div>`
+                keywordsHtml = `<div class="card-footer text-muted"> Some keywords: ${keywordsInnerHtml}</div>`
             }
 
             var itemHtml = `
                 <div class="card mb-4">
+                ${imgHtml}
                     <div class="card-body">
-                      <small>Published at: ${ formatDate(article.date) }</small>
-                      <h2 class="card-title">${ article.title }
-                      ${authorsHtml}
-                      </h2>
-                      <p class="card-text">${ article.abstract }</p>
-                      <a href="${article["url"]}" target="_blank" class="btn btn-primary">Read More &rarr;</a>
+                      <div class="row">
+                          <div class="col-7"><small>Published at: ${ formatDate(item.date) }</small></div>
+                          ${publishedByHtml}
+                      </div>
+                      <h2 class="card-title">${ item.title }</h2>
+                      <div>
+                      ${keywordsHtml}
+                      </div>
+                      <a href="${item["source"]}" target="_blank" class="btn btn-primary">Read More &rarr;</a>
                     </div>
-                    ${categoriesHtml}
                 </div>`;
             divHtml += itemHtml;
-               }
+         }
 
-        $("#articlesList").html(divHtml);
+        $("#newsList").html(divHtml);
         updatePaginationButtons();
     }});
 }
@@ -98,6 +107,12 @@ $("#nextPage").click(function(){
 $("#searchTermButton").click(function(){
     page = 1;
     searchTerm = $("#searchTermInput").val();
+    refreshData();
+});
+
+$("#publicationButton").click(function(){
+    page = 1;
+    publicationTerm = $("#publicationInput").val();
     refreshData();
 });
 
