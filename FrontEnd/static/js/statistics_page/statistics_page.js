@@ -83,6 +83,10 @@ $("#country-selector").change(function(){
             }
         });
     }
+    else {
+        $('#csv_button').prop("disabled", true);
+        $('#json_button').prop("disabled", true);
+    }
 });
 
 $('#xModal').on('click', function (e) {
@@ -191,3 +195,17 @@ function formatDate(date) {
 
     return [year, month, day].join('-');
 }
+
+$('#csv_button').on('click', function (e) {
+    var countryCode = $("#country-selector").val();
+    $.ajax({
+            url: "http://127.0.0.1:5000/api/country/"+countryCode+"/download?format=csv",
+            type: 'GET'});
+});
+
+$('#json_button').on('click', function (e) {
+    var countryCode = $("#country-selector").val();
+    $.ajax({
+            url: "http://127.0.0.1:5000/api/country/"+countryCode+"/download?format=json",
+            type: 'GET'});
+});

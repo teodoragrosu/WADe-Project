@@ -34,18 +34,37 @@ function refreshData(){
                 for( var category in article.categories){
                     categoriesInnerHtml += `<a href="http://127.0.0.1:8000/articles?category=${article.categories[category]}">${ article.categories[category] } </a>`
                 }
-                categoriesHtml = `<div class="card-footer text-muted"> Categories: ${categoriesInnerHtml}</div>`
+                categoriesHtml = `<div class="card-footer text-muted" style="margin:0;"> Categories: ${categoriesInnerHtml}</div>`
             }
 
             var itemHtml = `
                 <div class="card mb-4">
                     <div class="card-body">
-                      <small>Published at: ${ formatDate(article.date) }</small>
-                      <h2 class="card-title">${ article.title }
-                      ${authorsHtml}
-                      </h2>
-                      <p class="card-text">${ article.abstract }</p>
-                      <a href="${article["url"]}" target="_blank" class="btn btn-primary">Read More &rarr;</a>
+                          <small>Published at: ${ formatDate(article.date) }</small>
+                          <h2 class="card-title">${ article.title }
+                          ${authorsHtml}
+                          </h2>
+                          <p class="card-text">${ article.abstract }</p>
+                          <div class="read-share">
+                                <a href="${article["url"]}" target="_blank" class="btn btn-primary">Read More &rarr;</a>
+                                <div id="share-buttons">
+                                    <a href="mailto:?Subject=Check this article I found on CODA&amp;Body=I%20saw%20this%20and%20thought%20you%20might%20enjoy%20it: ${article["url"]}">
+                                        <img src="https://simplesharebuttons.com/images/somacro/email.png" alt="Email" />
+                                    </a>
+                                    <a href="http://www.facebook.com/sharer.php?u=${article["url"]}" target="_blank">
+                                        <img src="https://simplesharebuttons.com/images/somacro/facebook.png" alt="Facebook" />
+                                    </a>
+                                    <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url=${article["url"]}" target="_blank">
+                                        <img src="https://simplesharebuttons.com/images/somacro/linkedin.png" alt="LinkedIn" />
+                                    </a>
+                                    <a href="http://reddit.com/submit?url=${article["url"]}&amp;title=${ article.title }" target="_blank">
+                                        <img src="https://simplesharebuttons.com/images/somacro/reddit.png" alt="Reddit" />
+                                    </a>
+                                    <a href="https://twitter.com/share?url=${article["url"]}&amp;text=Coda%20article%20&amp;hashtags=coda" target="_blank">
+                                        <img src="https://simplesharebuttons.com/images/somacro/twitter.png" alt="Twitter" />
+                                    </a>
+                                </div>
+                          </div>
                     </div>
                     ${categoriesHtml}
                 </div>`;

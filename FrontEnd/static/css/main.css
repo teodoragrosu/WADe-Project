@@ -112,6 +112,12 @@ a:hover {
     border-color: #3b6d48;
 }
 
+.btn-primary:disabled {
+    color: #fff;
+    background-color: #3b6d48;
+    border-color: #3b6d48;
+}
+
 .date-box {
     position: relative;
     display: flex;
@@ -149,4 +155,17 @@ header {
     margin: 5px 0px 15px 0px;
     background: #e8ede9;
     box-shadow: 5px 5px 5px 0px #0000002b;
+}
+
+#share-buttons img {
+    width: 35px;
+    padding: 5px;
+    border: 0;
+    box-shadow: 0;
+    display: inline;
+}
+
+.read-share{
+    display: flex;
+    justify-content: space-between;
 }

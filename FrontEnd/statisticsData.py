@@ -41,9 +41,9 @@ def pie_chart_data(json_data, selected_date=''):
         pie_values = [json_data[dates[-1]]['total_recovered'], json_data[dates[-1]]['total_confirmed'],
                       json_data[dates[-1]]['total_deceased']]
     else:
-        pie_dict['Total recovered'] = json_data[selected_date]['total_recovered']
-        pie_dict['Total confirmed'] = json_data[selected_date]['total_confirmed']
-        pie_dict['Total deceased'] = json_data[selected_date]['total_deceased']
+        pie_dict['Total recovered'] = json_data[selected_date]['total_recovered'] if 'total_recovered' in json_data[selected_date] else '0'
+        pie_dict['Total confirmed'] = json_data[selected_date]['total_confirmed'] if 'total_confirmed' in json_data[selected_date] else '0'
+        pie_dict['Total deceased'] = json_data[selected_date]['total_deceased'] if 'total_deceased' in json_data[selected_date] else '0'
 
     return pie_dict
 
@@ -54,18 +54,16 @@ def save_chart_data():
 
         with open("templates/chart_data/evol_data.json", "w") as data:
             evol_labels, evol_recovered, evol_deceased = evol_chart_data(json_data)
-            evol_json = {'evol_labels': evol_labels, 'evol_recovered': evol_recovered, 'evol_deceased': evol_deceased}
+            evol_json = {'date': evol_labels, 'recovered': evol_recovered, 'deceased': evol_deceased}
             json.dump(evol_json, data)
 
         with open("templates/chart_data/line_data.json", "w") as data:
-            line_labels, line_values = line_chart_data(json_data, list(json_data.keys())[-1], list(json_data.keys())[0])
-            line_json = {'line_labels': line_labels, 'line_values': line_values}
-            json.dump(line_json, data)
+            line_dict = line_chart_data(json_data, list(json_data.keys())[-1], list(json_data.keys())[0])
+            json.dump(dict(sorted(line_dict.items())), data)
 
         with open("templates/chart_data/pie_data.json", "w") as data:
-            pie_labels, pie_values = pie_chart_data(json_data, list(json_data.keys())[0])
-            pie_json = {'pie_labels': pie_labels, 'pie_values': pie_values}
-            json.dump(pie_json, data)
+            pie_dict = pie_chart_data(json_data, list(json_data.keys())[0])
+            json.dump(pie_dict, data)
 
 
 def format_date(date):

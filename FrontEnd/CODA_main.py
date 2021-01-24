@@ -10,6 +10,7 @@ localApiPath = 'http://127.0.0.1:5000/api/'
 app = Flask(__name__)
 CORS(app)
 
+@app.route("/")
 @app.route("/news")
 def news_list_page():
     return render_template("news_list_page.html")

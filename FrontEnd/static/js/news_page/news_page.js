@@ -40,15 +40,34 @@ function refreshData(){
                 <div class="card mb-4">
                 ${imgHtml}
                     <div class="card-body">
-                      <div class="row">
-                          <div class="col-7"><small>Published at: ${ formatDate(item.date) }</small></div>
-                          ${publishedByHtml}
-                      </div>
-                      <h2 class="card-title">${ item.title }</h2>
-                      <div>
-                      ${keywordsHtml}
-                      </div>
-                      <a href="${item["source"]}" target="_blank" class="btn btn-primary">Read More &rarr;</a>
+                          <div class="row">
+                              <div class="col-7"><small>Published at: ${ formatDate(item.date) }</small></div>
+                              ${publishedByHtml}
+                          </div>
+                          <h2 class="card-title">${ item.title }</h2>
+                          <div>
+                          ${keywordsHtml}
+                          </div>
+                          <div class="read-share">
+                                <a href="${item["source"]}" target="_blank" class="btn btn-primary">Read More &rarr;</a>
+                                <div id="share-buttons">
+                                    <a href="mailto:?Subject=Check this article I found on CODA&amp;Body=I%20saw%20this%20and%20thought%20you%20might%20enjoy%20it: ${item["source"]}">
+                                        <img src="https://simplesharebuttons.com/images/somacro/email.png" alt="Email" />
+                                    </a>
+                                    <a href="http://www.facebook.com/sharer.php?u=${item["source"]}" target="_blank">
+                                        <img src="https://simplesharebuttons.com/images/somacro/facebook.png" alt="Facebook" />
+                                    </a>
+                                    <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url=${item["source"]}" target="_blank">
+                                        <img src="https://simplesharebuttons.com/images/somacro/linkedin.png" alt="LinkedIn" />
+                                    </a>
+                                    <a href="http://reddit.com/submit?url=${item["source"]}&amp;title=${ item.title }" target="_blank">
+                                        <img src="https://simplesharebuttons.com/images/somacro/reddit.png" alt="Reddit" />
+                                    </a>
+                                    <a href="https://twitter.com/share?url=${item["source"]}&amp;text=Coda%20article%20&amp;hashtags=coda" target="_blank">
+                                        <img src="https://simplesharebuttons.com/images/somacro/twitter.png" alt="Twitter" />
+                                    </a>
+                                </div>
+                          </div>
                     </div>
                 </div>`;
             divHtml += itemHtml;

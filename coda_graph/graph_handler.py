@@ -2,9 +2,9 @@ import json
 from SPARQLWrapper import SPARQLWrapper, JSON, POST
 import shortuuid
 
-PATH = "http://localhost:7200/repositories/coda"
+#PATH = "http://localhost:7200/repositories/coda"
 API_PATH = "http://localhost:5000/api/country/"
-# PATH = "http://35.233.64.185:7200/repositories/coda"   # cloud path
+PATH = "http://34.76.118.122:7200/repositories/coda"   # cloud path
 
 
 class GraphHandler:
@@ -129,8 +129,8 @@ class GraphHandler:
                     ?cases rdf:value ?value .
                     ?country rdf:type schema:Country .
                     ?country ns1:IdentifiedBy ?country_code .
-                    ?country rdf:type ?cases .
-            FILTER (?type = 'total_confirmed' && ?date = '2021-01-19'^^xsd:dateTime)
+                    ?country ns1:hasCases ?cases .
+            FILTER (?type = 'total_confirmed' && ?date = '2021-01-20'^^xsd:dateTime)
             }}
             ORDER BY DESC (?value) LIMIT 22
             """
@@ -162,7 +162,7 @@ class GraphHandler:
                         ?cases ns1:IsReportedOn ?date .
                         ?cases ns1:IsOfType ?type .
                         ?cases rdf:value ?value .
-                        ?country rdf:type ?cases .
+                        ?country ns1:hasCases ?cases .
                 FILTER (?type = 'active' {filter_condition})
                 }}
             ORDER BY ASC (?date)}}
@@ -217,21 +217,21 @@ class GraphHandler:
 
     def get_pie_totals(self, pie_date=""):
         if pie_date:
-            filter_condition = f"&& ?date <= '{pie_date}'^^xsd:dateTime"
+            filter_condition = f"&& ?date <= '{pie_date}T00:00:00Z'^^xsd:dateTime"
         else:
-            filter_condition = ''
+            filter_condition = f"&& ?date = '2021-01-23T00:00:00Z'^^xsd:dateTime"
 
         self.wrapper.setQuery(
             f"""
             {self.PREFIXES}
             SELECT DISTINCT ?type (SUM(?value) as ?sumValue) WHERE {{
-            SELECT ?type ?value
+            SELECT ?type ?value ?date
             WHERE {{
                     ?cases rdfs:subClassOf owl:Thing .
                     ?cases ns1:IsReportedOn ?date .
                     ?cases ns1:IsOfType ?type .
                     ?cases rdf:value ?value .
-                    ?country rdf:type ?cases .
+                    ?country ns1:hasCases ?cases .
             FILTER (?type in ('total_confirmed', 'total_recovered', 'total_deceased') {filter_condition})
             }}
             }}

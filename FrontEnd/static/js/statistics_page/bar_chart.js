@@ -77,8 +77,6 @@ function generate_bar_chart(bar_data) {
 
 function update_bar(bar_results){
     var bar = JSON.parse(bar_results);
-    console.log('BARTEST');
-    console.log(bar);
     myBarChart.data.datasets = [
       {
           label: "deceased",

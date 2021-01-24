@@ -7,6 +7,8 @@ function save_country_data(country_data) {
         data: cdata,
         success: function(data) {
             $('.spinner-border').removeClass('visible').addClass('invisible');
+            $('#csv_button').prop("disabled", false);
+            $('#json_button').prop("disabled", false);
         }
     });
 }
