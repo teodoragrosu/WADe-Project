@@ -1,4 +1,6 @@
-from flask import Flask, render_template, request, jsonify, redirect
+import pathlib
+
+from flask import Flask, render_template, request, jsonify, redirect, send_from_directory
 import json
 from datetime import datetime
 import requests
@@ -49,7 +51,7 @@ def receive_dates():
                 line_dict = sd.line_chart_data(json_data, request.form['start_date'], request.form['end_date'])
 
                 with open("templates/chart_data/line_data.json", "w") as data:
-                    json.dump(line_dict, data)
+                    json.dump(dict(sorted(line_dict.items())), data)
 
             if len(request.form) == 1:
                 pie_dict = sd.pie_chart_data(json_data, request.form['pie_date'])
@@ -71,6 +73,12 @@ def country_data():
 
     return "Data uploaded"
 
+# @app.route('/download_csv', methods=['GET'])
+# def download_csv():
+#     if request.method == "GET":
+#         return send_from_directory(directory=pathlib.Path().absolute(), filename="AO_data.csv", as_attachment=True)
+#
+#     return "Data uploaded"
 
 @app.route('/line_data')
 def line_data():

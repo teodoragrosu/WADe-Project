@@ -10,6 +10,10 @@ body {
   background-color: #172b1c!important;
 }
 
+.navbar-brand {
+  font-family: 'Rubik Mono One', sans-serif;
+}
+
 .btn-primary {
   color: #fff;
   background-color: #3b6d48;
@@ -168,4 +172,22 @@ header {
 .read-share{
     display: flex;
     justify-content: space-between;
+}
+
+p {
+    font-family: 'Montserrat', sans-serif;
+}
+
+a {
+    font-family: 'Montserrat', sans-serif;
+}
+
+h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+}
+
+h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
 }

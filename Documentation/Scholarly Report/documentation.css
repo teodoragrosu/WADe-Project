@@ -72,3 +72,7 @@ figcaption {
 		height: 350px;
 	}
 }
+
+figure {
+    margin: 10px 0px 10px 0px;
+}

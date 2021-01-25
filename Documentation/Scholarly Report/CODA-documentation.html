@@ -81,8 +81,43 @@
             <h3>Website</h3>
             <blockquote>
                 <p>
-                    TODO
+                    The website was developed using the Flask framework on the server side and the Bootstrap framework and ChartJS library for frontend design.
                 </p>
+                <p>
+                    It consists of four pages: News, Articles, Statistics and About. News and Articles showcase data collected from around the internet that is retrieved via a call to the REST API mentioned below.
+                    The users can share the articles to popular social media platforms or send them via email. The categories on the right-hand side of the page as well as the search bar, can be used to filter the articles.
+                </p>
+                <p>    
+                    The About page is for informational purposes and contains a short description of the project and its goals.
+                </p>
+                <p>
+                    Statistics contains five dynamically generated charts based on processed data recieved from an API call.
+                    The data for the chart can be filtered regionally (general data or country specific data). Both general and country data are collected with API calls but country data is saved locally in order to be further proccessed.
+                </p>   
+                    The five charts present the following statistics:
+                    <ul>
+                        <li>Top countries by active cases (general only)</li>
+                        <li>COVID-19 evolution of active cases (time span filter available)</li>
+                        <li>COVID-19 statistics for confirmed, decesed and recovered cases (date filter available)</li>
+                        <li>COVID-19 average number of cases per month</li>
+                        <li>COVID-19 evolution of recoveries and deaths</li>
+                    </ul>
+                </p>    
+                <p>
+                    The overall country data can be downloaded in .CSV or .JSON format using the two download buttons located above the pie chart.
+                </p>
+                <figure typeof="sa:Image1">
+                    <img class="imagine" style="height:auto;" src="../Scholarly Report/screen shots/statistics.jpg">
+                    <figcaption>
+                       Top countries by active cases
+                    </figcaption>
+                </figure>
+                <figure typeof="sa:Image1">
+                    <img class="imagine" style="height:auto;" src="../Scholarly Report/screen shots/graphs.jpg">
+                    <figcaption>
+                        An example of the statistics graphs
+                    </figcaption>
+                </figure>
             </blockquote>
 
             <h3>Data Crawlers</h3>
@@ -249,7 +284,42 @@
             <h2>5. User Journey</h2>
             <blockquote>
                 <p>
-                    CODA allows unauthenticated usage.
+                    Users have acces to the News, Articles, Statistics and About pages and can use the following features:
+                    <ul>
+                        <li><b>News: </b> 
+                            <ul>
+                                <li>Share news on social media</li>
+                                <li>Search for news using the search bar</li>
+                                <li>Search for publications using the publications search bar</li>
+                                <li>Get news based on keywords</li>
+                            </ul>
+                        </li>
+                        <li><b>Articles: </b>
+                            <ul>
+                                <li>Share news on social media</li>
+                                <li>Filter articles based on categories</li>
+                                <li>Search for articles using the search bar</li>
+                            </ul>
+                        </li>
+                        <figure typeof="sa:Image1">
+                            <img class="imagine" style="height:auto;" src="../Scholarly Report/screen shots/Articles.jpg">
+                            <figcaption>
+                                Articles page
+                            </figcaption>
+                        </figure>
+                        <li><b>Statistics: </b>
+                            <ul>
+                                <li>Get country specific statistics</li>
+                                <li>Download country data in .CSV or .JSON format</li>
+                            </ul>
+                        </li>
+                        <li><b>About: </b>
+                            <ul>
+                                <li>Read information about the CODA service</li>
+                            </ul>
+                        </li>
+                    </ul>
+
                 </p>
             </blockquote>
             <h3>Guest User</h3>

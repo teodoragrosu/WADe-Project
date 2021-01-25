@@ -200,12 +200,19 @@ $('#csv_button').on('click', function (e) {
     var countryCode = $("#country-selector").val();
     $.ajax({
             url: "http://127.0.0.1:5000/api/country/"+countryCode+"/download?format=csv",
-            type: 'GET'});
+            type: 'GET',
+            complete: function(){
+                console.log(data);
+            });
 });
 
 $('#json_button').on('click', function (e) {
     var countryCode = $("#country-selector").val();
     $.ajax({
             url: "http://127.0.0.1:5000/api/country/"+countryCode+"/download?format=json",
-            type: 'GET'});
+            type: 'GET',
+            success: function(data) {
+                console.log(data);
+            }
+    });
 });

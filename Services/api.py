@@ -1,6 +1,8 @@
 import csv
 import json
-from flask import Flask, jsonify, request, abort, send_file
+import pathlib
+
+from flask import Flask, jsonify, request, abort, send_file, send_from_directory
 from flask_cors import CORS
 
 from Services.articleService import ArticlesService
@@ -140,6 +142,7 @@ def get_country_monthly_avg(country_code):
 
 @app.route('/api/country/<string:country_code>/download', methods=['GET'])
 def download_country_metrics(country_code):
+    print(pathlib.Path().absolute())
     if request.method != "GET":
         return abort(405, "Method not allowed!")
 
@@ -181,8 +184,9 @@ def download_country_metrics(country_code):
                     "Total Deceased": values.get("total_deceased", 0),
                 })
             mimetype = "text/csv"
-
-    return send_file(file_path, mimetype=mimetype, attachment_filename=file_path, as_attachment=True)
+    print('DONE')
+    #return send_file(file_path, mimetype=mimetype, attachment_filename=file_path, as_attachment=True)
+    return send_from_directory(directory=pathlib.Path().absolute(), filename=file_path, as_attachment=True)
 
 
 # =========================================== NEWS ENDPOINTS ==============================================
