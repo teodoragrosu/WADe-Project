@@ -2,9 +2,9 @@ import json
 from SPARQLWrapper import SPARQLWrapper, JSON, POST
 import shortuuid
 
-PATH = "http://localhost:7200/repositories/coda"
+#PATH = "http://localhost:7200/repositories/coda"
 API_PATH = "http://localhost:5000/api/country/"
-#PATH = "http://34.76.118.122:7200/repositories/coda"   # cloud path
+PATH = "http://34.76.118.122:7200/repositories/coda"   # cloud path
 
 
 class GraphHandler:
