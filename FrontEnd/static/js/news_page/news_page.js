@@ -90,6 +90,9 @@ function updatePaginationButtons(){
     } else {
         $("#nextPageLi").addClass("disabled");
     }
+
+    $("#pageNumber").html(page);
+    window.scrollTo(0, 0);
 }
 
 function formatDate(date) {
