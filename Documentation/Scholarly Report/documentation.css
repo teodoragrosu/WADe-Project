@@ -21,6 +21,13 @@ header > h1 {
 	border: 2px solid black;
 }
 
+.imagine-small {
+	width: 720px;
+	height: 360px;
+	display: inline;
+	border: 2px solid black;
+}
+
 h1,h2,h3,h4,h5,h6 {
 	letter-spacing: 0.0375em;
 }

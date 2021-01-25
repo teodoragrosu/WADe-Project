@@ -91,12 +91,82 @@
                     A data crawler or a web crawler is an Internet bot that systematically browses the World Wide Web, typically for creating search engine indices. CODA makes use of its own personalised data crawlers that collect Covid-19-related data from trusted news sources all over the internet.
                     The sources of information that are scraped by the data crawler come from official news articles sites, statistics sites and many more. A few examples are The Guardian, The New York Times and BBC News.
                 </p>
+				<h4>Basic inner workings</h4>
+                <p>
+					All our data crawler services work in a variation of a master-slave architecture. The common flow between all these services is the usage of a "ThreadManager", an entity which manages the speed, rythm and general flow of the resources between services.
+				</p>
+				<p>
+					Thus, the crawling service, the parent, acquires raw resources (pages, links, json data...) and feeds it to his thread manager which, assuming everything works well, will then make sure that every resource is processed in a timely manner, without putting at risk the integrity of the crawler or the well being of the API.
+				</p>
+				<p>
+					This mechanism is implemented in a generic way, such that it may be reused to other tasks that need this kind of resource processing management. Thus, in order benefit from a thread manager, we need to define some settings, the number of workers that we want and some other pause time length related settings, and we also need to define the actual method used to process a resource. Each crawler and usecase has different resources, that need to be processed differently in order to hopefully gather useful information that we will then displayed on the API, thus each crawler implements such a method that will be passed to the thread manager in order to be used.
+				</p>
+				
                 <h4>Metrics Consumer</h4>
-                <p>TODO (mention covid19.api)</p>
+                <p>
+					The metrics consumer is the service used to gather information and metrics about COVID related cases for each country and for each day from the beginning of the pandemic. The cases that we are interested in and that we gathered are as follows:
+					<ul>
+						<li>Confirmed - amount of people confirmed with Covid19 in that day and country</li>
+						<li>Deceases - number of deceased due to Covid19 in that day and country</li>
+						<li>Recovered - number of people that recovered from Covid19 in that day and country</li>
+						<li>Active - number of active cases at that time and in that country</li>
+						<li>Total Confirmed - total confirmed cases until that day and for that country</li>
+						<li>Total Deceased - total deceased due to covid until that day and for that country</li>
+						<li>Total Recovered - total recovered cases until that day and for that country</li>
+					</ul>
+				</p>
+				<p>
+					There are a number of API's able to provide us with this information, we reviewed multiple such sources and we finally choose Postman Covid Api as the main source of metrics. This API is reliable, fast, gives relevant live information that is always up to date, and it also is able to provide information about the earlier months of the pandemic, information that we needed in order to build useful graphs. 
+				</p>
+				<p>
+					The API provides an endpoint that, when given a country code, will return a list of items representing each day from the start of the pandemic to the current day, each item having relevant information about covid cases for that day. This is the structure of one such item:
+				</p>
+				<figure typeof="sa:Image1">
+                <img class="imagine-small" src="screen shots/postmanCovid19Data.bmp">
+                <figcaption>
+                    Postman Covid19 API data example
+                </figcaption>
+            </figure>
+				<p>
+					The Confirmed, Deceased and Recovered metrics present in the data are actually what we call "Total" metrics, in order to get a hold of the daily metrics (cases that happened in a single day, and not in all time until that day), we need to do some more processing. This involved gathering data from previous days and subtracting those amounts in order to reveal the daily values that we are interested into, this also calls for more validation in getting filtered data on the server.
+				</p>
+				<p>
+					Thus, the main flow is as follows: The main service gets a hold of all the country codes for the countries that we are interested in, each country code is a resource and it's added to the Thread Manager. The workers each take a country code, call the postman api and process the response in order to gather relevant information for that country. The response is then built and sent to our API which stores it into the graph. The worker then gets another country code and processes it until there are no more resources left.
+				</p>
+				<p>
+					Some optimizations. The Postman Covid19 API allows for "from" and "to" parameters, filtering the data that it sends back according to them. We can use this, for faster processing and avoidance of duplicates, yet we need to get a hold of the latest day that we have covid related metrics for each country, thus knowing how to use the filters. We implemented this using an extra call at the start of the consumer, this call is aimed at our API, and it returns a dictionary containing every country that we have in our system, alongside the latest day. This is used and updated subsequently.
+				</p>
+				<p>
+					We observed that Postman Covid19 API refreshes the data with new and updated values each day, commonly around 00:00 PM, yet we didn't know for sure, thus our consumer will try and fetch new data once every 6 hours, in order to be sure that we have the latest values at all times. 
+				</p>
                 <h4>News Consumer</h4>
-                <p>TODO </p>
+                <p> 
+					The news consumer is the service used to gather and populate the graph with the latest relevant news about Covid19. In order to do this we use News API, a popular API service that provides endpoints for gathering filtered news items on command. This is the structure to such an item:
+				</p>
+				<figure typeof="sa:Image1">
+                <img class="imagine" src="screen shots/newsApiData.bmp">
+                <figcaption>
+                    News API data item example
+                </figcaption>
+				<p>
+					This already provides us with most data that we need regarding news items: url, title, publication, description and even an optional imageUrl, yet we would also like to use a list of keywords, these would be displayed alongside the news item, to give a more focused view for the user.
+				</p>
+				<p>
+					In order to get a hold of some keywords, as well as other usefull information that we didn't get from News API, we used news-fetch, a python library that provides multiple functionalities when it comes to parsing and scrapping news articles and web pages in general. Using the url provided by News API, we scrapped the page that it was pointing at and, using one of the news-fetch functionalities, we got a hold of the keywords that would best describe that page. 
+				</p>
+				<p>
+					The main flow would be as follows: Every 15 minutes the main service would make a News Api call, asking for the news related to Covid that happened in the past 15 minutes. Every one of this items represents a resource that needs to be processed, thus the workers will each take one item, use news-fetch to process the keywords, and then send it to our API that would store the news item into the graph.
+				</p>
                 <h4>Articles Consumer</h4>
-                <p>TODO (mention covid19.api)</p>
+                <p>
+					The articles consumer is the service that handles the gathering and storing of Covid-research related articles. Like the news consumer, this service uses the News API and also news-fetch in order to use focused filters and and gather additional information.
+				</p>
+				<p>
+					Aside from the news-related mechanism, to gather relevant articles we also used a domain filtering implementation. We found that some publication domains use to focus on more research related items, while others opt for more traditional news. Thus, after some research, we came up with a list of trustworthy domains. These are present in a json file and can be changed at any time. 
+				</p>
+				<p>
+					Thus, having access to those domains we can use one of News Api filters to only get articles released by those domains, which, after processing with another news-fetch functionality, would reveal information about the article type and about the categories that the article represents. This type of article are a lot more rare than normal articles, thus we configured our consumer to make a call for such items only once in a few hours.
+				</p>
             </blockquote>
 
             <h3>REST API</h3>
