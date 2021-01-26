@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>CODA (COVID-19 Data for ALL) User Documentation</title>
+    <link rel="stylesheet" href="documentation.css">
+</head>
+<body prefix="schema: http://schema.org">
+    <article typeof="schema:ScholarlyArticle" resource="#">
+        <header>
+            <h1 property="schema:name"> CODA User Documentation
+            </h1>
+        </header>
+        <div role="contentinfo">
+            <dl>
+                <dt>Authors</dt>
+                <dd>
+                    TOG-team: Grosu Teodora, Hriscu Oana, Schițcu Gabriel
+                </dd>
+            </dl>
+        </div>
+        <section typeof="sa:content" id="content">
+            <h2>Content</h2>
+            <aside typeof="schema:WPSideBar">
+                <ol>
+                    <li>
+                        <a href="#introduction">Introduction</a>
+                    </li>
+                    <li>
+                        <a href="#website">Navigating the website</a>
+                    </li>
+                    <li>
+                        <a href="#rest-api">Using the REST API</a>
+                    </li>
+                    <li>
+                        <a href="#endpoint">Accessing the SPARQL Endpoint using Postman</a>
+                    </li>
+                    <li>
+                        <a href="#biblio">Bibliography</a>
+                    </li>
+                </ol>
+            </aside>
+        </section>
+        <section typeof="sa:Results" id="introduction">
+            <h2>1. Introduction</h2>
+            <h3>About CODA</h3>
+            <blockquote>
+                <p>
+                    CODA stands for COVID-19 Data for All. It is a smart micro-service-based web system that is able to provide information regarding the Covid-19 pandemic in multiple written and visual formats for both specialists and the general public. Every data collected by CODA such as articles, documents and graphics, contains attested pieces of information which can be easily viewed, downloaded and shared to other platforms. Moreover, everything on CODA can be accessed via a SPARQL endpoint created in order to ease user access to required knowledge. CODA’s goal is to keep everyone informed about the pandemic in a fast and easy manner and avoid spreading misinformation to the general public.
+                </p>
+            </blockquote>
+        </section>
+
+        <section typeof="sa:Results" id="website">
+            <h2>2. Navigating the website</h2>
+            <h3>Statistics page</h3>
+            <blockquote>
+            The statistics page displays graphic charts containing various information about COVID cases. By default, the graphs
+             will show data on a global level, the first graphic revealing the countries with the biggest count of confirmed cases at the moment.
+            The next charts depict the general evolution of the decease, in terms of active cases, confirmed, deceased, recovered
+             and all time total counts. The data can be filtered by country, and by a specific date range:
+            </blockquote>
+            <figure typeof="sa:Image2">
+                <img class="img-big" src="user_help/cases_japan.png">
+                <figcaption>
+                    Evolution of active cases in Japan, between the 5th of October and 31st of December 2020
+                </figcaption>
+            </figure>
+
+            <blockquote>
+                If no date or date range is specified, the charts will indicate the evolution starting from the first recorded day (22nd of January 2020)
+                 until the present day:
+            </blockquote>
+            <figure typeof="sa:Image2">
+                <img class="img-big" src="user_help/deaths_and_recov.png">
+                <figcaption>
+                    Evolution of recorded deaths and recovered cases in Marocco
+                </figcaption>
+            </figure>
+
+            <blockquote>
+                The bottom left chart indicates the average number of deaths, confirmed and recovered cases, per day,
+                 for every month in 2020, in a specific country.
+            </blockquote>
+
+            <figure typeof="sa:Image2">
+                <img class="img-big" src="user_help/avgs.png">
+            </figure>
+
+            <blockquote>
+                The country data can be downloaded, either in a CSV format, or JSON, by clicking on one of the two buttons
+                 available - the download functionality only allows for data related to one country to be downloaded (at a time).
+            </blockquote>
+
+            <h2>News page</h2>
+            <blockquote>
+                The News page presents the most recent news about the Coronavirus from around the globe. The news can be shared on
+             social media platforms, such as facebook, linkedin, reddit and twitter. The "Search" form allows for news to be filtered
+             by different terms found in the title or, you can enter a specific publication source in the form bellow and get
+             the news published on that:
+            </blockquote>
+            <figure typeof="sa:Image2">
+                <img class="img-big" src="user_help/news.png">
+            </figure>
+            <h2>Articles page</h2>
+            <blockquote>
+                Next, by clicking on the "Articles" page in the menu, you can browse the latest research articles
+                related to the COVID-19 decease. Click on the "Read More" button to get to the publication source or filter
+                the articles depending on your own interest - for example, by entering "COVID" in the search form, you will get
+                 all research data containing this term in the title. Alternatively, you can filter the publications by category,
+                by clicking on one of the most popular ones, available in the "Categories" panel on the top right side of the page.
+            </blockquote>
+            <figure typeof="sa:Image2">
+                <img class="img-big" src="user_help/articles.png">
+            </figure>
+
+            <blockquote>
+                Moreover, you can share the articles that you find interesting on social media platforms, including facebook,
+                 linkedin, reddit and twitter.
+            </blockquote>
+
+        </section>
+
+        <section typeof="sa:Results" id="rest-api">
+            <h2>2. Using the REST API</h2>
+            <blockquote>
+                CODA offers a public REST API, which follows the OpenAPI Specification <a href="#open-api"><sup>1</sup></a> , providing access to data at a global level.
+                The data can be queried, filtered and downloaded (in both JSON and CSV format). The Swagger documentation is openly available <a href="https://coda-documentation.herokuapp.com/v1/ui/"> here</a>.
+                <br><br><b>API domain name:</b> <a href="http://coda-apiv1.herokuapp.com">http://coda-apiv1.herokuapp.com</a>
+            </blockquote>
+
+            <figure typeof="sa:Image2">
+                <img class="img-big" src="user_help/coda-api.png">
+                <figcaption>
+                    Homepage of the CODA REST API documentation
+                </figcaption>
+            </figure>
+            <br>
+            <blockquote>
+                The information related to cases count can be filtered by country code, a specific day or a date range.
+                The country code has to follow the ISO 3166 Alpha-2 international standard <a href="#country-code"><sup>2</sup></a>  and
+                all dates have to be specified using the ISO 8601 date format. <a href="#dates"><sup>3</sup></a>
+            </blockquote>
+            <blockquote>
+                The results returned by the <b>/api/country/:country_code</b> endpoint will contain the following information:
+                 <ol>
+                    <li>total_deceased - total number of deaths in the selected country at the moment</li>
+                    <li>total_confirmed - total number of all time confirmed cases in the selected country at the moment</li>
+                    <li>total_recovered - total number of recovered cases in the selected country at the moment</li>
+                    <li>confirmed - number of confirmed cases on the specific day</li>
+                    <li>deceased - number of deaths on the specific day</li>
+                    <li>recovered - number of recovered cases on the specific day</li>
+                     <li>active - number of active cases cases on the specific day</li>
+                </ol>
+            </blockquote>
+            <br>
+            <figure typeof="sa:Image2">
+                <img class="img-nig" src="user_help/japan_api.png">
+                <figcaption>
+                    Filtering the cases that occurred in Japan between 1-21 January 2021
+                </figcaption>
+            </figure>
+
+            <blockquote>
+                If no date is provided, the API will return by default all cases available, from the first recorded day.
+                Data can also be downloaded - the currently supported formats are JSON and CSV and they have to be specified
+                in the query parameters as well:
+            </blockquote>
+            <figure typeof="sa:Image2">
+                <img class="img-nig" src="user_help/download_csv.png">
+                <figcaption>
+                    Downloading the Japan data in CSV format
+                </figcaption>
+            </figure>
+
+            <blockquote>
+                The news related to the Coronavirus can also be filtered using the CODA API. You can choose to view the latest
+                ones, by using the <b>/api/news/latest</b> endpoint, filter them by their source publication or search for specific
+                 terms (using the <b>search_term</b> query parameter) in the news headline. All these endpoints will return by default
+                the first 20 results on the first page, but <b>limit and offset</b> can also be set in the query to further customize the
+                request.
+            </blockquote>
+            <blockquote>
+                The results returned by the endpoint will contain the following fields:
+                                <ol>
+                    <li>date</li>
+                    <li>title, or headline of the news</li>
+                    <li>publication (source name)</li>
+                    <li>keywords (related tags)</li>
+                    <li>source (url to the actual piece of news)</li>
+                    <li>img_url (a related image that exists on the original source page)</li>
+                </ol>
+            </blockquote>
+            <br>
+            <figure typeof="sa:Image2">
+                <img class="img-big" src="user_help/news_latest_api.png">
+                <figcaption>
+                    Getting the latest news available
+                </figcaption>
+            </figure>
+            <br>
+            <blockquote>
+                The <b>/api/articles</b> endpoint works in a similar manner to the news one, but returns the slightly different
+                 results, since it refers to research-oriented articles and publications, rather than newspaper headlines:
+                <ol>
+                    <li>date</li>
+                    <li>title</li>
+                    <li>authors</li>
+                    <li>categories</li>
+                    <li>type (article, journal contribution, dataset)</li>
+                    <li>abstract (description)</li>
+                    <li>url</li>
+                </ol>
+                The filtering methods and parameters are the same as before, although this endpoint allows for searching certain categories of articles.
+            </blockquote>
+            <figure typeof="sa:Image2">
+                <img class="img-big" src="user_help/articles_api.png">
+                <figcaption>
+                    Searching articles for the term "pandemic"
+                </figcaption>
+            </figure>
+
+        </section>
+
+        <section typeof="sa:Results" id="endpoint-api">
+            <h2>3. Accessing the SPARQL Endpoint using Postman</h2>
+            <blockquote>
+                <p>
+                The CODA GraphDB <a href="graphdb"><sup>4</sup></a>  repository exposes a SPARQL<a href="#sparql"><sup>5</sup></a>  endpoint which can be accessed using the
+                 RDF4J server API <a href="#rdf4j"><sup>6</sup></a> . RDF4J server is
+                a Web application that allows interaction with repositories using the HTTP protocol.
+                Using the RDF4J REST API, users can access the CODA repository endpoint and run queries against the data.
+                </p>
+            </blockquote>
+
+            <blockquote>
+                Before starting this tutorial, you will need to have <a href="https://www.postman.com/">Postman</a> installed.
+            </blockquote>
+            <h3>Step 1 (Optional) - Create your Postman enviromment</h3>
+            <blockquote>
+                Open the Postman application, head over to 'Environments quick look' and click on "Add". Give your new environment a proper name.
+            </blockquote>
+            <figure typeof="sa:Image2">
+                <img class="img-thin" src="user_help/step_1.jpg">
+            </figure>
+
+            <h3>Step 2 - Add a SPARQL query</h3>
+            <blockquote>
+                Create a SPARQL query using the CODA ontology. A description of the vocabularies that CODA uses is available
+                on the <a href="https://github.com/teodoragrosu/WADe-Project/#coda---used-vocabulary">Github repository.</a>
+                For example, in order to select the cases recorded in Chad, you'll need
+                to specify the prefixes of the vocabulary used, and filter the results by the country code:
+                </blockquote>
+                <figure typeof="sa:Image2">
+                <img class="img-big" src="user_help/query_example.png">
+
+            </figure>
+            <blockquote>
+                Add your SPARQL queries as environment variables (this is an optional step, the queries can be added as parameters to the request,
+                but we recommend saving them for easier reuse). Paste the SPARQL query in the "Initial Value" field:
+            </blockquote>
+            <figure typeof="sa:Image2">
+                <img class="img-big" src="user_help/step2.jpg">
+            </figure>
+
+            <h3>Step 3 - Encode the query</h3>
+            <blockquote>
+                Select the query you have added in the previous step and click on
+                "Encode URI Component" - the queries have to be encoded, otherwise, a "MalformedQuery" exception will appear.
+                After you have encoded the query, click "Add".
+            </blockquote>
+            <figure typeof="sa:Image2">
+                <img class="img-big" src="user_help/step3.jpg">
+            </figure>
+
+            <h3>Step 4 - Create the request</h3>
+            <blockquote>
+                Once you have completed the first 3 steps, return to the main page. Set "GET" as the request method (if it's not
+                already set by default) and enter the URL to the SPARQL Endpoint in the field next to it. Next, go to 'Params' section,
+                enter "query" under "KEY" and the environment variable you've created at step 2 under "VALUE". If you have NOT created
+                 an environment variable, copy-paste the SPARQL query and encode it.
+            </blockquote>
+            <figure typeof="sa:Image2">
+                <img class="img-thin" src="user_help/step4.jpg">
+            </figure>
+
+            <h3>Step 5 - Authorization</h3>
+            <blockquote>
+                Go to the "Authorization" section and look for "Basic Auth" in the "TYPE" dropdown. A generic user has been created for this purpose -
+                enter "user" as both Username and Password (keep in mind that this account has read access only to the repository).
+            </blockquote>
+            <figure typeof="sa:Image2">
+                <img class="img-thin" src="user_help/step5.jpg">
+            </figure>
+
+            <h3>Step 6 (Optional) - Accept header</h3>
+            <blockquote>
+                By default, the Accept header has the "application/json" value. However, it can be set to a more "SPARQL-like" mime type,
+                such as "application/sparql-results+xml". In order to do this, you need to go to the "Headers" section, and enter the mime type manually.
+                The last thing left to do is hit the "Send" button and the results should appear in the Body section:
+            </blockquote>
+            <figure typeof="sa:Image2">
+                <img class="img-big" src="user_help/step6.jpg">
+            </figure>
+
+        </section>
+
+        <section typeof="sa:Results" id="biblio">
+            <h2>Bibliography</h2>
+            <ol>
+                <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://www.iban.com/country-codes" property="schema:citation" id="country-code">
+            <cite property="schema:name">
+                <a href="https://www.iban.com/country-codes">The complete list of all country ISO codes as described in the ISO 3166 international standard.</a>
+            </cite></li>
+                <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://en.wikipedia.org/wiki/ISO_8601" property="schema:citation" id="date">
+            <cite property="schema:name">
+                <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601 Representation of dates and times</a>
+            </cite></li>
+
+                <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://www.openapis.org/" property="schema:citation" id="open-api">
+            <cite property="schema:name">
+                <a href="https://www.openapis.org/">The OpenAPI Specification</a>
+            </cite></li>
+
+            <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://graphdb.ontotext.com/" property="schema:citation" id="graphdb">
+            <cite property="schema:name">
+                <a href="https://graphdb.ontotext.com/">GraphDB</a>
+            </cite>, by <span property="schema:author" typeof="schema:Organisation">Ontotext</li>
+
+            <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://www.w3.org/TR/sparql11-protocol/" property="schema:citation" id="sparql">
+            <cite property="schema:name">
+                <a href="https://www.w3.org/TR/sparql11-protocol/">SPARQL 1.1 Protocol</a>
+            </cite></li>
+
+            <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://rdf4j.org/documentation/reference/rest-api/#graph-store-support" property="schema:citation" id="rdf4j">
+            <cite property="schema:name">
+                <a href="https://rdf4j.org/documentation/reference/rest-api/#graph-store-support">The RDF4J REST API</a>
+            </cite></li>
+
+            </ol>
+        </section>
+
+
+    </article>
+</body>
+</html>
