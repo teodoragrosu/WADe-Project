@@ -2,6 +2,8 @@ var page = 1;
 var searchTerm = '';
 var publicationTerm = '';
 var numberOfResults = 0;
+//var apiPath = 'https://coda-apiv1.herokuapp.com/api'
+var apiPath = "http://127.0.0.1:5000/api"
 
 var urlParams = new URLSearchParams(window.location.search);
 if(urlParams.has('keyword')){
@@ -10,7 +12,7 @@ if(urlParams.has('keyword')){
 }
 
 function refreshData(){
-    $.ajax({url: "http://127.0.0.1:5000/api/news/page/" + page +"?search_term=" + searchTerm + "&publication=" + publicationTerm, success: function(result){
+    $.ajax({url: apiPath + "/news/page/" + page +"?search_term=" + searchTerm + "&publication=" + publicationTerm, success: function(result){
         var news = JSON.parse(result);
         numberOfResults = Object.keys(news).length;
         var divHtml = '';

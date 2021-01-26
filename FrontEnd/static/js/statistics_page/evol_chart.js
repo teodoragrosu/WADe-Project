@@ -89,13 +89,30 @@ function generate_evol_chart(evol_data) {
 }
 
 function update_evol(evol_results){
-    var evol = JSON.parse(evol_results);
-    var maxOfList = Math.max(...evol.recovered);
-    var zeroes = maxOfList.toString().length-1;
-    var upper_threshold = Math.ceil(maxOfList / Math.pow(10, zeroes)) * Math.pow(10, zeroes);
-    myEvolChart.data.labels = evol.date;
-    myEvolChart.data.datasets[0].data = evol.recovered;
-    myEvolChart.data.datasets[1].data = evol.deceased;
-    myEvolChart.options.scales.yAxes[0].ticks.max = upper_threshold;
+    var upper_threshold = 1000;
+    if(evol_results) {
+        var evol = JSON.parse(evol_results);
+        var maxOfList = Math.max(...evol.recovered);
+        var zeroes = maxOfList.toString().length-1;
+        upper_threshold = Math.ceil(maxOfList / Math.pow(10, zeroes)) * Math.pow(10, zeroes);
+        myEvolChart.data.labels = evol.date;
+        myEvolChart.data.datasets[0].data = evol.recovered;
+        myEvolChart.data.datasets[1].data = evol.deceased;
+        myEvolChart.options.scales.yAxes[0].ticks.max = upper_threshold;
+
+    }
+    else{
+        var dayList = getDaysArray(new Date("2020-01-01"),new Date());
+
+        (arr = []).length =  dayList.length;
+         arr.fill(0);
+        evol = {"date": dayList, "recovered": arr, "deceased": arr};
+
+        myEvolChart.data.labels = evol.date;
+        myEvolChart.data.datasets[0].data = evol.recovered;
+        myEvolChart.data.datasets[1].data = evol.deceased;
+        myEvolChart.options.scales.yAxes[0].ticks.max = upper_threshold;
+    }
+
     myEvolChart.update();
 }

@@ -6,6 +6,7 @@ import dateutil.parser
 
 countriesUri = "https://api.covid19api.com/countries"
 countryUri = "https://api.covid19api.com/total/country/"
+
 apiMetricsUri = "http://127.0.0.1:5000/api/metrics"
 apiMetricsInitialValuesUri = "http://127.0.0.1:5000/api/metrics/initialValues"
 

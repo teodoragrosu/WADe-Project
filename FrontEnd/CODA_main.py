@@ -9,7 +9,8 @@ from flask_cors import CORS
 
 import FrontEnd.statisticsData as sd
 
-localApiPath = 'http://127.0.0.1:5000/api/'
+#apiPath ='https://coda-apiv1.herokuapp.com/api/'
+apiPath = 'http://127.0.0.1:5000/api/'
 app = Flask(__name__)
 CORS(app)
 
@@ -32,7 +33,7 @@ def statistics_page():
     open('templates/chart_data/pie_data.json', 'w').close()
     today_date = datetime.today().strftime('%Y-%m-%d')
 
-    response = requests.get('http://127.0.0.1:5000/api/countries')
+    response = requests.get(apiPath + 'countries')
     codes = list(response.json().keys())
     names = []
     for code in codes:
@@ -40,7 +41,7 @@ def statistics_page():
         if convert != None:
             names.append(convert.name)
         else:
-            names.append('')
+            names.append('Kosovo')
 
     countries = dict(zip(codes, names))
 

@@ -2,6 +2,8 @@ var page = 1;
 var searchTerm = '';
 var numberOfResults = 0;
 var selectedCategories = [];
+//var apiPath = 'https://coda-apiv1.herokuapp.com/api'
+var apiPath = "http://127.0.0.1:5000/api"
 
 var urlParams = new URLSearchParams(window.location.search);
 if(urlParams.has('category')){
@@ -12,7 +14,7 @@ if(urlParams.has('category')){
 
 function refreshData(){
     var categoryQueryParam = "categories=" + selectedCategories.join("&categories=")
-    $.ajax({url: "http://127.0.0.1:5000/api/articles/page/" + page +"?search_term=" + searchTerm + "&" + categoryQueryParam, success: function(result){
+    $.ajax({url: apiPath + "/articles/page/" + page +"?search_term=" + searchTerm + "&" + categoryQueryParam, success: function(result){
         console.log(selectedCategories);
         var articles = JSON.parse(result);
         numberOfResults = articles.length;

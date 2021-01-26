@@ -106,12 +106,26 @@ function generate_line_chart(line_data) {
 };
 
 function update_line(line_results){
-    var line = JSON.parse(line_results);
-    var maxOfList = Math.max(...Object.values(line));
-    var zeroes = maxOfList.toString().length-1;
-    var upper_threshold = Math.ceil(maxOfList / Math.pow(10, zeroes)) * Math.pow(10, zeroes);
-    myLineChart.data.labels = Object.keys(line);
-    myLineChart.data.datasets[0].data = Object.values(line);
-    myLineChart.options.scales.yAxes[0].ticks.max = upper_threshold;
+    if(line_results) {
+        var line = JSON.parse(line_results);
+        var maxOfList = Math.max(...Object.values(line));
+        var zeroes = maxOfList.toString().length-1;
+        upper_threshold = Math.ceil(maxOfList / Math.pow(10, zeroes)) * Math.pow(10, zeroes);
+
+        myLineChart.data.labels = Object.keys(line);
+        myLineChart.data.datasets[0].data = Object.values(line);
+        myLineChart.options.scales.yAxes[0].ticks.max = upper_threshold;
+    }
+    else {
+        var dayList = getDaysArray(new Date("2020-01-01"),new Date());
+
+        (arr = []).length =  dayList.length;
+         arr.fill(0);
+
+        myLineChart.data.labels = dayList;
+        myLineChart.data.datasets[0].data = arr;
+        myLineChart.options.scales.yAxes[0].ticks.max = 1000;
+    }
+
     myLineChart.update();
 }

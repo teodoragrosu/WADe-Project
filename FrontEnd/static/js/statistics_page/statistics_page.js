@@ -1,24 +1,27 @@
+//var apiPath = 'https://coda-apiv1.herokuapp.com/api'
+var apiPath = 'http://127.0.0.1:5000/api'
+
 $.getScript("static/js/statistics_page/line_chart.js",
 function() {$.ajax({
-            url: "http://127.0.0.1:5000/api/metrics/active",
+            url: apiPath + "/metrics/active",
             type: 'GET',
             success:generate_line_chart});
             });
 $.getScript("static/js/statistics_page/pie_chart.js",
 function() {$.ajax({
-            url: "http://127.0.0.1:5000/api/metrics/pie",
+            url: apiPath + "/metrics/pie",
             type: 'GET',
             success:generate_pie_chart});
             });
 $.getScript("static/js/statistics_page/bar_chart.js",
 function() {$.ajax({
-            url: "http://127.0.0.1:5000/api/metrics/averages",
+            url: apiPath + "/metrics/averages",
             type: 'GET',
             success:generate_bar_chart});
             });
 $.getScript("static/js/statistics_page/evol_chart.js",
 function() {$.ajax({
-            url: "http://127.0.0.1:5000/api/metrics/evols",
+            url: apiPath + "/metrics/evols",
             type: 'GET',
             success:generate_evol_chart,
             complete: function (data) {
@@ -29,7 +32,7 @@ function() {$.ajax({
             });
 $.getScript("static/js/statistics_page/totals_chart.js",
 function() {$.ajax({
-            url: "http://127.0.0.1:5000/api/metrics/totals",
+            url: apiPath + "/metrics/totals",
             type: 'GET',
             success:generate_totals_chart});
             });
@@ -50,15 +53,15 @@ $("#country-selector").change(function(){
     var countryCode = $("#country-selector").val();
     if (countryCode != 'ALL'){
         $.ajax({
-            url: "http://127.0.0.1:5000/api/country/"+countryCode+"/download?format=json",
+            url: apiPath + "/country/"+countryCode+"/download?format=json",
             type: 'GET'
         });
         $.ajax({
-            url: "http://127.0.0.1:5000/api/country/"+countryCode+"/download?format=csv",
+            url: apiPath + "/country/"+countryCode+"/download?format=csv",
             type: 'GET'
         })
         $.ajax({
-            url: "http://127.0.0.1:5000/api/country/"+countryCode,
+            url: apiPath + "/country/"+countryCode,
             type: 'GET',
             success: save_country_data,
             complete: function(){
@@ -75,7 +78,7 @@ $("#country-selector").change(function(){
                     success: update_pie
                  });
                 $.ajax({
-                    url: "http://127.0.0.1:8000/bar_data",
+                    url: apiPath + "/country/monthly/" + countryCode,
                     type: 'get',
                     dataType: 'html',
                     async: false,
@@ -145,7 +148,7 @@ $('button#line_chart_button').on('click', function (e) {
         }
         else {
             $.ajax({
-            url: "http://127.0.0.1:5000/api/metrics/active?from="+start_date+"&to="+end_date,
+            url: apiPath + "/metrics/active?from="+start_date+"&to="+end_date,
             type: 'GET',
             success: update_line});
         }
@@ -184,7 +187,7 @@ $('button#pie_chart_button').on('click', function (e) {
         }
         else {
             $.ajax({
-            url: "http://127.0.0.1:5000/api/metrics/pie?date="+pie_date,
+            url: apiPath + "/metrics/pie?date="+pie_date,
             type: 'GET',
             success: update_pie});
         }
@@ -245,23 +248,26 @@ $('#json_button').on('click', function (e) {
 //POPULATE GRAPHS WITH GENERAL DATA
 function getGeneral() {
     $.ajax({
-            url: "http://127.0.0.1:5000/api/metrics/active",
+            url: apiPath + "/metrics/active",
             type: 'GET',
             success:update_line
             });
     $.ajax({
-            url: "http://127.0.0.1:5000/api/metrics/pie",
+            url: apiPath + "/metrics/pie",
             type: 'GET',
             success:update_pie
             });
     $.ajax({
-            url: "http://127.0.0.1:5000/api/metrics/averages",
+            url: apiPath + "/metrics/averages",
             type: 'GET',
             success:update_bar
             });
     $.ajax({
-            url: "http://127.0.0.1:5000/api/metrics/evols",
+            url: apiPath + "/metrics/evols",
             type: 'GET',
-            success: update_evol
+            success: update_evol,
+            complete: function(data) {
+                $('.spinner-border').removeClass('visible').addClass('invisible');
+            }
             });
 }

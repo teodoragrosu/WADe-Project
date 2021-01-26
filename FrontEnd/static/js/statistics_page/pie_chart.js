@@ -53,8 +53,16 @@ function generate_pie_chart(pie_data) {
 }
 
 function update_pie(pie_results){
-    var pie = JSON.parse(pie_results);
-    myPieChart.data.labels = Object.keys(pie);
-    myPieChart.data.datasets[0].data = Object.values(pie);
+    var pie;
+    if(pie_results) {
+        pie = JSON.parse(pie_results);
+        myPieChart.data.labels = Object.keys(pie);
+        myPieChart.data.datasets[0].data = Object.values(pie);
+    }
+    else {
+        pie = {"pie_labels": ["Total confirmed", "Total recovered", "Total deceased"], "pie_values": ["0", "0", "0"]}
+        myPieChart.data.labels = pie.pie_labels;
+        myPieChart.data.datasets[0].data = pie.pie_values;
+    }
     myPieChart.update();
 }

@@ -76,27 +76,53 @@ function generate_bar_chart(bar_data) {
 }
 
 function update_bar(bar_results){
-    var bar = JSON.parse(bar_results);
-    myBarChart.data.datasets = [
-      {
-          label: "deceased",
-          backgroundColor: chartColors.red,
-          borderColor: chartColors.red,
-          data : Object.values(bar).map(function (value) { return value.avg_deceased_per_day;}),
-      },
-      {
-          label: "confirmed",
-          lineTension: 0.1,
-          backgroundColor: chartColors.orange,
-          borderColor: chartColors.orange,
-          data : Object.values(bar).map(function (value) { return value.avg_confirmed_per_day;}),
-      },
-      {
-          label: "recovered",
-          backgroundColor: chartColors.green,
-          borderColor: chartColors.green,
-          data : Object.values(bar).map(function (value) { return value.avg_recovered_per_day;}),
-      }
-      ]
+    var bar;
+    if(bar_results) {
+        bar = JSON.parse(bar_results);
+        myBarChart.data.datasets = [
+          {
+              label: "deceased",
+              backgroundColor: chartColors.red,
+              borderColor: chartColors.red,
+              data : Object.values(bar).map(function (value) { return value.avg_deceased_per_day;}),
+          },
+          {
+              label: "confirmed",
+              lineTension: 0.1,
+              backgroundColor: chartColors.orange,
+              borderColor: chartColors.orange,
+              data : Object.values(bar).map(function (value) { return value.avg_confirmed_per_day;}),
+          },
+          {
+              label: "recovered",
+              backgroundColor: chartColors.green,
+              borderColor: chartColors.green,
+              data : Object.values(bar).map(function (value) { return value.avg_recovered_per_day;}),
+          }
+          ]
+    }
+    else {
+        myBarChart.data.datasets = [
+              {
+                  label: "deceased",
+                  backgroundColor: chartColors.red,
+                  borderColor: chartColors.red,
+                  data : [0],
+              },
+              {
+                  label: "confirmed",
+                  lineTension: 0.1,
+                  backgroundColor: chartColors.orange,
+                  borderColor: chartColors.orange,
+                  data : [0],
+              },
+              {
+                  label: "recovered",
+                  backgroundColor: chartColors.green,
+                  borderColor: chartColors.green,
+                  data : [0],
+              }
+          ]
+    }
     myBarChart.update();
 }

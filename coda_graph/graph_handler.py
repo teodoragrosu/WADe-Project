@@ -4,7 +4,8 @@ import shortuuid
 
 PATH = "http://localhost:7200/repositories/coda"
 API_PATH = "http://localhost:5000/api/country/"
-#PATH = "http://34.76.118.122:7200/repositories/coda"   # cloud path
+#API_PATH = "https://coda-apiv1.herokuapp.com/api/country"
+#PATH = "http://35.205.159.186:7200/repositories/coda"   # cloud path
 
 
 class GraphHandler:
@@ -163,7 +164,7 @@ class GraphHandler:
                         ?cases ns1:IsOfType ?type .
                         ?cases rdf:value ?value .
                         ?country ns1:hasCases ?cases .
-                FILTER (?type = 'active' {filter_condition})
+                FILTER (?type = 'active' && ?value > 0 {filter_condition})
                 }}
             ORDER BY ASC (?date)}}
             GROUP BY ?date
@@ -191,7 +192,7 @@ class GraphHandler:
                     ?cases ns1:IsReportedOn ?date .
                     ?cases ns1:IsOfType ?type .
                     ?cases rdf:value ?value .
-                    FILTER (?type in ('recovered', 'deceased'))
+                    FILTER (?type in ('recovered', 'deceased') && ?value > 0)
                 }}
                 ORDER BY ASC(?date)
             }}
@@ -261,7 +262,7 @@ class GraphHandler:
                     ?cases ns1:IsOfType ?type .
                     ?cases rdf:value ?value .
                     FILTER (?type in ('confirmed', 'recovered', 'deceased')
-                        && YEAR(?date) = 2020)
+                        && YEAR(?date) = 2020 && ?value > 0)
                 }}
                 ORDER BY ASC(?date)
             }}
