@@ -99,7 +99,7 @@
             <h3 id="goals">About CODA - Goals and requirements</h3>
             <blockquote>
                 <p>
-                    CODA stands for COVID-19 Data for All. It is a smart micro-service-based web system that is able to provide information regarding the Covid-19 pandemic in multiple written and visual formats for both specialists and the general public. Every data collected by CODA such as articles, documents and graphics, contains attested pieces of information which can be easily viewed, downloaded and shared to other platforms. Moreover, everything on CODA can be accessed via a SPARQL endpoint created in order to ease user access to required knowledge. CODA’s goal is to keep everyone informed about the pandemic in a fast and easy manner and avoid spreading misinformation to the general public.
+                    CODA stands for COVID-19 Data for All. It is a smart micro-service-based web system that is able to provide information regarding the Covid-19 pandemic in multiple written and visual formats for both specialists and the general public. Every data collected by CODA such as articles, documents and graphics, contains attested pieces of information which can be easily viewed, downloaded and shared to other platforms. Moreover, everything on CODA can be accessed via a SPARQL <a href="#sparql-proto"><sup>1</sup></a>  endpoint created in order to ease user access to required knowledge. CODA’s goal is to keep everyone informed about the pandemic in a fast and easy manner and avoid spreading misinformation to the general public.
                 </p>
             </blockquote>
             <br>
@@ -149,10 +149,10 @@
             <blockquote>
                 <p><b><a href="https://flask.palletsprojects.com/en/1.1.x/">Flask</a></b> - a python micro web framework</p>
                 <p><b><a href="https://santhoshse7en.github.io/news-fetch/">newsfetch </a></b> -  an open source, easy-to-use news crawler that extracts structured information from almost any news website </p>
-                <p><b><a href="https://rdflib.readthedocs.io/en/stable/">RDFLib</a></b> - a Python library for working with RDF</p>
-                <p><b><a href="https://sparqlwrapper.readthedocs.io/en/latest/">SPARQLWrapper</a></b> - python wrapper around a SPARQL service to remotely execute queries</p>
-                <p><b><a href="https://www.w3.org/TR/rdf-sparql-query/">SPARQL</a></b> - a query language for interacting with RDF data </p>
-                <p><b><a href="https://graphdb.ontotext.com/">GraphDB</a></b> - a Semantic Graph Database, compliant with W3C Standards </p>
+                <p><b><a href="https://rdflib.readthedocs.io/en/stable/">RDFLib</a></b> - a Python library for working with RDF<a href="#rdf"><sup>2</sup></a></p>
+                <p><b><a href="https://sparqlwrapper.readthedocs.io/en/latest/">SPARQLWrapper</a></b> - python wrapper around a SPARQL <a href="#sparql-proto"><sup>1</sup></a> service to remotely execute queries</p>
+                <p><b><a href="https://www.w3.org/TR/rdf-sparql-query/">SPARQL</a></b> - a query language for interacting with RDF<a href="#rdf"><sup>2</sup></a> data </p>
+                <p><b><a href="https://graphdb.ontotext.com/">GraphDB</a></b> - a Semantic Graph Database, compliant with W3C Standards <a href="#graphdb"><sup>3</sup></a> </p>
             </blockquote>
 
         </section>
@@ -309,37 +309,51 @@
 
                 <h4><b>Communication between the USERS and the REST API</b></h4>
                 Users can also retrieve data by making unauthenticated requests to the <b>CodAPI</b>. Possible use case scenarios include:
-                    <p><b>Getting all available countries</b> - /api/countries</p>
-                    <p><b>Getting all cases recorded in a specific country</b> - /api/country/RO</p>
-                    <p><b>Getting the cases recorded in a specific day for a given country</b> - /api/country/RO?date=2020-01-23 </p>
-                    <p><b>Getting the cases recorded in a date range for a given country</b> - /api/country/RO?from=2020-01-23&to=2020-01-26 </p>
-                    <p><b>Getting the average number of cases that occurred on a daily basis in each month of 2020 for a given country</b> - /api/country/monthly/RO </p>
-                <p><b>Downloading the cases info for a specified country</b> - /api/country/RO/download?format=csv</p>
-                    <p><b>Searching for the latest news related to COVID-19*</b> - /api/news/latest </p>
-                    <p><b>Filtering the news by their publication source*</b> - /api/news/filter/bbcNews </p>
-                    <p><b>Searching for the latest research articles related to COVID-19*</b> - /api/articles/latest </p>
-                    <p><b>Filtering the articles by their type*</b> - /api/articles/filter/journal%20contribution </p>
-                    <p><b>Searching for articles containing a specific term in the title*</b> - /api/articles/page/1?search_term=covid </p>
+                    <p><b>Getting all available countries*</b></p>
+                        <a href="https://coda-apiv1.herokuapp.com/api/countries">https://coda-apiv1.herokuapp.com/api/countries</a>
+                    <p><b>Getting all cases recorded in a specific country*</b></p>
+                        <a href="https://coda-apiv1.herokuapp.com/api/country/RO">https://coda-apiv1.herokuapp.com/api/country/RO</a>
+                <p><b>Getting the cases recorded in a specific day for a given country*</b></p>
+                <a href="https://coda-apiv1.herokuapp.com/api/country/RO?date=2020-01-23">https://coda-apiv1.herokuapp.com/api/country/RO?date=2020-01-23</a>
+                <p><b>Getting the cases recorded in a date range for a given country*</b></p>
+                <a href="https://coda-apiv1.herokuapp.com/api/country/RO?from=2020-01-23&to=2020-01-26">https://coda-apiv1.herokuapp.com/api/country/RO?from=2020-01-23&to=2020-01-26</a>
+                <p><b>Getting the average number of cases that occurred on a daily basis in each month of 2020 for a given country*</b></p>
+                <a href="https://coda-apiv1.herokuapp.com/api/country/monthly/RO">https://coda-apiv1.herokuapp.com/api/country/monthly/RO</a>
+                <p><b>Downloading the cases info for a specified country*</b></p>
+                <a href="https://coda-apiv1.herokuapp.com/api/country/RO/download?format=csv">https://coda-apiv1.herokuapp.com/api/country/RO/download?format=csv</a>
+                <p><b>Searching for the latest news related to COVID-19**</b> </p>
+                <a href="https://coda-apiv1.herokuapp.com/api/news/latest">https://coda-apiv1.herokuapp.com/api/news/latest</a>
+                <p><b>Filtering the news by their publication source**</b> </p>
+                <a href="https://coda-apiv1.herokuapp.com/api/news/filter/bbcNews">https://coda-apiv1.herokuapp.com/api/news/filter/bbcNews</a>
+                <p><b>Searching for the latest research articles related to COVID-19**</b> </p>
+                <a href="https://coda-apiv1.herokuapp.com/api/articles/latest">https://coda-apiv1.herokuapp.com/api/articles/latest</a>
+                <p><b>Filtering the articles by their type**</b></p>
+                <a href="https://coda-apiv1.herokuapp.com/api/articles/filter/journal%20contribution">https://coda-apiv1.herokuapp.com/api/articles/filter/journal%20contribution</a>
+                <p><b>Searching for articles containing a specific term in the title**</b></p>
+                <a href="https://coda-apiv1.herokuapp.com/api/articles/page/1?search_term=covid">https://coda-apiv1.herokuapp.com/api/articles/page/1?search_term=covid</a>
 
-                * all these endpoints will return the latest 20 results by default, but a limit and/or offset can be explicitly specified
-                <p>The documentation of the API can be found <a href="https://coda-documentation.herokuapp.com/v1/ui/">here</a></p>
+                <p><b>*  The country code has to follow the ISO 3166 Alpha-2 international standard <a href="#country-code"><sup>6</sup></a>  and
+                all dates have to be specified using the ISO 8601 date format. <a href="#date"><sup>7</sup></a></b></p>
+                <p><b>** all these endpoints will return the latest 20 results by default, but a limit and/or offset can be explicitly specified</b></p>
+                <p><b>The Swagger documentation of the API can be found <a href="https://coda-documentation.herokuapp.com/v1/ui/">here</a>. For more detailed instructions on how to use the API,
+                 please visit the User Guide.</b></p>
             </blockquote>
             <h3 id="handler">Graph Handler</h3>
             <blockquote>
                 <p>
                     The graph handler is an intermediate layer between the API and the graphs. It runs queries against
-                    a SPARQL endpoint in order to get/insert data in the graphs. The SPARQLWrapper library is used as
+                    a SPARQL <a href="#sparql-proto"><sup>1</sup></a> endpoint in order to get/insert data in the graphs. The SPARQLWrapper library is used as
                     a Python interface for the endpoint, creating the query invocation and converting the results into
                     JSON format.
-                    For SPARQL query examples, see section <a href="#sparql">Accessing RDF Graph data using SPARQL</a>
+                    For SPARQL <a href="#sparql-proto"><sup>1</sup></a> query examples, see section <a href="#sparql">Accessing RDF Graph data using SPARQL</a>
                 </p>
             </blockquote>
             <h3 id="db">GraphDB</h3>
             <blockquote>
                 <p>
-                    Ontotext GraphDB is a highly efficient and robust graph database with RDF and SPARQL support.
-                    The three graphs that the application uses are stored in a repository on a remote GraphDB instance,
-                    hosted in Google Cloud. The GraphDB Workbench (which is a web-based administration tool) is used for
+                    Ontotext GraphDB <a href="#graphdb"><sup>3</sup></a> is a highly efficient and robust graph database with RDF<a href="#rdf"><sup>2</sup></a> and SPARQL <a href="#sparql-proto"><sup>1</sup></a> support.
+                    The three graphs that the application uses are stored in a repository on a remote GraphDB <a href="#graphdb"><sup>3</sup></a> instance,
+                    hosted in Google Cloud. The GraphDB <a href="#graphdb"><sup>3</sup></a> Workbench (which is a web-based administration tool) is used for
                     managing the CODA repository and monitoring queries.
                 </p>
             <figure typeof="sa:Image1">
@@ -404,7 +418,7 @@
             <blockquote>
                 <p>
                     The CODA Ontologies describe how the items relate to one another semantically. The data extracted by the crawlers has been
-                    stored in three different graphs, located in the same repository on the remote GraphDB instance. Each graph has its own smaller ontology,
+                    stored in three different graphs, located in the same repository on the remote GraphDB <a href="#graphdb"><sup>3</sup></a> instance. Each graph has its own smaller ontology,
                     modelling the semantic representation of the objects used.
                 </p>
             </blockquote>
@@ -457,7 +471,7 @@
                 </ul>
                 <br>
                 Since the news entities can be uniquely identified by their URI, other triples could be added to the ontology, from the available sources,
-                (for example schema.org), which define additional properties, such as articleBody, articleSection, editor and so on.
+                (for example schema.org<a href="#schemaorg"><sup>4</sup></a>), which define additional properties, such as articleBody, articleSection, editor and so on.
                 </p>
             </blockquote>
             <figure typeof="sa:Image1">
@@ -501,7 +515,8 @@
             <h2>6. Accessing RDF Graph data using SPARQL</h2>
             <blockquote>
                 <p>
-                    TODO
+                    All the data in the graphs follows the RDF<a href="#rdf"><sup>2</sup></a> standard model. In order to query the data, the SPARQL <a href="#sparql-proto"><sup>1</sup></a> language was used.
+                    A few queries of interest include:
                 </p>
             </blockquote>
             <h3>Adding new case nodes in the countries graph</h3>
@@ -527,7 +542,39 @@
         </section>
         <section id="biblio">
             <h2>7. Bibliography</h2>
+            <ol>
 
+            <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://www.w3.org/TR/sparql11-protocol/" property="schema:citation" id="sparql-proto">
+            <cite property="schema:name">
+                <a href="https://www.w3.org/TR/sparql11-protocol/">The SPARQL 1.1 Protocol</a>
+            </cite></li>
+                <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://www.w3.org/RDF/" property="schema:citation" id="rdf">
+            <cite property="schema:name">
+                <a href="https://www.w3.org/RDF/">RDF (Resource Description Framework) standard model</a>
+            </cite></li>
+
+            <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://graphdb.ontotext.com/" property="schema:citation" id="graphdb">
+            <cite property="schema:name">
+                <a href="https://graphdb.ontotext.com/">GraphDB</a>
+            </cite>, by <span property="schema:author" typeof="schema:Organisation">Ontotext</li>
+
+                <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://schema.org/" property="schema:citation" id="schemaorg">
+            <cite property="schema:name">
+                <a href="https://schema.org/">The schema.org vocabulary</a>
+                <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://www.w3.org/TR/owl-guide/" property="schema:citation" id="owl">
+            <cite property="schema:name">
+                <a href="https://www.w3.org/TR/owl-guide/">The Web Ontology Language (OWL)</a>
+
+                <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://www.iban.com/country-codes" property="schema:citation" id="country-code">
+            <cite property="schema:name">
+                <a href="https://www.iban.com/country-codes">The complete list of all country ISO codes as described in the ISO 3166 international standard.</a>
+            </cite></li>
+                <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://en.wikipedia.org/wiki/ISO_8601" property="schema:citation" id="date">
+            <cite property="schema:name">
+                <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601 Representation of dates and times</a>
+            </cite></li>
+
+            </ol>
         </section>
     </article>
 </body>
