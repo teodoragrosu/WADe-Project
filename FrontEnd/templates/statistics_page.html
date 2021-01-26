@@ -38,8 +38,8 @@
                         <select id="country-selector" class="form-select country-select"
                                 aria-label="Default select example">
                             <option selected>ALL</option>
-                            {% for country in countries %}
-                            <option value="{{ country }}">{{ country }}</option>
+                            {% for k,v in countries.items() %}
+                            <option value="{{ k }}">{{ v }}</option>
                             {% endfor %}
                         </select>
                         <div class="spinner-border text-success invisible" role="status" style="margin-left: 2rem;">

@@ -50,6 +50,14 @@ $("#country-selector").change(function(){
     var countryCode = $("#country-selector").val();
     if (countryCode != 'ALL'){
         $.ajax({
+            url: "http://127.0.0.1:5000/api/country/"+countryCode+"/download?format=json",
+            type: 'GET'
+        });
+        $.ajax({
+            url: "http://127.0.0.1:5000/api/country/"+countryCode+"/download?format=csv",
+            type: 'GET'
+        })
+        $.ajax({
             url: "http://127.0.0.1:5000/api/country/"+countryCode,
             type: 'GET',
             success: save_country_data,
@@ -84,6 +92,7 @@ $("#country-selector").change(function(){
         });
     }
     else {
+        getGeneral();
         $('#csv_button').prop("disabled", true);
         $('#json_button').prop("disabled", true);
     }
@@ -196,23 +205,63 @@ function formatDate(date) {
     return [year, month, day].join('-');
 }
 
+//DOWNLOAD BUTTONS
+
 $('#csv_button').on('click', function (e) {
     var countryCode = $("#country-selector").val();
-    $.ajax({
-            url: "http://127.0.0.1:5000/api/country/"+countryCode+"/download?format=csv",
-            type: 'GET',
-            complete: function(){
-                console.log(data);
-            });
+    const options={
+        method: "GET",
+        headers:{
+            'Content-Type':'text/csv',
+        },
+        responseType: 'blob'
+    };
+
+    fetch('/download_csv?code='+countryCode,options)
+        .then(res=>{
+            return res.blob();
+        }).then(blob=>{
+            download(blob,countryCode+"_data.csv")
+        }).catch(err=>console.log(err));
 });
 
 $('#json_button').on('click', function (e) {
     var countryCode = $("#country-selector").val();
-    $.ajax({
-            url: "http://127.0.0.1:5000/api/country/"+countryCode+"/download?format=json",
-            type: 'GET',
-            success: function(data) {
-                console.log(data);
-            }
-    });
+    const options={
+        method: "GET",
+        headers:{
+            'Content-Type':'application/json',
+        }
+    };
+
+    fetch('/download_json?code='+countryCode,options)
+        .then(res=>{
+            return res.blob();
+        }).then(blob=>{
+            download(blob, countryCode+"_data.json")
+        }).catch(err=>console.log(err));
 });
+
+//POPULATE GRAPHS WITH GENERAL DATA
+function getGeneral() {
+    $.ajax({
+            url: "http://127.0.0.1:5000/api/metrics/active",
+            type: 'GET',
+            success:update_line
+            });
+    $.ajax({
+            url: "http://127.0.0.1:5000/api/metrics/pie",
+            type: 'GET',
+            success:update_pie
+            });
+    $.ajax({
+            url: "http://127.0.0.1:5000/api/metrics/averages",
+            type: 'GET',
+            success:update_bar
+            });
+    $.ajax({
+            url: "http://127.0.0.1:5000/api/metrics/evols",
+            type: 'GET',
+            success: update_evol
+            });
+}

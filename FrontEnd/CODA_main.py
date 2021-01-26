@@ -1,5 +1,6 @@
 import pathlib
 
+import pycountry
 from flask import Flask, render_template, request, jsonify, redirect, send_from_directory
 import json
 from datetime import datetime
@@ -32,7 +33,17 @@ def statistics_page():
     today_date = datetime.today().strftime('%Y-%m-%d')
 
     response = requests.get('http://127.0.0.1:5000/api/countries')
-    countries = response.json().keys()
+    codes = list(response.json().keys())
+    names = []
+    for code in codes:
+        convert = pycountry.countries.get(alpha_2=code)
+        if convert != None:
+            names.append(convert.name)
+        else:
+            names.append('')
+
+    countries = dict(zip(codes, names))
+
     return render_template("statistics_page.html", today_date=today_date, countries=countries)
 
 @app.route('/statistics', methods=['POST'])
@@ -73,12 +84,21 @@ def country_data():
 
     return "Data uploaded"
 
-# @app.route('/download_csv', methods=['GET'])
-# def download_csv():
-#     if request.method == "GET":
-#         return send_from_directory(directory=pathlib.Path().absolute(), filename="AO_data.csv", as_attachment=True)
-#
-#     return "Data uploaded"
+@app.route('/download_csv', methods=['GET'])
+def download_csv():
+    if request.method == "GET":
+        code = request.args.get("code")
+        return send_from_directory(directory=pathlib.Path().absolute(), filename=code+"_data.csv", as_attachment=True)
+
+    return "Data uploaded"
+
+@app.route('/download_json', methods=['GET'])
+def download_json():
+    if request.method == "GET":
+        code = request.args.get("code")
+        return send_from_directory(directory=pathlib.Path().absolute(), filename=code+"_data.json", as_attachment=True)
+
+    return "Data uploaded"
 
 @app.route('/line_data')
 def line_data():
