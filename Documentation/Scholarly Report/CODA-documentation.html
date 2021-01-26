@@ -25,47 +25,127 @@
                 <ol>
                     <li>
                         <a href="#introduction">Introduction</a>
+                        <ul>
+                            <li>
+                                <a href="#goals">About CODA - Goals and requirements</a>
+                            </li>
+                            <li>
+                                <a href="#mockups">Initial UI Mockups and design</a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
-                        <a href="#technology-stack">Technology stack</a>
+                        <a href="#technology-stack"> Implementation - Technology Stack</a>
+                        <ul>
+                            <li>
+                                <a href="#front">Front-end</a>
+                            </li>
+                            <li>
+                                <a href="#back">Back-end</a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         <a href="#microservices">Microservices and Architecture</a>
-                    </li>
-                    <li>
-                        <a href="#implementation-logic">Implementation Logic</a>
+                        <ul>
+                            <li>
+                                <a href="#website">Website</a>
+                            </li>
+                            <li>
+                                <a href="#crawlers">Data Crawlers</a>
+                            </li>
+                            <li>
+                                <a href="#restapi">REST API</a>
+                            </li>
+                            <li>
+                                <a href="#handler">Graph Handler</a>
+                            </li>
+                            <li>
+                                <a href="#db">GraphDB</a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         <a href="#user-journey">User journey</a>
                     </li>
                     <li>
                         <a href="#ontology">Ontology and Vocabularies</a>
+                         <ul>
+                            <li>
+                                <a href="#vocab">Used vocabularies</a>
+                            </li>
+                            <li>
+                                <a href="#countries-onto">Countries ontology and graph</a>
+                            </li>
+                            <li>
+                                <a href="#news-onto">News ontology and graph</a>
+                            </li>
+                            <li>
+                                <a href="#articles-onto">Articles ontology and graph</a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         <a href="#sparql">Accessing RDF Graph data using SPARQL</a>
+                    </li>
+                    <li>
+                        <a href="#biblio">Bibliography</a>
                     </li>
                 </ol>
             </aside>
         </section>
         <section typeof="sa:Results" id="introduction">
             <h2>1. Introduction</h2>
-            <h3>About CODA</h3>
+            <h3 id="goals">About CODA - Goals and requirements</h3>
             <blockquote>
                 <p>
                     CODA stands for COVID-19 Data for All. It is a smart micro-service-based web system that is able to provide information regarding the Covid-19 pandemic in multiple written and visual formats for both specialists and the general public. Every data collected by CODA such as articles, documents and graphics, contains attested pieces of information which can be easily viewed, downloaded and shared to other platforms. Moreover, everything on CODA can be accessed via a SPARQL endpoint created in order to ease user access to required knowledge. CODA’s goal is to keep everyone informed about the pandemic in a fast and easy manner and avoid spreading misinformation to the general public.
                 </p>
             </blockquote>
+            <br>
+            <h3 id="mockups"> Initial UI Mockups and design</h3>
+            <blockquote>
+                <p>
+                    The desired website will have 3 pages with data extracted from external resources, and an About page containing information about the project.
+                </p>
+            </blockquote>
+            <h4>Statistics Page - various charts for visualising the data</h4>
+            <figure typeof="sa:Image1">
+                <img class="imagine" style="height:auto;" src="../UI Mockups/1_stats.png">
+            </figure>
+            <figure typeof="sa:Image1">
+                <img class="imagine" style="height:auto;" src="../UI Mockups/2_stats.png">
+            </figure>
+            <br>
+            <h4>News Page</h4>
+            <figure typeof="sa:Image1">
+                <img class="imagine" style="height:auto;" src="../UI Mockups/3_news.png">
+            </figure>
+            <br>
+            <h4>Articles Page</h4>
+            <figure typeof="sa:Image1">
+                <img class="imagine" style="height:auto;" src="../UI Mockups/4_articles.png">
+            </figure>
+            <br>
+            <h4>About Page</h4>
+            <figure typeof="sa:Image1">
+                <img class="imagine" style="height:auto;" src="../UI Mockups/5_about.png">
+            </figure>
+
+
+
+
         </section>
         <section id="technology-stack">
-            <h2>2. Technology Stack</h2>
-            <h3>FRONT-END</h3>
+            <h2>2. Implementation - Technology Stack</h2>
+            <h3 id="front">FRONT-END</h3>
             <blockquote>
                 <p><b><a href="https://getbootstrap.com/">Bootstrap</a></b> - a free and open-source CSS framework directed at responsive, mobile-first front-end web development</p>
                 <p><b><a href="https://flask.palletsprojects.com/en/1.1.x/">Flask</a></b> - a python micro web framework</p>
                 <p><b><a href="https://www.chartjs.org/">Chart.js</a></b> - open source HTML5 charts </p>
             </blockquote>
 
-            <h3>BACK-END</h3>
+            <h3 id="back">BACK-END</h3>
             <blockquote>
                 <p><b><a href="https://flask.palletsprojects.com/en/1.1.x/">Flask</a></b> - a python micro web framework</p>
                 <p><b><a href="https://santhoshse7en.github.io/news-fetch/">newsfetch </a></b> -  an open source, easy-to-use news crawler that extracts structured information from almost any news website </p>
@@ -78,7 +158,7 @@
         </section>
         <section id="microservices">
             <h2>3. Microservices</h2>
-            <h3>Website</h3>
+            <h3 id="website">Website</h3>
             <blockquote>
                 <p>
                     The website was developed using the Flask framework on the server side and the Bootstrap framework and ChartJS library for frontend design.
@@ -120,7 +200,7 @@
                 </figure>
             </blockquote>
 
-            <h3>Data Crawlers</h3>
+            <h3 id="crawlers">Data Crawlers</h3>
             <blockquote>
                 <p>
                     A data crawler or a web crawler is an Internet bot that systematically browses the World Wide Web, typically for creating search engine indices. CODA makes use of its own personalised data crawlers that collect Covid-19-related data from trusted news sources all over the internet.
@@ -204,7 +284,7 @@
 				</p>
             </blockquote>
 
-            <h3>REST API</h3>
+            <h3 id="restapi">REST API</h3>
             <blockquote>
                 <p>
                 <b>CodAPI</b>, the REST API developed for CODA is used by the other application services, but some
@@ -244,7 +324,7 @@
                 * all these endpoints will return the latest 20 results by default, but a limit and/or offset can be explicitly specified
                 <p>The documentation of the API can be found <a href="https://coda-documentation.herokuapp.com/v1/ui/">here</a></p>
             </blockquote>
-            <h3>Graph Handler</h3>
+            <h3 id="handler">Graph Handler</h3>
             <blockquote>
                 <p>
                     The graph handler is an intermediate layer between the API and the graphs. It runs queries against
@@ -254,7 +334,7 @@
                     For SPARQL query examples, see section <a href="#sparql">Accessing RDF Graph data using SPARQL</a>
                 </p>
             </blockquote>
-            <h3>GraphDB</h3>
+            <h3 id="db">GraphDB</h3>
             <blockquote>
                 <p>
                     Ontotext GraphDB is a highly efficient and robust graph database with RDF and SPARQL support.
@@ -262,26 +342,18 @@
                     hosted in Google Cloud. The GraphDB Workbench (which is a web-based administration tool) is used for
                     managing the CODA repository and monitoring queries.
                 </p>
-            </blockquote>
             <figure typeof="sa:Image1">
                 <img class="imagine" src="../Diagrams/arhitecture/Service Architecture.jpeg">
                 <figcaption>
                     Service Architecture
                 </figcaption>
             </figure>
-        </section>
-        <section id="implementation-logic">
-            <h2>4. Implementation Logic</h2>
-            <figure typeof="sa:Image1">
-                <img class="imagine" src="../Diagrams/arhitecture/Backend UML.png">
-                <figcaption>
-                    Back-end - UML diagram
-                </figcaption>
-            </figure>
+            </blockquote>
+
         </section>
 
         <section id="user-journey">
-            <h2>5. User Journey</h2>
+            <h2>4. User Journey</h2>
             <blockquote>
                 <p>
                     Users have acces to the News, Articles, Statistics and About pages and can use the following features:
@@ -322,33 +394,23 @@
 
                 </p>
             </blockquote>
-            <h3>Guest User</h3>
-            <blockquote>
-                <p>
-                    Guest users can browse the website and view every data available on it
-                    ADD MORE DETAILS
-                </p>
-            <h3>Admin</h3>
-            <blockquote>
-                <p>
-                    todo: details
-                </p>
-            </blockquote>
+            <h3>For detailed instructions on how to use CODA, as well as the services it offers, please check out the CODA User Documentation,
+                available <a href="https://github.com/teodoragrosu/WADe-Project/blob/main/Documentation/Scholarly%20Report/User%20Guide.htmlhttps://github.com/teodoragrosu/WADe-Project/blob/main/Documentation/Scholarly%20Report/User%20Guide.html">on github. </a></h3>
+
         </section>
 
         <section id="ontology">
-            <h2>6. CODA Ontology and Vocabularies</h2>
+            <h2>5. CODA Ontologies and Vocabularies</h2>
             <blockquote>
                 <p>
-                    TODO: "considerations regarding the designed/reused RDF-based knowledge model(s) – for example, the expressiveness and real usage of the proposed and/or reused vocabulary, taxonomy or ontology in the context of the developed system;"
+                    The CODA Ontologies describe how the items relate to one another semantically. The data extracted by the crawlers has been
+                    stored in three different graphs, located in the same repository on the remote GraphDB instance. Each graph has its own smaller ontology,
+                    modelling the semantic representation of the objects used.
                 </p>
             </blockquote>
-            <h3>Used vocabularies</h3>
+            <h3 id="vocab">Used vocabularies</h3>
             <blockquote>
-                <p>TODO description</p>
-                <p>
-                    More details on the vocabulary <a href="https://github.com/teodoragrosu/WADe-Project/blob/main/README.md#coda---used-vocabulary">here</a>
-                </p>
+                <p>For creating the ontologies, the following vocabularies have been used:</p>
                 <ul>
                     <li><b>PREFIX schema</b>: https://schema.org/ </li>
                     <li><b>PREFIX owl</b>: http://www.w3.org/2002/07/owl# </li>
@@ -358,46 +420,85 @@
                     <li><b>PREFIX ns1</b>: 	http://coda.org/resources/ </li>
                 </ul>
             </blockquote>
-            <h3>Countries graph</h3>
+            <h3 id="countries-onto">Countries ontology and graph</h3>
             <blockquote>
                 <p>
-                    description
+                    As shown in the picture below, the Countries are represented using the <a href="https://schema.org/Country">schema.org Country</a> type,
+                    to which an additional custom property has been added, i.e <b>IdentifiedBy</b>, using a country code. The country code is used for
+                    uniquely identifying the resource URI. Furthermore, each country in the graph has a <b>hasCases</b> predicate, the objects being unique Cases blank nodes.
+                    Additionally, each Cases node is modelled as an <a href="http://www.w3.org/2002/07/owl#Class">owl:Class</a>, and a subclass of <a href="http://www.w3.org/2002/07/owl#Thing">owl:Thing</a>,
+                    with its own custom properties, as defined by the CODA ontology:
+                    <ul>
+                <li><b>ns1:isOfType</b> defines the type of case for the value available in the node - confirmed, deceased, recovered, active, total_confirmed, total_deceased, total_recovered</li>
+                <li><b>ns1:isRaportedOn</b> specifies the day when the cases occurred - it is used by both the API, and the crawlers for filtering the data and avoiding adding duplicate information in the graph</li>
+                <li><b>rdf:value</b> contains the actual integer representing the number of cases of the specified type</li>
+                    </ul>
+
                 </p>
             </blockquote>
             <figure typeof="sa:Image1">
                 <img class="imagine" src="../Diagrams/ontology/countries.jpg">
                 <figcaption>
-                    Countries
+                    Countries ontology
                 </figcaption>
             </figure>
-            <h3>News graph</h3>
+            <h3 id="news-onto">News ontology and graph</h3>
             <blockquote>
                 <p>
-                    description
+                    The news ontology uses the <a href="https://schema.org/NewsArticle">schema.org NewsArticle type</a> for representing the news nodes,
+                    for which the following properties have been defined:
+                <ul>
+                <li><b>schema.org headline</b> defines the title</li>
+                <li><b>schema.org keywords</b> represent items used for tagging the content</li>
+                <li><b>schema.org datePublished</b> reveals the publication date</li>
+                <li><b>schema.org url</b> represents the URL to the source publication (the website where the news was extracted from)</li>
+                <li><b>ns1:IdentifiedBy</b> short uuid used to uniquely identify the news URI</li>
+                <li><b>ns1:PublishedIn</b> the name of the publication the piece of news originates from</li>
+                </ul>
+                <br>
+                Since the news entities can be uniquely identified by their URI, other triples could be added to the ontology, from the available sources,
+                (for example schema.org), which define additional properties, such as articleBody, articleSection, editor and so on.
                 </p>
             </blockquote>
             <figure typeof="sa:Image1">
                 <img class="imagine" src="../Diagrams/ontology/news.jpeg">
                 <figcaption>
-                    News
+                    News ontology
                 </figcaption>
             </figure>
-            <h3>Articles graph</h3>
+            <h3 id="articles-onto">Articles graph</h3>
             <blockquote>
                 <p>
-                    description
-                </p>
+                    The articles ontology evolves around the <a href="https://schema.org/ScholarlyArticle">schema.org ScholarlyArticle type</a> which defines
+                 more research-oriented publications, as opposed to news. For this ontology, categories have been chosen as more appropriate, instead of keywords, since they relate to scientific
+                 fields of research. As mentioned in the section above, other properties could be added to extend the ontology; however, for this case scenario, the following have been selected:
+                <ul>
+                <li><b>schema.org headline</b> defines the title</li>
+                <li><b>schema.org author</b> or creator of the article, which is more relevant than in the news ontology, where the creator is usually the same as the publication</li>
+                <li><b>schema.org datePublished</b> reveals the publication date</li>
+                <li><b>schema.org abstract</b>, representing a short description of the article</li>
+                <li><b>schema.org about</b> defines the categories of the Scholarly Article</li>
+                <li><b>schema.org url</b> represents the URL to the source publication (the website where the article was extracted from)</li>
+                <li><b>ns1:IdentifiedBy</b> short uuid used to uniquely identify the article URI</li>
+                <li><b>ns1:hasType</b> a custom property, defining the research work type - such as article or journal contribution</li>
+                </ul>
+                <br>
+
             </blockquote>
             <figure typeof="sa:Image1">
                 <img class="imagine" src="../Diagrams/ontology/articles.jpeg">
                 <figcaption>
-                    Articles
+                    Articles ontology
                 </figcaption>
             </figure>
 
+            <p>
+                A detailed overview of the vocabularies used is also available on github <a href="https://github.com/teodoragrosu/WADe-Project/blob/main/README.md#coda---used-vocabulary">here</a>
+            </p>
+
         </section>
         <section id="sparql">
-            <h2>7. Accessing RDF Graph data using SPARQL</h2>
+            <h2>6. Accessing RDF Graph data using SPARQL</h2>
             <blockquote>
                 <p>
                     TODO
@@ -422,6 +523,10 @@
             <figure typeof="sa:Image1">
                 <img class="imagine" src="screen shots/filter_covid.png">
             </figure>
+
+        </section>
+        <section id="biblio">
+            <h2>7. Bibliography</h2>
 
         </section>
     </article>
