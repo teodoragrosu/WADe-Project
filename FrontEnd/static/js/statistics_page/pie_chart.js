@@ -56,8 +56,9 @@ function update_pie(pie_results){
     var pie;
     if(pie_results) {
         pie = JSON.parse(pie_results);
-        myPieChart.data.labels = Object.keys(pie);
-        myPieChart.data.datasets[0].data = Object.values(pie);
+        var pie_data = {"pie_labels": ["Total confirmed", "Total recovered", "Total deceased"], "pie_values": [Object.entries(pie)[0][1]["total_confirmed"],Object.entries(pie)[0][1]["total_recovered"], Object.entries(pie)[0][1]["total_deceased"]]};
+        myPieChart.data.labels = pie_data.pie_labels;
+        myPieChart.data.datasets[0].data = pie_data.pie_values;
     }
     else {
         pie = {"pie_labels": ["Total confirmed", "Total recovered", "Total deceased"], "pie_values": ["0", "0", "0"]}

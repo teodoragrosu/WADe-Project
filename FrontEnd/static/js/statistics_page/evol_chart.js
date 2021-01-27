@@ -91,13 +91,16 @@ function generate_evol_chart(evol_data) {
 function update_evol(evol_results){
     var upper_threshold = 1000;
     if(evol_results) {
-        var evol = JSON.parse(evol_results);
-        var maxOfList = Math.max(...evol.recovered);
+        var itemsList = Object.entries(JSON.parse(evol_results));
+        var dateList = itemsList.map((i) => i[0]);
+        var recoveredList = itemsList.map((i) => parseInt(i[1].recovered));
+        var deceasedList = itemsList.map((i) => parseInt(i[1].deceased));
+        var maxOfList = Math.max.apply(Math,recoveredList)
         var zeroes = maxOfList.toString().length-1;
         upper_threshold = Math.ceil(maxOfList / Math.pow(10, zeroes)) * Math.pow(10, zeroes);
-        myEvolChart.data.labels = evol.date;
-        myEvolChart.data.datasets[0].data = evol.recovered;
-        myEvolChart.data.datasets[1].data = evol.deceased;
+        myEvolChart.data.labels = dateList.reverse();
+        myEvolChart.data.datasets[0].data = recoveredList.reverse();
+        myEvolChart.data.datasets[1].data = deceasedList.reverse();
         myEvolChart.options.scales.yAxes[0].ticks.max = upper_threshold;
 
     }

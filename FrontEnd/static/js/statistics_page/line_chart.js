@@ -105,15 +105,25 @@ function generate_line_chart(line_data) {
     });
 };
 
-function update_line(line_results){
+function update_line(line_results, toReverse=1){
     if(line_results) {
+        var values;
         var line = JSON.parse(line_results);
-        var maxOfList = Math.max(...Object.values(line));
+        var labels = Object.keys(line).sort();
+        if(toReverse) {
+            values = Object.values(line).map(a => a.active).reverse();
+            }
+        else {
+            values = Object.values(line).map(a => a.active);
+        }
+
+        var maxOfList = Math.max(...values);
         var zeroes = maxOfList.toString().length-1;
+
         upper_threshold = Math.ceil(maxOfList / Math.pow(10, zeroes)) * Math.pow(10, zeroes);
 
-        myLineChart.data.labels = Object.keys(line);
-        myLineChart.data.datasets[0].data = Object.values(line);
+        myLineChart.data.labels = labels;
+        myLineChart.data.datasets[0].data = values;
         myLineChart.options.scales.yAxes[0].ticks.max = upper_threshold;
     }
     else {

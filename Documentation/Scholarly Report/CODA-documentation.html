@@ -89,6 +89,9 @@
                         <a href="#sparql">Accessing RDF Graph data using SPARQL</a>
                     </li>
                     <li>
+                        <a href="#linked-data">Linked Data principles</a>
+                    </li>
+                    <li>
                         <a href="#biblio">Bibliography</a>
                     </li>
                 </ol>
@@ -540,8 +543,31 @@
             </figure>
 
         </section>
+        <section id="linked-data">
+            <h2>7. Linked Data principles</h2>
+            <blockquote>
+                <p>
+                    <b>Linked Data</b> refers to a set of recommended practices for publishing structured data on the Web. In order to contribute to an environment where
+                    information is easily accessible, data should first be made available in a standard format that can be reached and processed by Semantic Web tools. This 
+                    is achieved by respecting the four principles of Linked Data:
+                    <ol>
+                        <li>Use Uniform Resource Identifiers (URIs) as names for things</li>
+                        <li>Use HTTP URIs so that people can look up those names</li>
+                        <li>Provide information using Semantic Web technologies such as RDF, OWL, SPARQL etc.</li>
+                        <li>Include links to other URIs to make other data discoverable</li>
+                    </ol>
+
+                    <p>CODA has incorporated or made use of a few of these principles in the following manners:</p>
+                    <ul>
+                        <li>URIs are properly used to name the pages which facilitates the search for named data</li>
+                        <li>The data used for news, articles and statistics has been modeled using the OWL, RDF, and XSD vocabularies.</li>
+                        <li>Entries on the Articles and News pages are all links that redirect to their sources, therefore users are encouraged to look for and discover information in other domains.</li>
+                    </ul>
+                </p>
+            </blockquote>
+        </section>
         <section id="biblio">
-            <h2>7. Bibliography</h2>
+            <h2>8. Bibliography</h2>
             <ol>
 
             <li typeof="schema:WebPage" role="doc-biblioentry" resource="https://www.w3.org/TR/sparql11-protocol/" property="schema:citation" id="sparql-proto">

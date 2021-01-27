@@ -1,5 +1,5 @@
-//var apiPath = 'https://coda-apiv1.herokuapp.com/api'
-var apiPath = 'http://127.0.0.1:5000/api'
+var apiPath = 'https://coda-apiv1.herokuapp.com/api'
+//var apiPath = 'http://127.0.0.1:5000/api'
 
 $.getScript("static/js/statistics_page/line_chart.js",
 function() {$.ajax({
@@ -36,7 +36,6 @@ function() {$.ajax({
             type: 'GET',
             success:generate_totals_chart});
             });
-$.getScript("static/js/statistics_page/country_data.js");
 
 var myTotalsChart;
 var myPieChart;
@@ -52,47 +51,24 @@ $("#country-selector").change(function(){
     $('.spinner-border').removeClass('invisible').addClass('visible');
     var countryCode = $("#country-selector").val();
     if (countryCode != 'ALL'){
-        $.ajax({
-            url: apiPath + "/country/"+countryCode+"/download?format=json",
-            type: 'GET'
-        });
-        $.ajax({
-            url: apiPath + "/country/"+countryCode+"/download?format=csv",
-            type: 'GET'
-        })
-        $.ajax({
-            url: apiPath + "/country/"+countryCode,
-            type: 'GET',
-            success: save_country_data,
-            complete: function(){
-                $.ajax({
-                    url: "http://127.0.0.1:8000/line_data",
-                    type: 'get',
-                    dataType: 'html',
-                    success: update_line
-                 });
-                $.ajax({
-                    url: "http://127.0.0.1:8000/pie_data",
-                    type: 'get',
-                    dataType: 'html',
-                    success: update_pie
-                 });
-                $.ajax({
-                    url: apiPath + "/country/monthly/" + countryCode,
-                    type: 'get',
-                    dataType: 'html',
-                    async: false,
-                    success: update_bar
-                });
-                $.ajax({
-                    url: "http://127.0.0.1:8000/evol_data",
-                    type: 'get',
-                    dataType: 'html',
-                    async: false,
-                    success: update_evol
-                });
-            }
-        });
+            $('#csv_button').prop("disabled", false);
+            $('#json_button').prop("disabled", false);
+            $.ajax({
+                url: apiPath + "/country/" + countryCode,
+                type: 'get',
+                dataType: 'html',
+                success: function(data){
+                    update_line(data);
+                    update_pie(data);
+                    update_evol(data);
+                }
+             });
+            $.ajax({
+                url: apiPath + "/country/monthly/" + countryCode,
+                type: 'get',
+                dataType: 'html',
+                success: update_bar
+            });
     }
     else {
         getGeneral();
@@ -130,20 +106,15 @@ $('button#line_chart_button').on('click', function (e) {
         end_date = $.format.date(new Date(end_date),'yyyy-MM-dd');
 
         if($("#country-selector").val() != 'ALL') {
+            var countryCode = $("#country-selector").val();
             var line_dates = {'start_date': start_date, 'end_date': end_date}
             $.ajax({
-                type : 'POST',
-                async: false,
-                url : "http://127.0.0.1:8000/statistics",
-                data : line_dates
-            });
-
-            $.ajax({
-                url: "http://127.0.0.1:8000/line_data",
+                url: apiPath + "/country/" + countryCode + "?from=" + start_date + "&to=" + end_date,
                 type: 'get',
                 dataType: 'html',
-                async: false,
-                success: update_line
+                success: function (data){
+                    update_line(data, 0);
+                }
             });
         }
         else {
@@ -171,17 +142,9 @@ $('button#pie_chart_button').on('click', function (e) {
 
         if($("#country-selector").val() != 'ALL') {
             $.ajax({
-                type : 'POST',
-                async: false,
-                url : "http://127.0.0.1:8000/statistics",
-                data : post_pie_date
-            });
-
-            $.ajax({
-                url: "http://127.0.0.1:8000/pie_data",
+                url: apiPath + "/country/" + countryCode,
                 type: 'get',
                 dataType: 'html',
-                async: false,
                 success: update_pie
             });
         }
