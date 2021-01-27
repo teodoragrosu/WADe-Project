@@ -1,0 +1,727 @@
+openapi: 3.0.0
+servers:
+  - url: https://coda-apiv1.herokuapp.com
+
+info:
+  title: Coda API
+  description: |
+    # REST API for the CODA project
+  contact:
+    email: teogrosu29@gmail.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0-oas3
+
+paths:
+  /api/countries:
+    get:
+      tags:
+      - Covid data by country
+      summary: Returns all countries available
+      description: |
+        ## Get a list of all countries and their URIs
+      operationId: api_countries_get
+      responses:
+        "200":
+          description: |
+            ### Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Country'
+                x-content-type: application/json
+              example:
+                AD: http://coda-apiv1.herokuapp.com/api/country/AD
+                AE: http://coda-apiv1.herokuapp.com/api/country/AE
+                AF: http://coda-apiv1.herokuapp.com/api/country/AF
+                AG: http://coda-apiv1.herokuapp.com/api/country/AG
+                AL: http://coda-apiv1.herokuapp.com/api/country/AL
+                AM: http://coda-apiv1.herokuapp.com/api/country/AM
+        "400":
+          description: |
+            ### Bad request, check your syntax
+          content:
+            application/json: {}
+        "404":
+          description: |
+            ### Resource not found
+          content:
+            application/json: {}
+        "415":
+          description: |
+            ### Method not allowed
+          content:
+            application/json: {}
+        "500":
+          description: |
+            ### Internal server error
+          content:
+            application/json: {}
+      x-openapi-router-controller: swagger_server.controllers.covid_data_by_country_controller
+  /api/country/{country_code}:
+    get:
+      tags:
+      - Covid data by country
+      summary: Returns all the cases recorded for the specified country
+      description: "### Returns all information related to the cases in the specified\
+        \ country from the first day recorded to the current day. \n### A specific\
+        \ day or a date range can be specified in the query parameters.\n"
+      operationId: api_country_country_code_get
+      parameters:
+      - name: country_code
+        in: path
+        description: |
+          ### ISO(alpha-2) country code to return the information for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: RO
+      - name: date
+        in: query
+        description: |
+          ### filter cases for a specific day (ISO format)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: 2020-01-20
+      - name: from
+        in: query
+        description: |
+          ### filter cases in a specific range, starting <from> (ISO format)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: 2020-01-01
+      - name: to
+        in: query
+        description: |
+          ### filter cases in a specific range, until <to> (ISO format)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: 2020-02-01
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cases'
+                x-content-type: application/json
+        "400":
+          description: |
+            ### Bad request, check your syntax
+          content:
+            application/json: {}
+        "404":
+          description: |
+            ### Resource not found
+          content:
+            application/json: {}
+        "415":
+          description: |
+            ### Method not allowed
+          content:
+            application/json: {}
+        "500":
+          description: |
+            ### Internal server error
+          content:
+            application/json: {}
+      x-openapi-router-controller: swagger_server.controllers.covid_data_by_country_controller
+  /api/country/{country_code}/latest:
+    get:
+      tags:
+      - Covid data by country
+      summary: Returns the latest recorded cases for the specified country
+      operationId: api_country_country_code_latest_get
+      parameters:
+      - name: country_code
+        in: path
+        description: |
+          ### ISO(alpha-2) country code to return the information for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: RO
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cases'
+                x-content-type: application/json
+        "400":
+          description: |
+            ### Bad request, check your syntax
+          content:
+            application/json: {}
+        "404":
+          description: |
+            ### Resource not found
+          content:
+            application/json: {}
+        "415":
+          description: |
+            ### Method not allowed
+          content:
+            application/json: {}
+        "500":
+          description: |
+            ### Internal server error
+          content:
+            application/json: {}
+      x-openapi-router-controller: swagger_server.controllers.covid_data_by_country_controller
+  /api/country/monthly/{country_code}:
+    get:
+      tags:
+      - Covid data by country
+      summary: Returns the average number of cases per day for each month
+      operationId: api_country_monthly_country_code_get
+      parameters:
+      - name: country_code
+        in: path
+        description: |
+          ### ISO(alpha-2) country code to return the information for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: RO
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cases'
+                x-content-type: application/json
+        "400":
+          description: |
+            ### Bad request, check your syntax
+          content:
+            application/json: {}
+        "404":
+          description: |
+            ### Resource not found
+          content:
+            application/json: {}
+        "415":
+          description: |
+            ### Method not allowed
+          content:
+            application/json: {}
+        "500":
+          description: |
+            ### Internal server error
+          content:
+            application/json: {}
+      x-openapi-router-controller: swagger_server.controllers.covid_data_by_country_controller
+  /api/country/{country_code}/download:
+    get:
+      tags:
+      - Covid data by country
+      summary: Download the cases data for a specified country, in a chosen format
+      operationId: api_country_country_code_download_get
+      parameters:
+      - name: country_code
+        in: path
+        description: |
+          ### ISO(alpha-2) country code to return the information for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: RO
+      - name: format
+        in: query
+        description: |
+          ### File format for the download
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: JSON
+      - name: from
+        in: query
+        description: |
+          ### Filter cases in a specific range, starting "from" (ISO format)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: 2020-01-01
+      - name: to
+        in: query
+        description: |
+          ### Filter cases in a specific range, until "to" (ISO format)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: 2020-02-01
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: |
+            ### Download format incorrect or not specified! Available formats: CSV, JSON
+          content:
+            application/json: {}
+        "404":
+          description: |
+            ### Resource not found
+          content:
+            application/json: {}
+        "415":
+          description: |
+            ### Method not allowed
+          content:
+            application/json: {}
+        "500":
+          description: |
+            ### Internal server error
+          content:
+            application/json: {}
+      x-openapi-router-controller: swagger_server.controllers.covid_data_by_country_controller
+  /api/news/latest:
+    get:
+      tags:
+      - Covid news
+      summary: Latest news related to the COVID disease
+      description: |
+        ### Get the latest news related to COVID-19 worldwide. If no limit is specified, the newest 20 news will be returned
+      operationId: api_news_latest_get
+      parameters:
+      - name: offset
+        in: query
+        description: |
+          ### The number of items to skip before starting to collect the result set
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
+      - name: limit
+        in: query
+        description: |
+          ### The numbers of items to return
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 20
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/News'
+                x-content-type: application/json
+        "400":
+          description: |
+            ### Bad request, check your syntax
+          content:
+            application/json: {}
+        "404":
+          description: |
+            ### Resource not found
+          content:
+            application/json: {}
+        "415":
+          description: |
+            ### Method not allowed
+          content:
+            application/json: {}
+        "500":
+          description: |
+            ### Internal server error
+          content:
+            application/json: {}
+      x-openapi-router-controller: swagger_server.controllers.covid_news_controller
+  /api/news/filter/{publication}:
+    get:
+      tags:
+      - Covid news
+      summary: Filter news by publication source
+      description: |
+        ### Filter the news related to the COVID disease, based on the source.
+      operationId: api_news_filter_publication_get
+      parameters:
+      - name: offset
+        in: query
+        description: |
+          ### The number of items to skip before starting to collect the result set
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
+      - name: limit
+        in: query
+        description: |
+          ### The numbers of items to return
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 20
+      - name: publication
+        in: path
+        description: publication source to filter by
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: BBC News
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/News'
+                x-content-type: application/json
+        "400":
+          description: |
+            ### Bad request, check your syntax
+          content:
+            application/json: {}
+        "404":
+          description: |
+            ### Resource not found
+          content:
+            application/json: {}
+        "415":
+          description: |
+            ### Method not allowed
+          content:
+            application/json: {}
+        "500":
+          description: |
+            ### Internal server error
+          content:
+            application/json: {}
+      x-openapi-router-controller: swagger_server.controllers.covid_news_controller
+  /api/articles/latest:
+    get:
+      tags:
+      - Covid articles and research
+      summary: Latest articles and research related to the COVID disease
+      description: |
+        ### Get the latest research articles related to COVID-19. If no limit is specified, the newest 20 articles will be returned
+      operationId: api_articles_latest_get
+      parameters:
+      - name: offset
+        in: query
+        description: |
+          ### The number of items to skip before starting to collect the result set
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
+      - name: limit
+        in: query
+        description: |
+          ### The numbers of items to return
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 20
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Articles'
+                x-content-type: application/json
+        "400":
+          description: |
+            ### Bad request, check your syntax
+          content:
+            application/json: {}
+        "404":
+          description: |
+            ### Resource not found
+          content:
+            application/json: {}
+        "415":
+          description: |
+            ### Method not allowed
+          content:
+            application/json: {}
+        "500":
+          description: |
+            ### Internal server error
+          content:
+            application/json: {}
+      x-openapi-router-controller: swagger_server.controllers.covid_articles_and_research_controller
+  /api/articles/filter/{type}:
+    get:
+      tags:
+      - Covid articles and research
+      summary: Latest articles and research related to the COVID disease
+      description: |
+        ### Filter research articles by their type. If no limit is specified, the newest 20 articles will be returned
+      operationId: api_articles_filter_type_get
+      parameters:
+      - name: type
+        in: path
+        description: |
+          ### Allowed article types: article, research, journal contribution
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: research
+      - name: offset
+        in: query
+        description: |
+          ### The number of items to skip before starting to collect the result set
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
+      - name: limit
+        in: query
+        description: |
+          ### The numbers of items to return
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 20
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Articles'
+                x-content-type: application/json
+        "400":
+          description: |
+            ### Bad request, check your syntax
+          content:
+            application/json: {}
+        "404":
+          description: |
+            ### Resource not found
+          content:
+            application/json: {}
+        "415":
+          description: |
+            ### Method not allowed
+          content:
+            application/json: {}
+        "500":
+          description: |
+            ### Internal server error
+          content:
+            application/json: {}
+      x-openapi-router-controller: swagger_server.controllers.covid_articles_and_research_controller
+components:
+  schemas:
+    Country:
+      required:
+      - country_code
+      type: object
+      properties:
+        country_code:
+          type: string
+          example: RO
+    Cases:
+      required:
+      - country
+      - date
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+          example: 2020-05-29
+        active:
+          type: integer
+          format: int64
+          example: 1000
+        confirmed:
+          type: integer
+          format: int64
+          example: 234
+        deceased:
+          type: integer
+          format: int64
+          example: 124
+        recovered:
+          type: integer
+          format: int64
+          example: 754
+        total_confirmed:
+          type: integer
+          format: int64
+          example: 1324
+        total_deceased:
+          type: integer
+          format: int64
+          example: 12443
+        total_recovered:
+          type: integer
+          format: int64
+          example: 235
+        country:
+          $ref: '#/components/schemas/Country'
+      example:
+        date: 2020-05-29T00:00:00.000+0000
+        total_deceased: 12443
+        country: RO
+        recovered: 754
+        deceased: 124
+        total_confirmed: 1324
+        active: 1000
+        total_recovered: 235
+        confirmed: 234
+    News:
+      required:
+      - date
+      - id
+      - source
+      - title
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int128
+        date:
+          type: string
+          format: date
+        title:
+          type: string
+        source:
+          type: string
+          format: url
+        publication:
+          type: string
+        keywords:
+          type: string
+          format: array
+        img_url:
+          type: string
+          format: url
+      example:
+        date: 2000-01-23
+        keywords: keywords
+        img_url: http://example.com/aeiou
+        publication: publication
+        id: 0
+        source: http://example.com/aeiou
+        title: title
+    Articles:
+      required:
+      - authors
+      - date
+      - id
+      - title
+      - url
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int128
+        date:
+          type: string
+          format: date
+        title:
+          type: string
+        astract:
+          type: string
+        authors:
+          type: string
+          format: array
+        categories:
+          type: string
+          format: array
+        url:
+          type: string
+          format: url
+        type:
+          type: string
+      example:
+        date: 2000-01-23
+        astract: astract
+        id: 0
+        categories: categories
+        title: title
+        type: type
+        url: http://example.com/aeiou
+        authors: authors
+  parameters:
+    offset:
+      name: offset
+      in: query
+      description: |
+        ### The number of items to skip before starting to collect the result set
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: integer
+        default: 0
+    limit:
+      name: limit
+      in: query
+      description: |
+        ### The numbers of items to return
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: integer
+        default: 20
