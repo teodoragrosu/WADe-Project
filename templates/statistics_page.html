@@ -1,0 +1,126 @@
+{% extends "layout.html" %}
+{% block content %}
+<div id="layoutSidenav">
+    <div id='mainLoader' class="spinner-grow text-success" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <div id="layoutSidenav_content" class="invisible">
+        <main>
+            <!-- The Modal -->
+            <div class="modal" id="errorModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Date input error</h4>
+                            <button id="xModal" type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            Please make sure the selected dates are valid.
+                        </div>
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button id="closeModal" type="button" class="btn btn-primary" data-dismiss="modal">Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <h1 class="mt-4">Statistics</h1>
+                <div class="card-body">
+                    <canvas id="totalsChart" width="100%" height="40"></canvas>
+                </div>
+                <ol class="breadcrumb mb-4" style="justify-content: space-between;">
+                    <div style="display: flex;">
+                        <li class="breadcrumb-item active" style="padding: 5px;">Select the country:</li>
+                        <select id="country-selector" class="form-select country-select"
+                                aria-label="Default select example">
+                            <option selected>ALL</option>
+                            {% for k,v in countries.items() %}
+                            <option value="{{ k }}">{{ v }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="spinner-border text-success invisible" role="status" style="margin-left: 2rem;">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                    <div>
+                        <button id="csv_button" type="button" class="btn btn-primary" style="margin-bottom: 0.3rem;" disabled>Download .CSV</button>
+                        <button id="json_button" type="button" class="btn btn-primary" style="margin-bottom: 0.3rem;" disabled>Download .JSON </button>
+                    </div>
+                </ol>
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <p>COVID-19 Evolution of active cases</p>
+                                <div class="filters">
+                                    <div class="datetimes">
+                                        <input type="text" id="start_placeholder" class="date-box"
+                                               placeholder="{{ today_date }}">
+                                        <input type="text" id="end_placeholder" class="date-box"
+                                               placeholder="{{ today_date }}">
+                                    <button id="line_chart_button" type="button" class="btn btn-primary" style="margin-bottom: 0;"
+                                            style="margin-bottom: 0.3rem;">Filter
+                                    </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="lineChart" width="100%" height="40"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <p>COVID-19 Statistics</p>
+                                <div class="filters">
+                                    <div class="datetimes" style="justify-content: flex-end;">
+                                        <input type="text" id="pie_placeholder" class="date-box"
+                                               placeholder="{{ today_date }}" size="30" style="width: 50%">
+                                    </div>
+                                    <button id="pie_chart_button" type="button" class="btn btn-primary"
+                                            style="margin-bottom: 0.3rem;">Filter
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="pieChart" width="100%" height="40"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--second row-->
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <p>COVID-19 Average number of cases each month </p>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="barChart" width="100%" height="40"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <p>Recoveries and deaths evolution over time </p>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="evolChart" width="100%" height="40"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+<script src="{{ url_for('static', filename='js/statistics_page/statistics_page.js') }}"></script>
+{% endblock content %}
