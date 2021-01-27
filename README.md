@@ -1,169 +1,25 @@
-# coda (covid-19 data for all)
+# CODA (covid-19 data for all)
 
-A large amount of scientific literature (reports, articles, case studies) and data regarding COVID-19 is already available – for example, browse COVID-19 Pandemic in Europe, WHO COVID-19 Dashboard, Coronavirus @ Worldometer, medRxiv, BMJ's Coronavirus Hub, COVID-19 Open Data. Create a "smart" (micro-)service-based Web system able to provide for both specialists and general public support for studying, visualizing, annotating, augmenting, and sharing – in multiple formats – the most authoritative and useful knowledge about this disease, including important advices, regional statistics, evolution & prediction. Implement at least three of the enumerated services. All processed data/knowledge will be accessed via a SPARQL endpoint – a useful ontology: CIDO (Coronavirus Infectious Disease Ontology). Inspiration: A knowledge-graph platform for newsrooms. Additional resources: COVID-19 Developer Resource Center. Bonus: capturing and exposing useful provenance.
+**CODA** stands for COVID-19 Data for All. It is a smart micro-service-based application that is able to provide information regarding the Covid-19 pandemic in multiple written and visual formats for both specialists and the general public. CODA’s goal is to keep everyone informed about the pandemic in a fast and easy manner and avoid spreading misinformation to the general public.
 
-Video demonstration: https://drive.google.com/file/d/1iEGeLtZ68mdwwE2VW_SNpFanzDOaDPwt/view?usp=sharing
+### Visit our CODA website [here](https://coda-fe.herokuapp.com/)
+
+### For a video demonstration of how the website works, watch [this](https://drive.google.com/file/d/1iEGeLtZ68mdwwE2VW_SNpFanzDOaDPwt/view?usp=sharing) video
+
+### CODA REST API
+CODA offers a public [REST API](https://coda-apiv1.herokuapp.com/api/news/latest)  providing access to all the data available on the website.
+The data can be queried, filtered and downloaded (in both JSON and CSV format). 
+For detailed instructions on how to use it, please refer to the [user guide](https://github.com/teodoragrosu/WADe-Project/blob/main/Documentation/Scholarly%20Report/User%20Guide.html).
+The Swagger documentation is openly available [here](https://coda-documentation.herokuapp.com/ui/) and the Open API Specification documentation resides at [this address](https://coda-documentation.herokuapp.com/openapi.json).
+
+### Technical Documentation
+CODA is a microservice-based application, that uses GraphDB as a database and SPARQL to retrieve the data. The full technical documentation is available [on github](https://github.com/teodoragrosu/WADe-Project/blob/main/Documentation/Scholarly%20Report/CODA-documentation.html). 
+A detailed overview of the vocabularies used to model the data can be found [on this page](https://github.com/teodoragrosu/WADe-Project/wiki/Vocabularies).
+
+### [Team & contributions](https://github.com/teodoragrosu/WADe-Project/wiki/Contributors)
 
 
-### CODA - Used Vocabulary
-
-```text
-| -------------------------------------------------------------------------------------------------------- |
-| Class Name: Country                                                                                      |
-| -------------------------------------------------------------------------------------------------------- |
-| URI                       |  http://coda.org/resources/countries                                         |
-| Definition                |  A country, identified by its ISO(alpha 2) code                              |
-| Type of term              |  Class                                                                       |
-| Subclass of               |  https://schema.org/Country                                                  |
-| -------------------------------------------------------------------------------------------------------- |
-| -------------------------------------------------------------------------------------------------------- |
-| Property Name: IdentifiedBy                                                                              |
-| -------------------------------------------------------------------------------------------------------- |
-| URI                       |  http://coda.org/resources/properties/IdentifiedBy                           |
-| Definition                |  A related resource that uniquely identifies the described resource          |
-| Type of term              |  Property                                                                    |
-| Used on types             |  Country, News, Article                                                      |
-| -------------------------------------------------------------------------------------------------------- |
-| -------------------------------------------------------------------------------------------------------- |
-| Property Name: hasCases                                                                                  |
-| -------------------------------------------------------------------------------------------------------- |
-| URI                       |  http://coda.org/resources/properties/hasCases                               |
-| Definition                |  Associates a case node to a country                                         |
-| Type of term              |  Property                                                                    |
-| Used on types             |  Country                                                                     |
-| -------------------------------------------------------------------------------------------------------- |
-| -------------------------------------------------------------------------------------------------------- |
-| Class Name: Cases                                                                                        |
-| -------------------------------------------------------------------------------------------------------- |
-| URI                       |  -                                                                           |
-| Definition                |  A BNode containing the cases recorded in a day for a country                |
-| Type of term              |  Class                                                                       |
-| Subclass Of               |  https://www.w3.org/2002/07/owl#Thing                                        |
-| -------------------------------------------------------------------------------------------------------- |
-| -------------------------------------------------------------------------------------------------------- |
-| Property Name: value                                                                                     |
-| -------------------------------------------------------------------------------------------------------- |
-| URI                       |  https://www.w3.org/1999/02/22-rdf-syntax-ns#value                           |
-| Definition                |  Number of cases of the specified type                                       |
-| Type of term              |  Propery                                                                     |
-| Used on types             |  Cases                                                                       |
-| -------------------------------------------------------------------------------------------------------- |
-| -------------------------------------------------------------------------------------------------------- |
-| Property Name: IsOfType                                                                                  |
-| -------------------------------------------------------------------------------------------------------- |
-| URI                       |  http://coda.org/resources/properties/IsOfType                               |
-| Definition                |  Type of case; one of (total_)confirmed, (total_)recovered,                  |
-|                           |  (total_)deceased, active                                                    |
-| Type of term              |  Property                                                                    |
-| Used on types             |  Cases                                                                       |
-| -------------------------------------------------------------------------------------------------------- |
-| -------------------------------------------------------------------------------------------------------- |
-| Property Name: IsReportedOn                                                                              |
-| -------------------------------------------------------------------------------------------------------- |
-| URI                       |  http://coda.org/resources/properties/IsReportedOn                           |
-| Definition                |  Date when the cases occurred (ISO format)                                   |
-| Type of term              |  Property                                                                    |
-| Used on types             |  Cases                                                                       |
-| -------------------------------------------------------------------------------------------------------- |
-| -------------------------------------------------------------------------------------------------------- |
-| Class Name: News                                                                                         |
-| -------------------------------------------------------------------------------------------------------- |
-| URI                       |  http://coda.org/resources/news                                              |
-| Definition                |  News related to COVID-19                                                    |
-| Type of term              |  Class                                                                       |
-| Subclass of               |  https://schema.org/NewsArticle                                              |
-| -------------------------------------------------------------------------------------------------------- |
-| -------------------------------------------------------------------------------------------------------- |
-| Property Name: PublishedIn                                                                               |
-| -------------------------------------------------------------------------------------------------------- |
-| URI                       |  http://coda.org/resources/properties/IsReportedOn                           |
-| Definition                |  Publication / website where the news was posted                             |
-| Type of term              |  Property                                                                    |
-| Used on types             |  News                                                                        |
-| -------------------------------------------------------------------------------------------------------- |
-| -------------------------------------------------------------------------------------------------------- |
-| Property Name: urlSource                                                                                 |
-| -------------------------------------------------------------------------------------------------------- |
-| URI                       |  https://schema.org/url                                                      |
-| Definition                |  URL of the news source                                                      |
-| Type of term              |  Property                                                                    |
-| Used on types             |  News, Articles                                                              |
-| -------------------------------------------------------------------------------------------------------- |
-| -------------------------------------------------------------------------------------------------------- |
-| Property Name: datePublished                                                                             |
-| -------------------------------------------------------------------------------------------------------- |
-| URI                       |  https://schema.org/datePublished                                            |
-| Definition                |  Date of first publication                                                   |
-| Type of term              |  Property                                                                    |
-| Used on types             |  News, Articles                                                              |
-| -------------------------------------------------------------------------------------------------------- |
-| -------------------------------------------------------------------------------------------------------- |
-| Property Name: headline                                                                                  |
-| -------------------------------------------------------------------------------------------------------- |
-| URI                       |  https://schema.org/headline                                                 |
-| Definition                |  News headline / title                                                       |
-| Type of term              |  Property                                                                    |
-| Used on types             |  News, Articles                                                              |
-| -------------------------------------------------------------------------------------------------------- |
-| -------------------------------------------------------------------------------------------------------- |
-| Property Name: keywords                                                                                  |
-| -------------------------------------------------------------------------------------------------------- |
-| URI                       |  https://schema.org/keywords                                                 |
-| Definition                |  Keywords or tags used to describe the news (delimited by commas)            |
-| Type of term              |  Property                                                                    |
-| Used on types             |  News                                                                        |
-| -------------------------------------------------------------------------------------------------------- |
-| -------------------------------------------------------------------------------------------------------- |
-| Property Name: imgURL                                                                                    |
-| -------------------------------------------------------------------------------------------------------- |
-| URI                       |  http://coda.org/resources/properties/imgURL                                 |
-| Definition                |  URL to the image posted with this news                                      |
-| Type of term              |  Property                                                                    |
-| Used on types             |  News                                                                        |
-| -------------------------------------------------------------------------------------------------------- |
-| -------------------------------------------------------------------------------------------------------- |
-| Class Name: Articles                                                                                     |
-| -------------------------------------------------------------------------------------------------------- |
-| URI                       |  http://coda.org/resources/articles                                          |
-| Definition                |  A research article related to COVID-19                                      |
-| Type of term              |  Class                                                                       |
-| Subclass of               |  https://schema.org/ScholarlyArticle                                         |
-| -------------------------------------------------------------------------------------------------------- |
-| -------------------------------------------------------------------------------------------------------- |
-| Property Name: hasType                                                                                   |
-| -------------------------------------------------------------------------------------------------------- |
-| URI                       |  http://coda.org/resources/properties/hasType                                |
-| Definition                |  Type of article; one of: article, journal contribution, dataset             |
-| Type of term              |  Property                                                                    |
-| Used on types             |  Articles                                                                    |
-| -------------------------------------------------------------------------------------------------------- |
-| -------------------------------------------------------------------------------------------------------- |
-| Property Name: about                                                                                     |
-| -------------------------------------------------------------------------------------------------------- |
-| URI                       |  https://schema.org/about                                                    |
-| Definition                |  The subject matter of the content.                                          |
-| Type of term              |  Property                                                                    |
-| Used on types             |  Articles                                                                    |
-| -------------------------------------------------------------------------------------------------------- |
-| -------------------------------------------------------------------------------------------------------- |
-| Property Name: abstract                                                                                  |
-| -------------------------------------------------------------------------------------------------------- |
-| URI                       |  https://schema.org/abstract                                                 |
-| Definition                |  Short description that summarizes an article                                |
-| Type of term              |  Property                                                                    |
-| Used on types             |  Articles                                                                    |
-| -------------------------------------------------------------------------------------------------------- |
-| -------------------------------------------------------------------------------------------------------- |
-| Property Name: author                                                                                    |
-| -------------------------------------------------------------------------------------------------------- |
-| URI                       |  https://schema.org/author                                                   |
-| Definition                |  The author of this article                                                  |
-| Type of term              |  Property                                                                    |
-| Used on types             |  Articles                                                                    |
-| -------------------------------------------------------------------------------------------------------- |
-| -------------------------------------------------------------------------------------------------------- |
-```
-
+ 
 
 
 
