@@ -28,16 +28,18 @@
                 </div>
             </div>
             <div class="container-fluid">
-                <h1 class="mt-4">Statistics</h1>
+                <h1 class="mt-4">COVID Dashboard - Top Worldwide Statistics </h1>
                 <div class="card-body">
                     <canvas id="totalsChart" width="100%" height="40"></canvas>
                 </div>
+                <h1 class="mt-4">COVID Dashboard - Countries Statistics </h1>
+                <br />
                 <ol class="breadcrumb mb-4" style="justify-content: space-between;">
                     <div style="display: flex;">
                         <li class="breadcrumb-item active" style="padding: 5px;">Select the country:</li>
                         <select id="country-selector" class="form-select country-select"
                                 aria-label="Default select example">
-                            <option selected>ALL</option>
+                            <option selected>Worldwide</option>
                             {% for k,v in countries.items() %}
                             <option value="{{ k }}">{{ v }}</option>
                             {% endfor %}

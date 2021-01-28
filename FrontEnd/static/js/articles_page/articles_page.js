@@ -2,8 +2,6 @@ var page = 1;
 var searchTerm = '';
 var numberOfResults = 0;
 var selectedCategories = [];
-//var apiPath = 'https://coda-apiv1.herokuapp.com/api'
-var apiPath = "http://127.0.0.1:5000/api"
 
 var urlParams = new URLSearchParams(window.location.search);
 if(urlParams.has('category')){
@@ -14,7 +12,7 @@ if(urlParams.has('category')){
 
 function refreshData(){
     var categoryQueryParam = "categories=" + selectedCategories.join("&categories=")
-    $.ajax({url: apiPath + "/articles/page/" + page +"?search_term=" + searchTerm + "&" + categoryQueryParam, success: function(result){
+    $.ajax({url: "https://coda-apiv1.herokuapp.com/api/articles/page/" + page +"?search_term=" + searchTerm + "&" + categoryQueryParam, success: function(result){
         console.log(selectedCategories);
         var articles = JSON.parse(result);
         numberOfResults = articles.length;
@@ -34,7 +32,7 @@ function refreshData(){
             if(article.categories.length > 0 && article.categories[0] != "" ){
                 var categoriesInnerHtml = "";
                 for( var category in article.categories){
-                    categoriesInnerHtml += `<a href="http://127.0.0.1:8000/articles?category=${article.categories[category]}">${ article.categories[category] } </a>`
+                    categoriesInnerHtml += `<a href="https://coda-fe.herokuapp.com/articles?category=${article.categories[category]}">${ article.categories[category] } </a>`
                 }
                 categoriesHtml = `<div class="card-footer text-muted" style="margin:0;"> Categories: ${categoriesInnerHtml}</div>`
             }

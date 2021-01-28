@@ -110,7 +110,7 @@ function update_evol(evol_results){
         (arr = []).length =  dayList.length;
          arr.fill(0);
         evol = {"date": dayList, "recovered": arr, "deceased": arr};
-
+        console.log(evol);
         myEvolChart.data.labels = evol.date;
         myEvolChart.data.datasets[0].data = evol.recovered;
         myEvolChart.data.datasets[1].data = evol.deceased;

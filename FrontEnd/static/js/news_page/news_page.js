@@ -2,8 +2,6 @@ var page = 1;
 var searchTerm = '';
 var publicationTerm = '';
 var numberOfResults = 0;
-//var apiPath = 'https://coda-apiv1.herokuapp.com/api'
-var apiPath = "http://127.0.0.1:5000/api"
 
 var urlParams = new URLSearchParams(window.location.search);
 if(urlParams.has('keyword')){
@@ -12,7 +10,7 @@ if(urlParams.has('keyword')){
 }
 
 function refreshData(){
-    $.ajax({url: apiPath + "/news/page/" + page +"?search_term=" + searchTerm + "&publication=" + publicationTerm, success: function(result){
+    $.ajax({url: "https://coda-apiv1.herokuapp.com/api/news/page/" + page +"?search_term=" + searchTerm + "&publication=" + publicationTerm, success: function(result){
         var news = JSON.parse(result);
         numberOfResults = Object.keys(news).length;
         var divHtml = '';
@@ -33,7 +31,7 @@ function refreshData(){
             if(item.keywords.length > 0 && item.keywords[0] != "" ){
                 var keywordsInnerHtml = "";
                 for( var keyword in item.keywords){
-                    keywordsInnerHtml += `<a href="http://127.0.0.1:8000/news?keyword=${item.keywords[keyword]}">${ item.keywords[keyword] } </a>`
+                    keywordsInnerHtml += `<a href="https://coda-fe.herokuapp.com/news?keyword=${item.keywords[keyword]}">${ item.keywords[keyword] } </a>`
                 }
                 keywordsHtml = `<div class="card-footer text-muted"> Keywords: ${keywordsInnerHtml}</div>`
             }
